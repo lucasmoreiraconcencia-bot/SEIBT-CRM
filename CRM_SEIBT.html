@@ -79,13 +79,14 @@ body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;font-size:13px;co
 .nav-section{padding:14px 20px 5px;font-size:10px;font-weight:700;color:rgba(255,255,255,.28);letter-spacing:1px;text-transform:uppercase;white-space:nowrap;overflow:hidden;transition:opacity .15s,padding .22s}
 .nav-item{display:flex;align-items:center;gap:10px;padding:9px 20px;color:rgba(255,255,255,.62);cursor:pointer;font-size:12.5px;transition:background .12s,color .12s,padding .22s,gap .22s;border-left:3px solid transparent;user-select:none;line-height:1;white-space:nowrap}
 .nav-item:hover{background:rgba(255,255,255,.07);color:rgba(255,255,255,.9)}
-.nav-item.active{background:rgba(255,255,255,.12);color:#fff;border-left-color:#60a5fa;box-shadow:inset 3px 0 10px rgba(96,165,250,.18)}
+.nav-item.active{background:rgba(96,165,250,.16);color:#fff;border-left-color:#60a5fa;box-shadow:inset 3px 0 14px rgba(96,165,250,.22)}
+.nav-item.active .nav-label{font-weight:600}
 .nav-item svg{width:14px;height:14px;flex-shrink:0;opacity:.75}
 .nav-item.active svg{opacity:1}
 .nav-label{transition:opacity .15s;overflow:hidden;flex:1;min-width:0;text-overflow:ellipsis;overflow:hidden}
-.nav-badge{margin-left:auto;background:rgba(255,255,255,.12);color:rgba(255,255,255,.75);border-radius:20px;padding:2px 8px;font-size:10px;font-weight:700;min-width:22px;text-align:center;transition:opacity .15s,width .22s;flex-shrink:0}
-.nav-badge.green{background:rgba(22,163,74,.25);color:#86efac}
-.nav-badge.red{background:rgba(220,38,38,.25);color:#fca5a5}
+/* Badges padronizados: pílula escura única em todas as seções */
+.nav-badge{margin-left:auto;background:rgba(2,6,23,.55);color:#cbd5e1;border-radius:20px;padding:2px 9px;font-size:10px;font-weight:700;min-width:24px;text-align:center;transition:opacity .15s,width .22s;flex-shrink:0}
+.nav-badge.green,.nav-badge.red{background:rgba(2,6,23,.55);color:#cbd5e1}
 .sidebar-footer{padding:14px 20px;border-top:1px solid rgba(255,255,255,.08);overflow:hidden;transition:opacity .15s}
 .sidebar-footer span{display:block;font-size:10.5px;color:rgba(255,255,255,.55);line-height:1.8;white-space:nowrap}
 
@@ -125,12 +126,13 @@ body.sidebar-collapsed .main{margin-left:var(--sidebar-mini)}
 .btn-icon svg{width:16px;height:16px;stroke-width:1.8}
 .search-wrap{position:relative}
 .search-wrap .search-icon{position:absolute;left:10px;top:50%;transform:translateY(-50%);color:var(--muted);width:14px;height:14px;pointer-events:none}
-.search{border:1px solid var(--border);border-radius:var(--radius);padding:7px 12px 7px 32px;font-size:12px;width:240px;outline:none;background:var(--bg);color:var(--text);transition:border-color .15s,box-shadow .15s;font-family:inherit}
-.search:focus{border-color:var(--blue);background:var(--white);box-shadow:0 0 0 3px rgba(32,116,185,.1)}
+.search{border:1px solid var(--border-md);border-radius:9px;padding:8px 12px 8px 32px;font-size:12px;width:250px;outline:none;background:var(--gray-bg);color:var(--text);transition:border-color .15s,box-shadow .15s,background .15s;font-family:inherit}
+.search:focus{border-color:var(--blue);background:var(--white);box-shadow:0 0 0 3px rgba(32,116,185,.12)}
 .search::placeholder{color:var(--muted)}
 
 /* Content */
-.content{padding:20px 24px;flex:1}
+.content{padding:22px 24px;flex:1;background:var(--gray-bg)}
+.content.view-inicio{background:var(--gray-bg)}
 
 /* KPI Cards */
 .kpi-row{display:flex;gap:12px;margin-bottom:20px;flex-wrap:wrap}
@@ -961,6 +963,83 @@ body.sidebar-collapsed .main{margin-left:var(--sidebar-mini)}
 .pf-period{padding:7px 10px;font-size:12px;border:1px solid var(--border);border-radius:var(--radius);background:var(--white);color:var(--text);font-family:inherit;cursor:pointer}
 @media(max-width:760px){.pf-kpis{grid-template-columns:repeat(2,1fr)}.pf-charts{grid-template-columns:1fr}.pf-tabs-head{flex-direction:column;align-items:stretch}}
 
+/* ── Ficha do Representante (Performance Individual) ─────────────────────── */
+.fi-grid{display:grid;grid-template-columns:2fr 1fr;gap:16px;margin-bottom:16px}
+.fi-grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;margin-bottom:16px}
+.fi-grid-2{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px}
+.fi-card{background:var(--white);border:1px solid var(--border);border-radius:16px;padding:18px;box-shadow:0 1px 2px rgba(15,23,42,.04),0 4px 14px rgba(15,23,42,.05)}
+.fi-card-t{font-size:12.5px;font-weight:700;color:var(--navy);margin-bottom:14px;display:flex;align-items:center;justify-content:space-between;gap:8px}
+.fi-card-t .fi-sub{font-size:10.5px;font-weight:500;color:var(--muted)}
+/* Header */
+.fi-head{display:flex;gap:18px;align-items:center}
+.fi-avatar-wrap{position:relative;flex-shrink:0}
+.fi-avatar{width:84px;height:84px;border-radius:20px;background:#475569;color:#fff;display:flex;align-items:center;justify-content:center;font-size:28px;font-weight:800;object-fit:cover;overflow:hidden}
+.fi-avatar img{width:100%;height:100%;object-fit:cover}
+.fi-avatar-edit{position:absolute;right:-6px;bottom:-6px;width:30px;height:30px;border-radius:50%;background:var(--navy);color:#fff;border:2px solid var(--white);display:flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:var(--shadow-sm)}
+.fi-avatar-edit svg{width:15px;height:15px;stroke:#fff;stroke-width:2.2;fill:none}
+.fi-avatar-edit.uploading{opacity:.5;pointer-events:none}
+.fi-name{font-size:21px;font-weight:800;color:var(--navy);line-height:1.1}
+.fi-role{font-size:12.5px;color:var(--muted);margin-top:3px}
+.fi-tenure{font-size:11.5px;color:var(--text-2);margin-top:2px}
+.fi-badges{display:flex;flex-wrap:wrap;gap:6px;margin-top:11px}
+.fi-badge{display:inline-flex;align-items:center;gap:5px;font-size:10.5px;font-weight:700;padding:4px 10px;border-radius:20px;background:#eef2f7;color:#334155;border:1px solid var(--border)}
+.fi-badge.good{background:#ecfdf5;color:#047857;border-color:#a7f3d0}
+.fi-badge.warn{background:#fffbeb;color:#b45309;border-color:#fde68a}
+.fi-badge svg{width:12px;height:12px}
+.fi-badge-add{cursor:pointer;border-style:dashed;color:var(--muted)}
+/* Mapa de atuação (tile grid) */
+.fi-map{display:grid;grid-template-columns:repeat(7,1fr);gap:3px}
+.fi-uf{aspect-ratio:1;border-radius:5px;background:#eef2f6;border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:8.5px;font-weight:700;color:#94a3b8;user-select:none}
+.fi-uf.on{background:var(--navy);color:#fff;border-color:var(--navy)}
+.fi-uf.ex.on{background:#0e7490;border-color:#0e7490}
+.fi-zones{display:flex;flex-wrap:wrap;gap:5px;margin-top:12px}
+.fi-zone{font-size:10px;font-weight:600;padding:3px 9px;border-radius:14px;background:#eef2f7;color:#334155;border:1px solid var(--border)}
+.fi-zone.empty{color:var(--muted);background:transparent;border-style:dashed}
+/* Gauge / Donut */
+.fi-gauge-wrap{display:flex;flex-direction:column;align-items:center;gap:6px}
+.fi-meta-row{display:flex;align-items:center;justify-content:center;gap:7px;margin-top:4px;font-size:12px;color:var(--muted)}
+.fi-meta-val{font-weight:700;color:var(--navy)}
+.fi-edit-btn{width:24px;height:24px;border-radius:6px;border:1px solid var(--border);background:var(--white);display:inline-flex;align-items:center;justify-content:center;cursor:pointer;color:var(--navy)}
+.fi-edit-btn svg{width:13px;height:13px;fill:none;stroke:currentColor;stroke-width:2}
+.fi-meta-edit{display:flex;gap:6px;align-items:center;justify-content:center;margin-top:6px}
+.fi-meta-edit input{width:130px;padding:6px 8px;font-size:12.5px;border:1px solid var(--navy);border-radius:6px;font-family:inherit}
+/* Radar */
+.fi-legend{display:flex;gap:14px;justify-content:center;margin-top:8px;font-size:10.5px;color:var(--muted)}
+.fi-legend span{display:inline-flex;align-items:center;gap:5px}
+.fi-dot{width:9px;height:9px;border-radius:3px;display:inline-block}
+/* 1-on-1 + Simulador */
+.fi-1on1-area{width:100%;min-height:80px;padding:10px 12px;font-size:12.5px;border:1px solid var(--border);border-radius:10px;font-family:inherit;resize:vertical;color:var(--text)}
+.fi-1on1-bar{display:flex;justify-content:flex-end;margin-top:8px}
+.fi-tl{list-style:none;margin:14px 0 0;padding:0;display:flex;flex-direction:column;gap:0}
+.fi-tl-item{position:relative;padding:0 0 16px 20px;border-left:2px solid var(--border)}
+.fi-tl-item:last-child{border-left-color:transparent;padding-bottom:0}
+.fi-tl-item::before{content:'';position:absolute;left:-6px;top:2px;width:10px;height:10px;border-radius:50%;background:var(--navy);border:2px solid var(--white)}
+.fi-tl-d{font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.3px}
+.fi-tl-x{font-size:12px;color:var(--text);margin-top:2px;white-space:pre-wrap}
+.fi-sim-row{margin-bottom:16px}
+.fi-sim-lbl{display:flex;justify-content:space-between;font-size:11.5px;color:var(--text-2);margin-bottom:6px}
+.fi-sim-lbl b{color:var(--navy)}
+.fi-slider{width:100%;accent-color:var(--navy);height:5px;cursor:pointer}
+.fi-sim-out{background:linear-gradient(135deg,#1e3a5f,#2c4f79);color:#fff;border-radius:12px;padding:14px 16px;margin-top:6px}
+.fi-sim-out-l{font-size:11px;opacity:.85}
+.fi-sim-out-v{font-size:24px;font-weight:800;margin-top:3px;letter-spacing:-.5px}
+.fi-sim-out-d{font-size:11px;margin-top:4px;opacity:.9}
+/* Feed / Timeline de eventos */
+.fi-feed{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:0;max-height:520px;overflow-y:auto}
+.fi-feed-item{display:flex;gap:11px;padding:11px 0;border-bottom:1px solid var(--border)}
+.fi-feed-item:last-child{border-bottom:none}
+.fi-feed-ic{width:30px;height:30px;border-radius:9px;flex-shrink:0;display:flex;align-items:center;justify-content:center;background:#eef2f7;color:var(--navy)}
+.fi-feed-ic svg{width:15px;height:15px;fill:none;stroke:currentColor;stroke-width:2}
+.fi-feed-ic.sell{background:#ecfdf5;color:#047857}
+.fi-feed-ic.prop{background:#eff6ff;color:#1d4ed8}
+.fi-feed-ic.meet{background:#fef3c7;color:#b45309}
+.fi-feed-d{font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.3px}
+.fi-feed-x{font-size:12px;color:var(--text);margin-top:2px;line-height:1.4}
+.fi-zone-modal-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px 18px;max-height:50vh;overflow-y:auto;padding:4px 2px}
+.fi-zone-modal-grp{font-size:10.5px;font-weight:800;color:var(--navy);text-transform:uppercase;letter-spacing:.4px;margin:8px 0 2px;grid-column:1/-1}
+.fi-zone-chk{display:flex;align-items:center;gap:7px;font-size:12px;color:var(--text);cursor:pointer;padding:3px 0}
+@media(max-width:900px){.fi-grid,.fi-grid-3,.fi-grid-2{grid-template-columns:1fr}}
+
 /* Central Comercial */
 .cc-inds{display:grid;grid-template-columns:repeat(6,1fr);gap:12px;margin-bottom:20px}
 .cc-ind{background:var(--white);border:1px solid var(--border);border-radius:var(--radius-lg);padding:14px 16px;box-shadow:var(--shadow-sm);position:relative;overflow:hidden}
@@ -986,24 +1065,44 @@ body.sidebar-collapsed .main{margin-left:var(--sidebar-mini)}
 
 /* Painel de Atividades (home do usuário) */
 .act-wrap{padding:4px 0}
-.act-cards{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:22px}
-.act-tile{background:var(--white);border:1px solid var(--border);border-radius:var(--radius-lg);padding:16px;box-shadow:var(--shadow-sm);cursor:pointer;transition:box-shadow .15s,transform .1s;position:relative;overflow:hidden}
-.act-tile:hover{box-shadow:var(--shadow-md);transform:translateY(-1px)}
-.act-tile::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:var(--border-md)}
-.act-tile.bad::before{background:var(--error)}
-.act-tile.warn::before{background:var(--warn)}
-.act-tile.good::before{background:var(--success)}
-.act-tile.info::before{background:var(--primary)}
-.act-tile-n{font-size:26px;font-weight:700;color:var(--navy);line-height:1}
-.act-tile.bad .act-tile-n{color:var(--error)}
-.act-tile.warn .act-tile-n{color:var(--warn)}
-.act-tile-l{font-size:11.5px;color:var(--muted);margin-top:6px}
+.act-cards{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:24px}
+.act-tile{background:var(--white);border:1px solid var(--border);border-radius:16px;padding:18px;box-shadow:0 1px 2px rgba(15,23,42,.04),0 4px 14px rgba(15,23,42,.05);cursor:pointer;transition:box-shadow .18s,transform .12s,border-color .18s;position:relative;overflow:hidden;min-height:96px;display:flex;flex-direction:column;justify-content:space-between}
+.act-tile:hover{box-shadow:0 8px 24px rgba(15,23,42,.11);transform:translateY(-2px)}
+.act-tile-head{display:flex;align-items:flex-start;justify-content:space-between;gap:8px}
+.act-tile-n{font-size:30px;font-weight:800;color:var(--navy);line-height:1;letter-spacing:-.5px}
+.act-tile-l{font-size:12px;color:var(--muted);margin-top:8px;font-weight:500}
+.act-tile-ic{width:34px;height:34px;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-weight:800;font-size:13px}
+.act-tile-ic svg{width:18px;height:18px;stroke-width:2.4}
+/* Tons semânticos */
+.act-tile.t-ok .act-tile-ic{background:#dcfce7;color:#16a34a}
+.act-tile.t-neutral .act-tile-ic{background:var(--gray-bg);color:var(--muted)}
+.act-tile.t-info .act-tile-ic{background:#dbeafe;color:#2563eb}
+.act-tile.t-alert{background:#fef2f2;border-color:#fecaca}
+.act-tile.t-alert .act-tile-n{color:#b91c1c}
+.act-tile.t-alert .act-tile-ic{background:#fee2e2;color:#dc2626}
+.act-tile.t-priority{background:linear-gradient(135deg,#f59e0b 0%,#ea7c0c 100%);border-color:transparent;box-shadow:0 6px 18px rgba(234,124,12,.28)}
+.act-tile.t-priority .act-tile-n,.act-tile.t-priority .act-tile-l{color:#fff}
+.act-tile.t-priority .act-tile-ic{background:rgba(255,255,255,.22);color:#fff}
+.act-tile.t-primary{background:linear-gradient(135deg,#1e3a5f 0%,#2c4f79 100%);border-color:transparent;box-shadow:0 6px 18px rgba(30,58,95,.26)}
+.act-tile.t-primary .act-tile-n,.act-tile.t-primary .act-tile-l{color:#fff}
+.act-tile.t-primary .act-tile-ic{background:rgba(255,255,255,.16);color:#fff}
+.act-meta-empty{font-size:13px;font-weight:600;color:var(--muted)}
+.btn-mini{margin-top:10px;align-self:flex-start;display:inline-flex;align-items:center;gap:5px;font-size:11.5px;font-weight:600;color:var(--navy);background:var(--gray-bg);border:1px solid var(--border);border-radius:8px;padding:5px 11px;cursor:pointer;transition:background .15s}
+.btn-mini:hover{background:#e2e8f0}
+.btn-mini svg{width:13px;height:13px;stroke-width:2.4}
 .act-sec-title{font-size:13px;font-weight:700;color:var(--navy);margin:6px 0 12px}
-.act-agenda{background:var(--white);border:1px solid var(--border);border-radius:var(--radius-lg);box-shadow:var(--shadow-sm);overflow:hidden;margin-bottom:22px}
-.act-ag-row{display:flex;align-items:center;gap:12px;padding:11px 16px;border-bottom:1px solid var(--border);font-size:12.5px}
+.act-sec-head{display:flex;align-items:center;justify-content:space-between;margin:6px 0 12px}
+.act-sec-head .act-sec-title{margin:0}
+.btn-primary-soft{display:inline-flex;align-items:center;gap:6px;background:var(--navy);color:#fff;border:none;border-radius:9px;padding:8px 14px;font-size:12px;font-weight:600;cursor:pointer;box-shadow:var(--shadow-sm);transition:filter .15s,transform .1s}
+.btn-primary-soft:hover{filter:brightness(1.12);transform:translateY(-1px)}
+.btn-primary-soft svg{width:15px;height:15px;stroke-width:2.4}
+.act-agenda{background:var(--white);border:1px solid var(--border);border-radius:16px;box-shadow:0 1px 2px rgba(15,23,42,.04),0 4px 14px rgba(15,23,42,.05);overflow:hidden;margin-bottom:24px}
+.act-ag-row{display:flex;align-items:center;gap:12px;padding:12px 18px;border-bottom:1px solid var(--border);font-size:12.5px}
 .act-ag-row:last-child{border-bottom:none}
 .act-ag-time{font-weight:700;color:var(--navy);min-width:74px;font-size:11.5px}
 .act-ag-cli{flex:1;font-weight:600}
+.act-ag-empty{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;padding:24px 18px;color:var(--muted);font-size:13px}
+.act-ag-empty svg{width:26px;height:26px;opacity:.5}
 @media(max-width:900px){.act-cards{grid-template-columns:repeat(2,1fr)}}
 @media(max-width:520px){.act-cards{grid-template-columns:1fr}}
 /* Tile Detail Drawer */
@@ -5848,45 +5947,31 @@ function applyUserFilter() {
   function filterBySession(list) {
     if (!SESSION) return list;
     const tipo  = (SESSION.tipo_acesso || '').toLowerCase().trim();
-    const valor = SESSION.valor_acesso || '';
     const extUsers = SESSION.externo_users || [];
+    // Alvo do escopo: valor configurado pelo admin OU, na falta dele, o nome do
+    // próprio usuário logado (evita zerar tudo quando valor_acesso vem vazio).
+    const alvo = SESSION.valor_acesso || SESSION.nome || '';
 
-    const match = _matchNome; // usa helper global que trata "NOME - EMP" e "EMP-NOME"
+    const match = _matchNome; // helper global: trata "NOME - EMP" e "EMP-NOME"
 
-    switch (tipo) {
-      // ── Acesso total ───────────────────────────────────────────────────────
-      case 'todos':
-      case 'gestor':
-        return list;
+    // ── Acesso total ─────────────────────────────────────────────────────────
+    if (tipo === 'todos' || tipo === 'gestor') return list;
 
-      // ── Acesso por representante ───────────────────────────────────────────
-      case 'representante':
-        return list.filter(p => match(p.representante, valor));
+    // Sem alvo → não há como restringir por nome; não esconde tudo (fail-open).
+    if (!alvo) return list;
 
-      // ── Acesso por interno ─────────────────────────────────────────────────
-      case 'interno':
-        return list.filter(p => match(p.interno, valor));
+    // Casa o nome do usuário em QUALQUER papel da proposta (representante,
+    // interno ou responsável). Resolve nomes que aparecem em campos diferentes
+    // (ex.: SEDENIR como representante numas e responsável noutras) — vale para
+    // representante / interno / externo / especialista. Espelha scopeForSession.
+    const mine = p => match(p.representante, alvo) || match(p.interno, alvo) || match(p.responsavel, alvo);
 
-      // ── Especialista (ex: Leandro) ─────────────────────────────────────────
-      // Vê apenas as propostas vinculadas ao SEU nome (interno/rep/responsável)
-      // + as dos representantes que ele acompanha (externo_users). NÃO vê as
-      // propostas de Peças de outras pessoas — escopo é por nome.
-      case 'especialista':
-        return list.filter(p =>
-          match(p.interno, valor) || match(p.representante, valor) || match(p.responsavel, valor) ||
-          extUsers.some(eu => match(p.interno, eu) || match(p.representante, eu) || match(p.responsavel, eu))
-        );
-
-      // ── Externo (ex: Eliezer) ──────────────────────────────────────────────
-      // Vê apenas as próprias propostas (por interno, representante ou responsavel)
-      case 'externo':
-        return list.filter(p =>
-          match(p.interno, valor) || match(p.representante, valor) || match(p.responsavel, valor)
-        );
-
-      default:
-        return list;
+    if (tipo === 'especialista') {
+      return list.filter(p => mine(p) ||
+        extUsers.some(eu => match(p.interno, eu) || match(p.representante, eu) || match(p.responsavel, eu)));
     }
+    // representante / interno / externo (e qualquer outro tipo nomeado)
+    return list.filter(mine);
   }
 
   // ── Filtro de visibilidade (Nacional / Exportação / Ambas) ──────────────
@@ -6996,6 +7081,139 @@ function scopeForInicio() {
   if (!_inicioAno || _inicioAno === 'todos') return base;
   return base.filter(p => String(getYear(p)) === String(_inicioAno));
 }
+// Ícones de linha usados nos KPIs do Início
+const ACT_ICO = {
+  check:  '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="20 6 9 17 4 12"/></svg>',
+  warn:   '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>',
+  clock:  '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15 14"/></svg>',
+  filter: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>',
+  doc:    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>',
+  bag:    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>',
+  target: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1"/></svg>',
+  cal:    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>',
+  plus:   '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>',
+};
+// Funil de vendas em formato cônico (área ∝ volume) + taxa de conversão entre etapas.
+function funnelConicHTML(stages) {
+  if (!stages || !stages.length) return '<div class="pf-empty-chart">Sem dados de funil.</div>';
+
+  // ── Geometry ─────────────────────────────────────────────────────────────
+  // Sections connect seamlessly (no gap). Section boundaries = visible rings.
+  const VBW = 460, cx = 248;
+  const segH = 66;          // height of each section
+  const topPad = 26;        // room for the top rim ellipse to protrude upward
+  const botPad = 16;
+  const ryF = 0.155;        // rim ry = width × ryF (larger = more 3D depth)
+  const ryMax = 22, ryMin = 7;
+  const maxC = Math.max(1, ...stages.map(s => s.count));
+  const minW = 44, maxW = 256;
+  const wFor = c => c <= 0 ? minW * 0.48 : minW + (maxW - minW) * (c / maxC);
+
+  // ── Per-stage colour palette (body / specular-highlight / shadow) ────────
+  const pal = [
+    { b:'#1b3554', h:'#2d5585', s:'#0c1c30' },
+    { b:'#225070', h:'#347098', s:'#10283a' },
+    { b:'#2d6898', h:'#4888c0', s:'#163858' },
+    { b:'#4282b2', h:'#5ca4d8', s:'#1e4868' },
+    { b:'#5898c4', h:'#74b8e0', s:'#285870' },
+  ];
+
+  const widths  = stages.map(s => wFor(s.count));
+  const wBottom = Math.max(minW * 0.35, widths[widths.length - 1] * 0.38);
+
+  const H = topPad + stages.length * segH + botPad;
+  const defs = [], bodies = [], rings = [], texts = [];
+
+  // ── Pass 1: trapezoid bodies (continuous, no gap) ────────────────────────
+  stages.forEach((s, i) => {
+    const p   = pal[Math.min(i, pal.length - 1)];
+    const wT  = widths[i];
+    const wB  = i < stages.length - 1 ? widths[i + 1] : wBottom;
+    const y   = topPad + i * segH;
+    const yB  = y + segH;
+    const gid = `g3d${i}`;
+
+    // Horizontal gradient: dark left-edge → specular highlight → body → dark right-edge
+    defs.push(`<linearGradient id="${gid}" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%"   stop-color="${p.s}"/>
+      <stop offset="24%"  stop-color="${p.h}"/>
+      <stop offset="52%"  stop-color="${p.b}"/>
+      <stop offset="80%"  stop-color="${p.s}"/>
+      <stop offset="100%" stop-color="${p.s}" stop-opacity="0.78"/>
+    </linearGradient>`);
+
+    bodies.push(`<path d="M${cx-wT/2} ${y} L${cx+wT/2} ${y} L${cx+wB/2} ${yB} L${cx-wB/2} ${yB} Z" fill="url(#${gid})"/>`);
+  });
+
+  // ── Pass 2: ring dividers at every section boundary ──────────────────────
+  stages.forEach((s, i) => {
+    const wB   = i < stages.length - 1 ? widths[i + 1] : wBottom;
+    const yB   = topPad + (i + 1) * segH;
+    const ryB  = Math.min(ryMax, Math.max(ryMin, wB * ryF));
+    const p    = pal[Math.min(i, pal.length - 1)];
+    const pN   = pal[Math.min(i + 1, pal.length - 1)];
+    const rgid = `rg${i}`;
+
+    // Radial gradient: white specular upper-left → highlight → body colour
+    defs.push(`<radialGradient id="${rgid}" cx="36%" cy="30%" r="66%">
+      <stop offset="0%"   stop-color="#ffffff" stop-opacity="0.32"/>
+      <stop offset="40%"  stop-color="${pN.h}"  stop-opacity="0.85"/>
+      <stop offset="100%" stop-color="${pN.b}"  stop-opacity="1"/>
+    </radialGradient>`);
+
+    rings.push(`<ellipse cx="${cx}" cy="${yB}" rx="${wB/2+3}" ry="${ryB+2}" fill="${p.s}" opacity="0.42"/>`); // outer shadow
+    rings.push(`<ellipse cx="${cx}" cy="${yB}" rx="${wB/2}"   ry="${ryB}"   fill="url(#${rgid})"/>`);        // ring surface
+    rings.push(`<ellipse cx="${cx}" cy="${yB}" rx="${wB*0.44}" ry="${ryB*0.60}" fill="${pN.s}" opacity="0.5"/>`); // inner depth
+  });
+
+  // ── Top rim of the funnel (most prominent) ───────────────────────────────
+  const wT0  = widths[0];
+  const ry0  = Math.min(ryMax, Math.max(ryMin, wT0 * ryF));
+  defs.push(`<radialGradient id="topRim" cx="36%" cy="30%" r="66%">
+    <stop offset="0%"   stop-color="#ffffff" stop-opacity="0.58"/>
+    <stop offset="42%"  stop-color="${pal[0].h}" stop-opacity="0.88"/>
+    <stop offset="100%" stop-color="${pal[0].b}" stop-opacity="1"/>
+  </radialGradient>`);
+  rings.push(`<ellipse cx="${cx}" cy="${topPad}" rx="${wT0/2+4}" ry="${ry0+2}" fill="${pal[0].s}" opacity="0.38"/>`);
+  rings.push(`<ellipse cx="${cx}" cy="${topPad}" rx="${wT0/2}"   ry="${ry0}"   fill="url(#topRim)"/>`);
+  rings.push(`<ellipse cx="${cx}" cy="${topPad}" rx="${wT0*0.43}" ry="${ry0*0.60}" fill="${pal[0].s}" opacity="0.26"/>`);
+
+  // ── Pass 3: text (always on top) ─────────────────────────────────────────
+  stages.forEach((s, i) => {
+    const wT  = widths[i];
+    const wB  = i < stages.length - 1 ? widths[i + 1] : wBottom;
+    const y   = topPad + i * segH;
+    const yB  = y + segH;
+    const ryB = Math.min(ryMax, Math.max(ryMin, wB * ryF));
+
+    // Stage label — left outside, right-aligned to funnel edge
+    texts.push(`<text x="${cx - wT/2 - 12}" y="${y + segH/2 + 3}" text-anchor="end" dominant-baseline="central" fill="#1e293b" font-size="11.5" font-weight="600" font-family="Inter,system-ui,sans-serif">${s.label}</text>`);
+
+    // Count — centred, white bold
+    texts.push(`<text x="${cx}" y="${y + segH/2 + 5}" text-anchor="middle" dominant-baseline="central" fill="#ffffff" font-size="21" font-weight="800" font-family="Inter,system-ui,sans-serif">${s.count}</text>`);
+
+    // Conversion % badge — floats to the right of the divider ring
+    if (i < stages.length - 1) {
+      const conv = s.count > 0 ? Math.round(stages[i+1].count / s.count * 100) : 0;
+      const bx = cx + wB/2 + 30, by = yB;
+      texts.push(`<rect x="${bx-20}" y="${by-8}" width="40" height="16" rx="8" fill="#f1f5f9" stroke="#cbd5e1" stroke-width="0.6"/>`);
+      texts.push(`<text x="${bx}" y="${by}" text-anchor="middle" dominant-baseline="central" fill="#475569" font-size="10" font-weight="700" font-family="Inter,system-ui,sans-serif">${conv}%</text>`);
+    }
+  });
+
+  return `<svg viewBox="0 0 ${VBW} ${H}" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;display:block;max-height:none;overflow:visible">
+    <defs>${defs.join('')}</defs>
+    ${bodies.join('')}${rings.join('')}${texts.join('')}
+  </svg>`;
+}
+// CTA "Definir Meta": admin vai para a Gestão de Metas; demais abrem o detalhe.
+function inicioDefinirMeta() {
+  if (SESSION && SESSION.role === 'admin') {
+    try { showScreen('screen-admin'); setAdminTab('metas'); return; } catch(e) {}
+  }
+  openActTileDrawer('meta');
+}
+
 function renderAtividadesPanel() {
   const box = document.getElementById('section-atividades');
   if (!box) return;
@@ -7028,18 +7246,40 @@ function renderAtividadesPanel() {
   }).length;
   const pedidosLabel = isAnoAtual ? 'Pedidos do mês' : 'Pedidos no ano';
 
+  const ico   = svg => `<div class="act-tile-ic">${svg}</div>`;
+  const pill  = n   => `<div class="act-tile-ic">${n}</div>`;
+  // Tom semântico: 0 = positivo (verde/check); >0 = alerta (vermelho/aviso)
+  const alertable = (n, okIco) => n > 0
+    ? { tone:'t-alert',   ic: ico(ACT_ICO.warn) }
+    : { tone:'t-ok',      ic: ico(okIco || ACT_ICO.check) };
+  const A = ind;
   const tiles = [
-    { n: ind.fuAtrasados.length,      l:'Follow-ups atrasados',         c:'bad',  k:'fuAtrasados' },
-    { n: ind.fuHoje.length,           l:'Follow-ups para hoje',         c:'good', k:'fuHoje' },
-    { n: ind.visitasAgendadas.length, l:'Visitas / contatos agendados', c:'info', k:'visitas' },
-    { n: ind.semMov.length,           l:'Leads em espera',              c:'warn', k:'semMov' },
-    { n: ind.abertas.length,          l:'Propostas abertas',            c:'',     k:'abertas' },
-    { n: pedidosCount,                l:pedidosLabel,                   c:'good', k:'pedidosMes' },
-    { n: ind.vencidas.length,         l:'Propostas vencidas',           c:'bad',  k:'vencidas' },
-    { n: metaPctTxt,                  l:'% da meta atingido',           c:'info', k:'meta' },
+    Object.assign({ n:A.fuAtrasados.length,      l:'Follow-ups atrasados',         k:'fuAtrasados' }, alertable(A.fuAtrasados.length)),
+    Object.assign({ n:A.fuHoje.length,           l:'Follow-ups para hoje',         k:'fuHoje' },
+                  A.fuHoje.length > 0 ? { tone:'t-info', ic: ico(ACT_ICO.clock) } : { tone:'t-ok', ic: ico(ACT_ICO.check) }),
+    { n:A.visitasAgendadas.length, l:'Visitas / contatos agendados', k:'visitas',    tone:'t-neutral',  ic: pill(A.visitasAgendadas.length) },
+    { n:A.semMov.length,           l:'Leads em espera',              k:'semMov',     tone:'t-priority', ic: ico(ACT_ICO.filter) },
+    { n:A.abertas.length,          l:'Propostas abertas',            k:'abertas',    tone:'t-primary',  ic: pill(A.abertas.length) },
+    { n:pedidosCount,              l:pedidosLabel,                   k:'pedidosMes', tone:'t-info',     ic: pill(pedidosCount) },
+    Object.assign({ n:A.vencidas.length,         l:'Propostas vencidas',           k:'vencidas' }, alertable(A.vencidas.length)),
   ];
   const tilesHtml = tiles.map(t =>
-    `<div class="act-tile ${t.c}" onclick="openActTileDrawer('${t.k}')"><div class="act-tile-n">${t.n}</div><div class="act-tile-l">${t.l}</div></div>`).join('');
+    `<div class="act-tile ${t.tone}" onclick="openActTileDrawer('${t.k}')">
+       <div class="act-tile-head"><div class="act-tile-n">${t.n}</div>${t.ic}</div>
+       <div class="act-tile-l">${t.l}</div>
+     </div>`).join('');
+
+  // Cartão de meta — empty state com "Definir Meta" quando não há meta
+  const hasMeta = metaPctTxt !== '—';
+  const metaTile = `<div class="act-tile t-info" ${hasMeta?`onclick="openActTileDrawer('meta')"`:''}>
+    <div class="act-tile-head">
+      ${hasMeta ? `<div class="act-tile-n">${metaPctTxt}</div>` : `<div class="act-meta-empty">Nenhuma meta definida</div>`}
+      <div class="act-tile-ic">${ACT_ICO.target}</div>
+    </div>
+    ${hasMeta
+      ? `<div class="act-tile-l">% da meta atingido</div>`
+      : `<button class="btn-mini" onclick="event.stopPropagation();inicioDefinirMeta()">${ACT_ICO.plus}Definir Meta</button>`}
+  </div>`;
 
   // Agenda do dia — follow-ups com próximo contato hoje + abertos
   const agenda = ind.flat
@@ -7047,7 +7287,7 @@ function renderAtividadesPanel() {
     .sort((a,b) => (a.tipo_proximo_passo||'').localeCompare(b.tipo_proximo_passo||''));
   const agendaHtml = agenda.length ? agenda.map(ff =>
     `<div class="act-ag-row"><span class="act-ag-time">${ff.tipo_proximo_passo||'Contato'}</span><span class="act-ag-cli">${ff._cliente||'—'}</span><span style="color:var(--muted);font-size:11px">${ff._resp||''}</span></div>`).join('')
-    : '<div class="act-ag-row" style="color:var(--muted);justify-content:center">Nenhum compromisso para hoje.</div>';
+    : `<div class="act-ag-empty">${ACT_ICO.cal}<span>Nenhum compromisso para hoje</span></div>`;
 
   // Histórico de propostas (recentes)
   const recentes = props.slice().sort((a,b)=>cpParseDate(b.data_abertura)-cpParseDate(a.data_abertura)).slice(0,8);
@@ -7083,9 +7323,12 @@ function renderAtividadesPanel() {
           <select class="filter-select active" style="min-width:120px" onchange="inicioSetAno(this.value)">${anoOpts}</select>
         </div>
       </div>
-      <div class="act-cards">${tilesHtml}</div>
+      <div class="act-cards">${tilesHtml}${metaTile}</div>
 
-      <div class="act-sec-title">Agenda de hoje</div>
+      <div class="act-sec-head">
+        <div class="act-sec-title">Agenda de hoje</div>
+        <button class="btn-primary-soft" onclick="openCalendar()">${ACT_ICO.plus}Novo Compromisso</button>
+      </div>
       <div class="act-agenda">${agendaHtml}</div>
 
       <div class="cc-cols">
@@ -7095,7 +7338,7 @@ function renderAtividadesPanel() {
         </div>
         <div>
           <div class="act-sec-title">Funil de vendas</div>
-          <div class="pf-chart">${pfFunilHTML(funilStages)}</div>
+          <div class="pf-chart">${funnelConicHTML(funilStages)}</div>
         </div>
       </div>
     </div>`;
@@ -7439,13 +7682,355 @@ function pfRenderTab() {
   body.innerHTML = html;
 }
 
+// ════════════════════════════════════════════════════════════════════════
+// FICHA DO REPRESENTANTE — perfil, foto, mapa de regiões, gauge, radar,
+// 1-on-1, simulador what-if e timeline de eventos. (dados em Supabase)
+// ════════════════════════════════════════════════════════════════════════
+let FI_PROFILES = {};      // { nome: {avatar_url, cargo, admissao, badges[]} }
+let FI_REGIOES  = [];      // [{id, uf, label, ordem}]
+let FI_REP_REG  = {};      // { nome: [regiao_id,…] }
+let FI_ONEONONE = {};      // { nome: [{id, texto, autor, criado_em}] }
+let _fiSim = null;         // estado do simulador what-if (front-only)
+
+const fiIsAdmin = () => !!(SESSION && SESSION.role === 'admin');
+
+async function fiLoadAll() {
+  try {
+    const [profs, regs, repregs] = await Promise.all([
+      supaFetchAll(SUPA_URL + '/rest/v1/rep_profiles?select=nome,avatar_url,cargo,admissao,badges').catch(()=>[]),
+      supaFetchAll(SUPA_URL + '/rest/v1/regioes?select=id,uf,label,ordem').catch(()=>[]),
+      supaFetchAll(SUPA_URL + '/rest/v1/rep_regioes?select=rep_nome,regiao_id').catch(()=>[]),
+    ]);
+    FI_PROFILES = {}; (profs||[]).forEach(p => { FI_PROFILES[p.nome] = p; });
+    FI_REGIOES  = (regs||[]).sort((a,b)=> (a.uf||'').localeCompare(b.uf||'') || (a.ordem-b.ordem));
+    FI_REP_REG  = {}; (repregs||[]).forEach(r => { (FI_REP_REG[r.rep_nome] = FI_REP_REG[r.rep_nome] || []).push(r.regiao_id); });
+  } catch(e) { console.warn('[fiLoadAll]', e.message); }
+}
+async function fiLoadOneOnOne(nome) {
+  try {
+    const rows = await supaFetchAll(SUPA_URL + '/rest/v1/rep_oneonones?rep_nome=eq.' +
+      encodeURIComponent(nome) + '&select=id,texto,autor,criado_em&order=criado_em.desc');
+    FI_ONEONONE[nome] = rows || [];
+  } catch(e) { FI_ONEONONE[nome] = FI_ONEONONE[nome] || []; }
+}
+
+// ── Tempo de empresa a partir da data de admissão ──────────────────────────
+function fiTenure(admissao) {
+  if (!admissao) return null;
+  const t = cpParseDate(admissao); if (!t) return null;
+  const meses = Math.max(0, Math.round((Date.now() - t) / (1000*60*60*24*30.44)));
+  const anos = Math.floor(meses/12), m = meses%12;
+  if (anos <= 0) return `${m} ${m===1?'mês':'meses'} de casa`;
+  return `${anos} ${anos===1?'ano':'anos'}${m?` e ${m} ${m===1?'mês':'meses'}`:''} de casa`;
+}
+
+// ── UPLOAD da foto → Supabase Storage (bucket profile-pictures) → avatar_url ─
+async function fiUploadAvatar(nome, input) {
+  const file = input.files && input.files[0];
+  if (!file) return;
+  if (!/^image\//.test(file.type)) { alert('Selecione uma imagem.'); input.value=''; return; }
+  if (file.size > 5*1024*1024) { alert('Imagem muito grande (máx. 5 MB).'); input.value=''; return; }
+  const btn = document.getElementById('fi-av-edit'); if (btn) btn.classList.add('uploading');
+  try {
+    const ext  = (file.name.split('.').pop()||'jpg').replace(/[^a-z0-9]/gi,'').toLowerCase() || 'jpg';
+    const slug = _accUp(nome).replace(/[^A-Z0-9]+/g,'_').replace(/^_|_$/g,'') || 'rep';
+    const path = `${slug}/${Date.now()}.${ext}`;
+    const up = await fetch(`${SUPABASE_URL}/storage/v1/object/profile-pictures/${path}`, {
+      method:'POST',
+      headers:{ 'apikey':SUPABASE_KEY, 'Authorization':'Bearer '+SUPABASE_KEY,
+                'Content-Type':file.type||'image/jpeg', 'x-upsert':'true' },
+      body:file
+    });
+    if (!up.ok) throw new Error('HTTP '+up.status+': '+(await up.text()).slice(0,160));
+    const publicUrl = `${SUPABASE_URL}/storage/v1/object/public/profile-pictures/${path}`;
+    await fiSaveProfile(nome, { avatar_url: publicUrl });
+    perfRender();
+  } catch(e) {
+    console.error('[fiUploadAvatar]', e);
+    alert('Erro ao enviar foto: '+e.message+'\n\nConfirme que o bucket "profile-pictures" existe (migration 003) no Supabase Storage.');
+  } finally { if (btn) btn.classList.remove('uploading'); input.value=''; }
+}
+
+// ── Upsert do perfil (avatar/cargo/admissao/badges) na tabela rep_profiles ──
+async function fiSaveProfile(nome, patch) {
+  const cur = FI_PROFILES[nome] || { nome };
+  const body = Object.assign({ nome }, cur, patch, { updated_at:new Date().toISOString() });
+  FI_PROFILES[nome] = body;
+  try {
+    await fetch(SUPA_URL + '/rest/v1/rep_profiles?on_conflict=nome', {
+      method:'POST',
+      headers:{ ...supaHdr(true), 'Prefer':'resolution=merge-duplicates' },
+      body:JSON.stringify(body)
+    });
+  } catch(e) { console.warn('[fiSaveProfile]', e.message); }
+}
+
+// ── Conquistas/badges automáticas (a partir da performance) + manuais ──────
+function fiBadges(nome, m) {
+  const out = [];
+  const saved = (FI_PROFILES[nome] && Array.isArray(FI_PROFILES[nome].badges)) ? FI_PROFILES[nome].badges : [];
+  saved.forEach(b => { if (b && b.label) out.push({ label:b.label, tone:b.tone||'' }); });
+  // Automáticas
+  if (m.pct != null && m.pct >= 1)      out.push({ label:'Meta anual batida', tone:'good' });
+  else if (m.metaProjPct != null && m.metaProjPct >= 1) out.push({ label:'No ritmo da meta', tone:'good' });
+  if (m.crescimento != null && m.crescimento >= 0.1)    out.push({ label:`+${Math.round(m.crescimento*100)}% vs ${m.anoNum-1}`, tone:'good' });
+  if (m.conversao != null && m.conversao >= 0.4)        out.push({ label:'Alta conversão', tone:'' });
+  if (m.atividades >= 30)                               out.push({ label:'Muito ativo', tone:'' });
+  return out;
+}
+
+// ── Mapa de atuação: tile-grid do Brasil (esquemático) ─────────────────────
+const FI_UF_GRID = {
+  RR:[0,2], AP:[0,4],
+  AM:[1,1], PA:[1,3], MA:[1,4], CE:[1,5], RN:[1,6],
+  AC:[2,0], RO:[2,1], TO:[2,3], PI:[2,4], PB:[2,6],
+  MT:[3,2], DF:[3,3], BA:[3,4], PE:[3,5], AL:[3,6],
+  MS:[4,2], GO:[4,3], MG:[4,4], SE:[4,5], ES:[4,6],
+  SP:[5,3], RJ:[5,4],
+  PR:[6,2], SC:[6,3], RS:[6,2.5]
+};
+function fiBrazilMap(activeUFs) {
+  const set = new Set(activeUFs);
+  // posiciona 7 colunas × 7 linhas; usa grid-column/row pela posição
+  const cells = Object.entries(FI_UF_GRID).map(([uf,[r,c]]) => {
+    const on = set.has(uf), ex = uf==='EX';
+    const col = Math.round(c)+1, row = r+1;
+    return `<div class="fi-uf${on?' on':''}${ex?' ex':''}" style="grid-column:${col};grid-row:${row}" title="${uf}">${uf}</div>`;
+  });
+  if (set.has('EX')) cells.push(`<div class="fi-uf ex on" style="grid-column:1;grid-row:7" title="Exportação">EXP</div>`);
+  return `<div class="fi-map">${cells.join('')}</div>`;
+}
+
+// ── SVG: Gauge semicírculo (meta vs realizado) ─────────────────────────────
+function fiGaugeSVG(pct) {
+  const W=200, H=124, cx=100, cy=108, r=84, sw=18;
+  const p = pct==null ? 0 : Math.max(0, Math.min(1.4, pct));
+  const ang = Math.PI * Math.min(1, p);                 // 0..π (cheio em 100%)
+  const pt = a => [cx - r*Math.cos(a), cy - r*Math.sin(a)];
+  const arc = (a0,a1,col,width) => {
+    const [x0,y0]=pt(a0), [x1,y1]=pt(a1); const large = (a1-a0)>Math.PI?1:0;
+    return `<path d="M${x0.toFixed(1)} ${y0.toFixed(1)} A${r} ${r} 0 ${large} 1 ${x1.toFixed(1)} ${y1.toFixed(1)}" fill="none" stroke="${col}" stroke-width="${width}" stroke-linecap="round"/>`;
+  };
+  const col = p>=1 ? '#16a34a' : p>=0.7 ? '#1e3a5f' : p>=0.4 ? '#d97706' : '#dc2626';
+  const txt = pct==null ? '—' : Math.round(pct*100)+'%';
+  return `<svg viewBox="0 0 ${W} ${H}" style="width:100%;max-width:240px;height:auto;display:block">
+    ${arc(0, Math.PI, '#e2e8f0', sw)}
+    ${p>0 ? arc(0, ang, col, sw) : ''}
+    <text x="${cx}" y="${cy-14}" text-anchor="middle" font-size="30" font-weight="800" fill="${col}" font-family="Inter,system-ui,sans-serif">${txt}</text>
+    <text x="${cx}" y="${cy+6}" text-anchor="middle" font-size="10.5" fill="#64748b" font-family="Inter,system-ui,sans-serif">da meta atingido</text>
+  </svg>`;
+}
+
+// ── SVG: Radar de habilidades (self vs média da equipe) ────────────────────
+// vals/team: arrays 0..1 normalizados na mesma ordem de labels.
+function fiRadarSVG(labels, vals, team) {
+  const W=320, H=250, cx=160, cy=126, R=92, n=labels.length;
+  const ang = i => -Math.PI/2 + i*2*Math.PI/n;
+  const pt = (i,v) => [cx + R*v*Math.cos(ang(i)), cy + R*v*Math.sin(ang(i))];
+  let g = '';
+  for (let k=1;k<=4;k++){ const rr=R*k/4;
+    const poly = labels.map((_,i)=>{ const [x,y]=[cx+rr*Math.cos(ang(i)), cy+rr*Math.sin(ang(i))]; return `${x.toFixed(1)},${y.toFixed(1)}`; }).join(' ');
+    g += `<polygon points="${poly}" fill="none" stroke="#e2e8f0" stroke-width="1"/>`;
+  }
+  labels.forEach((_,i)=>{ const [x,y]=[cx+R*Math.cos(ang(i)), cy+R*Math.sin(ang(i))]; g += `<line x1="${cx}" y1="${cy}" x2="${x.toFixed(1)}" y2="${y.toFixed(1)}" stroke="#e2e8f0" stroke-width="1"/>`; });
+  const polyOf = (arr,col,fill) => {
+    const pts = arr.map((v,i)=>{ const [x,y]=pt(i,Math.max(0.04,Math.min(1,v))); return `${x.toFixed(1)},${y.toFixed(1)}`; }).join(' ');
+    return `<polygon points="${pts}" fill="${fill}" stroke="${col}" stroke-width="2" stroke-linejoin="round"/>`;
+  };
+  g += polyOf(team, '#94a3b8', 'rgba(148,163,184,.18)');
+  g += polyOf(vals, '#1e3a5f', 'rgba(30,58,95,.22)');
+  labels.forEach((l,i)=>{ const [x,y]=[cx+(R+16)*Math.cos(ang(i)), cy+(R+16)*Math.sin(ang(i))];
+    const anchor = Math.abs(Math.cos(ang(i)))<0.3 ? 'middle' : (Math.cos(ang(i))>0?'start':'end');
+    g += `<text x="${x.toFixed(1)}" y="${y.toFixed(1)}" text-anchor="${anchor}" dominant-baseline="middle" font-size="9.5" font-weight="600" fill="#475569" font-family="Inter,system-ui,sans-serif">${l}</text>`;
+  });
+  return `<svg viewBox="0 0 ${W} ${H}" style="width:100%;height:auto;display:block;overflow:visible">${g}</svg>`;
+}
+
+// ── Métricas de skill normalizadas (self) + média da equipe ────────────────
+function fiSkillVectors(nome, f) {
+  const axes = ['Volume','Fechamento','Ciclo','Ticket','Atividade'];
+  const cycleOf = mm => {
+    const ds = mm.vendidas.map(p => {
+      const a=cpParseDate(p.data_abertura), b=cpParseDate(p.data_fechamento);
+      return (a&&b&&b>=a) ? (b-a)/(1000*60*60*24) : null;
+    }).filter(v=>v!=null);
+    return ds.length ? ds.reduce((x,y)=>x+y,0)/ds.length : null;
+  };
+  const raw = mm => ({
+    Volume: mm.emitidas.length,
+    Fechamento: mm.conversao!=null ? mm.conversao : 0,
+    Ciclo: cycleOf(mm),                 // menor = melhor (invertido depois)
+    Ticket: mm.ticket || 0,
+    Atividade: mm.atividades || 0,
+  });
+  // Coleta a equipe (chaves de meta + pessoas)
+  const team = new Set(Object.keys(METAS_REP_MAP));
+  (CRM_PEOPLE.representantes||[]).forEach(n=>team.add(n));
+  (CRM_PEOPLE.internos||[]).forEach(n=>team.add(n));
+  const rows = [...team].map(n => {
+    const isKey = Object.prototype.hasOwnProperty.call(METAS_REP_MAP, n);
+    try { return raw(isKey ? PerformanceComputeKey(n,f) : PerformanceCompute(n,f)); } catch(e){ return null; }
+  }).filter(Boolean);
+  const selfIsKey = Object.prototype.hasOwnProperty.call(METAS_REP_MAP, nome);
+  const selfRaw = raw(selfIsKey ? PerformanceComputeKey(nome,f) : PerformanceCompute(nome,f));
+  // máximos p/ normalização
+  const max = {}; axes.forEach(a => { max[a] = Math.max(selfRaw[a]||0, ...rows.map(r=>r[a]||0), 1); });
+  const norm = (rw) => axes.map(a => {
+    if (a==='Ciclo') { const v = rw[a]; if (v==null||max[a]<=0) return 0.15; return Math.max(0.05, 1 - v/max[a]); } // invertido
+    if (a==='Fechamento') return Math.max(0, Math.min(1, rw[a]));
+    return max[a]>0 ? Math.max(0, Math.min(1, (rw[a]||0)/max[a])) : 0;
+  });
+  const avgRaw = {}; axes.forEach(a => { avgRaw[a] = rows.length ? rows.reduce((s,r)=>s+(r[a]||0),0)/rows.length : 0; });
+  return { labels:['Volume','Fechamento','Ciclo','Ticket','Atividade'], self:norm(selfRaw), team:norm(avgRaw) };
+}
+
+// ── Edição inline da meta (lápis) ──────────────────────────────────────────
+function fiEditMeta(key, ano) {
+  const box = document.getElementById('fi-meta-box'); if (!box) return;
+  const cur = metaForKey(key, ano) || '';
+  box.innerHTML = `<div class="fi-meta-edit">
+    <input id="fi-meta-inp" type="text" value="${cur?fmtBRL(cur):''}" placeholder="R$ 0,00"
+      onfocus="metaInputFocus&&metaInputFocus(this)">
+    <button class="fi-edit-btn" title="Salvar" onclick="fiSaveMeta('${key.replace(/'/g,"\\'")}',${ano})">${ACT_ICO.check}</button>
+  </div>`;
+  const inp = document.getElementById('fi-meta-inp'); if (inp) inp.focus();
+}
+function fiSaveMeta(key, ano) {
+  const inp = document.getElementById('fi-meta-inp'); if (!inp) return;
+  const val = parseMetaInput(inp.value);
+  setMetaForKey(key, ano, (!isNaN(val) && val>0) ? val : null);
+  perfClearCache();
+  perfRender();
+}
+
+// ── Modal genérico (criado on-the-fly) — usado pelo editor de regiões ──────
+function openGenericModal(title, bodyHtml, footerHtml) {
+  closeGenericModal();
+  const ov = document.createElement('div');
+  ov.id = 'fi-generic-overlay';
+  ov.className = 'user-modal-overlay open';
+  ov.onclick = e => { if (e.target === ov) closeGenericModal(); };
+  ov.innerHTML = `<div class="user-modal-card" style="max-width:560px;width:92%">
+    <div class="user-modal-header"><div class="user-modal-title">${title}</div>
+      <button class="btn-icon" onclick="closeGenericModal()" style="background:none;border:none;font-size:16px;cursor:pointer;color:var(--muted)">✕</button></div>
+    <div class="user-modal-body">${bodyHtml}</div>
+    <div class="user-modal-footer">${footerHtml||''}</div>
+  </div>`;
+  document.body.appendChild(ov);
+}
+function closeGenericModal() {
+  const ov = document.getElementById('fi-generic-overlay');
+  if (ov) ov.remove();
+}
+
+// ── 1-on-1: salvar nova anotação (Supabase) ────────────────────────────────
+async function fiSaveOneOnOne(nome) {
+  const ta = document.getElementById('fi-1on1-ta'); if (!ta) return;
+  const texto = ta.value.trim(); if (!texto) return;
+  const reg = { rep_nome:nome, texto, autor:(SESSION&&SESSION.nome)||'', criado_em:new Date().toISOString() };
+  (FI_ONEONONE[nome] = FI_ONEONONE[nome] || []).unshift(reg);
+  ta.value = '';
+  try {
+    await fetch(SUPA_URL + '/rest/v1/rep_oneonones', {
+      method:'POST', headers:{ ...supaHdr(true) }, body:JSON.stringify(reg)
+    });
+  } catch(e) { console.warn('[fiSaveOneOnOne]', e.message); }
+  perfRender();
+}
+
+// ── Editor de regiões (N:N) — modal com checkboxes agrupados por UF ─────────
+function fiOpenRegioes(nome) {
+  const sel = new Set(FI_REP_REG[nome] || []);
+  const byUf = {}; FI_REGIOES.forEach(r => { (byUf[r.uf] = byUf[r.uf] || []).push(r); });
+  const grps = Object.keys(byUf).map(uf => {
+    const items = byUf[uf].map(r =>
+      `<label class="fi-zone-chk"><input type="checkbox" value="${r.id}" ${sel.has(r.id)?'checked':''}> ${r.label}</label>`).join('');
+    return `<div class="fi-zone-modal-grp">${uf==='EX'?'Exportação':uf}</div>${items}`;
+  }).join('');
+  openGenericModal('Regiões de atuação — '+nome,
+    `<div class="fi-zone-modal-grid" id="fi-zone-grid">${grps || '<div class="pf-empty-chart">Nenhuma zona cadastrada. Rode a migration 003.</div>'}</div>`,
+    `<button class="btn-primary-sm" onclick="fiSaveRegioes('${nome.replace(/'/g,"\\'")}')">Salvar regiões</button>`);
+}
+async function fiSaveRegioes(nome) {
+  const grid = document.getElementById('fi-zone-grid'); if (!grid) return;
+  const ids = [...grid.querySelectorAll('input:checked')].map(c => +c.value);
+  FI_REP_REG[nome] = ids;
+  try {
+    await fetch(SUPA_URL + '/rest/v1/rep_regioes?rep_nome=eq.'+encodeURIComponent(nome), {
+      method:'DELETE', headers:{ ...supaHdr(true) }
+    });
+    if (ids.length) await fetch(SUPA_URL + '/rest/v1/rep_regioes', {
+      method:'POST', headers:{ ...supaHdr(true) },
+      body:JSON.stringify(ids.map(id => ({ rep_nome:nome, regiao_id:id })))
+    });
+  } catch(e) { console.warn('[fiSaveRegioes]', e.message); }
+  closeGenericModal && closeGenericModal();
+  perfRender();
+}
+
+// ── Simulador what-if (front-only) ─────────────────────────────────────────
+function fiSimInit(m) {
+  _fiSim = {
+    conv: m.conversao!=null ? Math.round(m.conversao*100) : 20,
+    ticket: Math.round(m.ticket||0),
+    volume: m.emitidas.length || 0,
+    baseReal: m.realizado||0, meta: m.meta||0
+  };
+}
+function fiSimSet(field, val) { if (_fiSim) { _fiSim[field] = +val; fiSimRender(); } }
+function fiSimRender() {
+  if (!_fiSim) return;
+  const proj = _fiSim.volume * (_fiSim.conv/100) * _fiSim.ticket;
+  const out = document.getElementById('fi-sim-out');
+  const cv = document.getElementById('fi-sim-conv-v'), tv = document.getElementById('fi-sim-tk-v'), vv = document.getElementById('fi-sim-vol-v');
+  if (cv) cv.textContent = _fiSim.conv+'%';
+  if (tv) tv.textContent = fmtBRLShort(_fiSim.ticket);
+  if (vv) vv.textContent = _fiSim.volume;
+  if (out) {
+    const dif = proj - _fiSim.baseReal;
+    const pctMeta = _fiSim.meta>0 ? Math.round(proj/_fiSim.meta*100) : null;
+    out.innerHTML = `<div class="fi-sim-out-l">Projeção de vendas no cenário</div>
+      <div class="fi-sim-out-v">${fmtBRLShort(proj)}</div>
+      <div class="fi-sim-out-d">${dif>=0?'+':''}${fmtBRLShort(dif)} vs. realizado atual${pctMeta!=null?` · ${pctMeta}% da meta`:''}</div>`;
+  }
+}
+
+// ── Timeline de eventos (feed cronológico do vendedor) ─────────────────────
+function fiBuildFeed(nome, m) {
+  const ev = [];
+  const ICO = {
+    sell:'<svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg>',
+    prop:'<svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/></svg>',
+    meet:'<svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/></svg>',
+  };
+  m.vendidas.forEach(p => { const t=cpParseDate(p.data_fechamento); if(t) ev.push({ t, k:'sell', ico:ICO.sell,
+    txt:`Negócio fechado · ${p.cliente||'—'} · ${fmtBRLShort(Number(p.valor_vendido)||0)}` }); });
+  m.emitidas.forEach(p => { const t=cpParseDate(p.data_abertura); if(t) ev.push({ t, k:'prop', ico:ICO.prop,
+    txt:`Proposta enviada · ${p.cliente||'—'} · ${fmtBRLShort(Number(p.receita_estimada)||0)}` }); });
+  (m.fuAll||[]).forEach(ff => { const t=cpParseDate(ff.data_contato); if(t) ev.push({ t, k:'meet', ico:ICO.meet,
+    txt:`${ff.canal||'Contato'} · ${ff._cliente||'—'}${ff.tipo_proximo_passo?` → ${ff.tipo_proximo_passo}`:''}` }); });
+  (FI_ONEONONE[nome]||[]).forEach(o => { const t=cpParseDate(o.criado_em); if(t) ev.push({ t, k:'meet', ico:ICO.meet,
+    txt:`Reunião 1-on-1 registrada${o.autor?` por ${o.autor}`:''}` }); });
+  ev.sort((a,b)=>b.t-a.t);
+  return ev.slice(0,14);
+}
+function fiRelDay(t) {
+  const d0 = _todayMid(), dd = new Date(t); dd.setHours(0,0,0,0);
+  const diff = Math.round((d0 - dd.getTime())/86400000);
+  if (diff<=0) return 'Hoje'; if (diff===1) return 'Ontem'; if (diff<7) return `Há ${diff} dias`;
+  return fmtDateDisplay(new Date(t).toISOString().slice(0,10));
+}
+
 // Abre o dashboard de uma pessoa (reseta filtro p/ ano corrente)
-function openPerfDashboard(nome) {
+async function openPerfDashboard(nome) {
   loadPeople();
   perfClearCache();
   _pfNome = nome;
   _pfTab = 'propostas';
   _pfFilter = { ano: String(new Date().getFullYear()), mes:'todos', semana:'todos', ini:'', fim:'' };
+  _fiSim = null;
+  if (!FI_REGIOES.length) await fiLoadAll();
+  await fiLoadOneOnOne(nome);
   perfRender();
 }
 
@@ -7529,31 +8114,148 @@ function perfRender() {
   const uniOpts = `<option value="">— ir p/ unidade —</option>` + Object.keys(buildUnidades()).map(u => `<option value="${u}">${u}</option>`).join('');
   const repOpts = Object.keys(METAS_REP_MAP).map(r => `<option value="${r}"${r===nome?' selected':''}>${r}</option>`).join('');
 
+  // ── FICHA: perfil, foto, regiões, badges, gauge, radar, táticas, feed ──────
+  const admin   = fiIsAdmin();
+  const prof    = FI_PROFILES[nome] || {};
+  const cargoTxt= prof.cargo || (cargo === 'externo' ? 'Representante Externo' : 'Vendedor Interno');
+  const tenure  = fiTenure(prof.admissao);
+  const metaKeyFicha = isKey ? nome : eqMetaKeyFor(nome);
+  // Avatar (foto ou iniciais) + botão de upload (admin)
+  const avatarInner = prof.avatar_url
+    ? `<img src="${prof.avatar_url}" alt="${nome}">`
+    : eqInitials(nome);
+  const avatarEdit = admin
+    ? `<label id="fi-av-edit" class="fi-avatar-edit" title="Trocar foto">
+         <svg viewBox="0 0 24 24"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+         <input type="file" accept="image/*" style="display:none" onchange="fiUploadAvatar('${nome.replace(/'/g,"\\'")}',this)">
+       </label>` : '';
+  // Badges/conquistas
+  const badges = fiBadges(nome, m);
+  const badgesHtml = badges.length
+    ? badges.map(b => `<span class="fi-badge ${b.tone||''}">${b.label}</span>`).join('')
+    : '<span class="fi-badge" style="opacity:.6">Sem conquistas ainda</span>';
+  // Regiões → mapa + chips
+  const repRegIds = new Set(FI_REP_REG[nome] || []);
+  const zonas = FI_REGIOES.filter(r => repRegIds.has(r.id));
+  const activeUFs = [...new Set(zonas.map(z => z.uf))];
+  const zonasHtml = zonas.length
+    ? zonas.map(z => `<span class="fi-zone">${z.label}</span>`).join('')
+    : '<span class="fi-zone empty">Nenhuma região vinculada</span>';
+  // Gauge + edição inline da meta
+  const gaugeHtml = fiGaugeSVG(m.pct);
+  const metaBox = (metaKeyFicha)
+    ? `<div id="fi-meta-box"><div class="fi-meta-row">Meta ${ano}: <span class="fi-meta-val">${m.meta==null?'não definida':fmtBRLShort(m.meta)}</span>
+         ${admin?`<button class="fi-edit-btn" title="Editar meta" onclick="fiEditMeta('${metaKeyFicha.replace(/'/g,"\\'")}',${ano})">
+           <svg viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.12 2.12 0 0 1 3 3L12 15l-4 1 1-4z"/></svg>
+         </button>`:''}</div></div>`
+    : `<div id="fi-meta-box"><div class="fi-meta-row">Realizado: <span class="fi-meta-val">${fmtBRLShort(m.realizado)}</span></div></div>`;
+  // Funil de conversão (etapas reais)
+  const funilFicha = funnelConicHTML(funilStages.filter(s => s.label !== 'Vendidas'));
+  // Radar de skills (self vs equipe)
+  const sk = fiSkillVectors(nome, f);
+  const radarHtml = fiRadarSVG(sk.labels, sk.self, sk.team);
+  // 1-on-1
+  const oo = FI_ONEONONE[nome] || [];
+  const ooTimeline = oo.length
+    ? `<ul class="fi-tl">${oo.slice(0,6).map(o => `<li class="fi-tl-item"><div class="fi-tl-d">${fmtDateDisplay(new Date(o.criado_em).toISOString().slice(0,10))}${o.autor?` · ${o.autor}`:''}</div><div class="fi-tl-x">${(o.texto||'').replace(/</g,'&lt;')}</div></li>`).join('')}</ul>`
+    : '<div class="pf-empty-chart" style="padding:16px 6px">Sem reuniões registradas.</div>';
+  // Simulador what-if
+  if (!_fiSim) fiSimInit(m);
+  // Feed de eventos
+  const feed = fiBuildFeed(nome, m);
+  const feedHtml = feed.length
+    ? `<ul class="fi-feed">${feed.map(e => `<li class="fi-feed-item"><div class="fi-feed-ic ${e.k}">${e.ico}</div><div><div class="fi-feed-d">${fiRelDay(e.t)}</div><div class="fi-feed-x">${e.txt}</div></div></li>`).join('')}</ul>`
+    : '<div class="pf-empty-chart">Sem eventos recentes.</div>';
+
   document.getElementById('admin-section-title').textContent = 'Performance — ' + nome;
   container.innerHTML = `
     <div class="eq-wrap">
       <button class="btn-tbl pf-back" onclick="setAdminTab('equipe')">← Voltar para Equipe</button>
-      <div class="eq-card-top" style="margin-bottom:18px">
-        <div class="eq-avatar" style="width:56px;height:56px;font-size:19px;background:${eqAvatarColor()}">${eqInitials(nome)}</div>
-        <div>
-          <div class="eq-head-title">${nome}</div>
-          <div class="eq-head-sub">${subtitulo}</div>
+
+      <div class="fi-grid">
+        <div class="fi-card">
+          <div class="fi-head">
+            <div class="fi-avatar-wrap">
+              <div class="fi-avatar">${avatarInner}</div>
+              ${avatarEdit}
+            </div>
+            <div style="flex:1;min-width:0">
+              <div class="fi-name">${nome}</div>
+              <div class="fi-role">${cargoTxt}${isKey&&m.produto?` · ${m.produto}`:''}</div>
+              ${tenure?`<div class="fi-tenure">${tenure}</div>`:(admin?`<div class="fi-tenure" style="color:var(--muted)">Admissão não definida</div>`:'')}
+              <div class="fi-badges">${badgesHtml}</div>
+            </div>
+          </div>
+        </div>
+        <div class="fi-card">
+          <div class="fi-card-t">Mapa de atuação ${admin?`<button class="fi-edit-btn" title="Editar regiões" onclick="fiOpenRegioes('${nome.replace(/'/g,"\\'")}')"><svg viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.12 2.12 0 0 1 3 3L12 15l-4 1 1-4z"/></svg></button>`:''}</div>
+          ${fiBrazilMap(activeUFs)}
+          <div class="fi-zones">${zonasHtml}</div>
         </div>
       </div>
 
-      <div class="pf-filters">
-        <div class="pf-fgrp"><label>Ano</label><select onchange="setPerfF('ano',this.value)">${anoOpts}</select></div>
-        <div class="pf-fgrp"><label>Mês</label><select onchange="setPerfF('mes',this.value)">${mesOpts}</select></div>
-        <div class="pf-fgrp"><label>Semana</label><select onchange="setPerfF('semana',this.value)">${semOpts}</select></div>
-        <div class="pf-fgrp"><label>De</label><input type="date" value="${f.ini||''}" onchange="setPerfF('ini',this.value)"></div>
-        <div class="pf-fgrp"><label>Até</label><input type="date" value="${f.fim||''}" onchange="setPerfF('fim',this.value)"></div>
-        <div class="pf-fgrp"><label>Representante</label><select onchange="openPerfDashboard(this.value)">${repOpts}</select></div>
-        <div class="pf-fgrp"><label>Unidade</label><select onchange="if(this.value)openUnitDashboard(this.value)">${uniOpts}</select></div>
-        <button class="btn-tbl" onclick="setPerfF('reset')">Limpar</button>
+      <div class="fi-grid-3">
+        <div class="fi-card">
+          <div class="fi-card-t">Meta Anual vs Realizado</div>
+          <div class="fi-gauge-wrap">${gaugeHtml}</div>
+          ${metaBox}
+        </div>
+        <div class="fi-card">
+          <div class="fi-card-t">Funil de Conversão</div>
+          ${funilFicha}
+        </div>
+        <div class="fi-card">
+          <div class="fi-card-t">Radar de Habilidades</div>
+          ${radarHtml}
+          <div class="fi-legend"><span><span class="fi-dot" style="background:#1e3a5f"></span>${nome.split(/[-–\s]/)[0]}</span><span><span class="fi-dot" style="background:#94a3b8"></span>Média da equipe</span></div>
+        </div>
       </div>
 
-      <div class="pf-sec-title">Indicadores</div>
-      <div class="pf-kpis">${kpisHtml}</div>
+      <div class="fi-grid-2">
+        <div class="fi-card">
+          <div class="fi-card-t">Reunião 1-on-1 ${admin?'<span class="fi-sub">feedback do gestor</span>':''}</div>
+          ${admin?`<textarea id="fi-1on1-ta" class="fi-1on1-area" placeholder="Anote o feedback da última reunião com ${nome}…"></textarea>
+          <div class="fi-1on1-bar"><button class="btn-primary-sm" onclick="fiSaveOneOnOne('${nome.replace(/'/g,"\\'")}')">Salvar anotação</button></div>`:''}
+          ${ooTimeline}
+        </div>
+        <div class="fi-card">
+          <div class="fi-card-t">Simulador de Cenários <span class="fi-sub">what-if (não altera dados)</span></div>
+          <div class="fi-sim-row">
+            <div class="fi-sim-lbl">Taxa de conversão <b id="fi-sim-conv-v">${_fiSim.conv}%</b></div>
+            <input class="fi-slider" type="range" min="0" max="100" value="${_fiSim.conv}" oninput="fiSimSet('conv',this.value)">
+          </div>
+          <div class="fi-sim-row">
+            <div class="fi-sim-lbl">Ticket médio <b id="fi-sim-tk-v">${fmtBRLShort(_fiSim.ticket)}</b></div>
+            <input class="fi-slider" type="range" min="0" max="${Math.max(50000,Math.round((_fiSim.ticket||10000)*3))}" step="1000" value="${_fiSim.ticket}" oninput="fiSimSet('ticket',this.value)">
+          </div>
+          <div class="fi-sim-row">
+            <div class="fi-sim-lbl">Volume de propostas <b id="fi-sim-vol-v">${_fiSim.volume}</b></div>
+            <input class="fi-slider" type="range" min="0" max="${Math.max(20,_fiSim.volume*3)}" value="${_fiSim.volume}" oninput="fiSimSet('volume',this.value)">
+          </div>
+          <div class="fi-sim-out" id="fi-sim-out"></div>
+        </div>
+      </div>
+
+      <div class="fi-grid">
+        <div>
+          <div class="pf-filters">
+            <div class="pf-fgrp"><label>Ano</label><select onchange="setPerfF('ano',this.value)">${anoOpts}</select></div>
+            <div class="pf-fgrp"><label>Mês</label><select onchange="setPerfF('mes',this.value)">${mesOpts}</select></div>
+            <div class="pf-fgrp"><label>Semana</label><select onchange="setPerfF('semana',this.value)">${semOpts}</select></div>
+            <div class="pf-fgrp"><label>De</label><input type="date" value="${f.ini||''}" onchange="setPerfF('ini',this.value)"></div>
+            <div class="pf-fgrp"><label>Até</label><input type="date" value="${f.fim||''}" onchange="setPerfF('fim',this.value)"></div>
+            <div class="pf-fgrp"><label>Representante</label><select onchange="openPerfDashboard(this.value)">${repOpts}</select></div>
+            <div class="pf-fgrp"><label>Unidade</label><select onchange="if(this.value)openUnitDashboard(this.value)">${uniOpts}</select></div>
+            <button class="btn-tbl" onclick="setPerfF('reset')">Limpar</button>
+          </div>
+          <div class="pf-sec-title">Indicadores</div>
+          <div class="pf-kpis">${kpisHtml}</div>
+        </div>
+        <div class="fi-card">
+          <div class="fi-card-t">Linha do tempo <span class="fi-sub">a história do vendedor</span></div>
+          ${feedHtml}
+        </div>
+      </div>
 
       <div class="pf-sec-title">Análises (ano ${ano})</div>
       <div class="pf-charts">
@@ -7595,6 +8297,7 @@ function perfRender() {
     </div>`;
 
   pfRenderTab();
+  fiSimRender();
 }
 
 // ════════════════════════════════════════════════════════════════════════
@@ -7653,9 +8356,96 @@ function commercialIndicators(props, fuOwner) {
 // ════════════════════════════════════════════════════════════════════════
 // FASE 4 — CENTRAL COMERCIAL (dashboard executivo)
 // ════════════════════════════════════════════════════════════════════════
-let _ccAno = String(new Date().getFullYear());
-function ccSetAno(a) { _ccAno = a; renderCentralComercial(); }
+// Estado dos filtros reativos do Central Comercial (categoria + representante + ano + mês)
+let _ccF = { ano: String(new Date().getFullYear()), mes:'todos', cat:'', rep:'' };
+function ccSetF(field, val) { _ccF[field] = val; renderCentralComercial(); }
+function ccResetF() { _ccF = { ano:String(new Date().getFullYear()), mes:'todos', cat:'', rep:'' }; renderCentralComercial(); }
+function ccSetAno(a) { _ccF.ano = a; renderCentralComercial(); }   // compat
 function isInternoKey(key) { const m = METAS_REP_MAP[key]; return !!(m && m.rep === 'SEIBT'); }
+
+// ── Escopo de propostas conforme filtros de Categoria/Representante (sem data) ──
+function ccScopeProps() {
+  let list = DATA.slice();
+  if (_ccF.rep) list = list.filter(p =>
+    _matchNome(p.representante, _ccF.rep) || _matchNome(p.interno, _ccF.rep) || _matchNome(p.responsavel, _ccF.rep));
+  if (_ccF.cat) list = list.filter(p => _propCategoriaKey(p) === _ccF.cat);
+  return list;
+}
+// Categoria dominante das propostas de uma chave de meta (para filtrar rankings/KPIs)
+function _ccKeyCat(key) {
+  const props = DATA.filter(metaKeyMatcher(key));
+  const counts = {}; props.forEach(p => { const c = _propCategoriaKey(p); if (c) counts[c] = (counts[c]||0)+1; });
+  let best = '', bc = -1; Object.entries(counts).forEach(([c,n]) => { if (n>bc){ bc=n; best=c; } });
+  return best;
+}
+function _ccKeyMatchesRep(key, rep) {
+  return DATA.filter(metaKeyMatcher(key)).some(p =>
+    _matchNome(p.representante, rep) || _matchNome(p.interno, rep) || _matchNome(p.responsavel, rep));
+}
+// Chaves de meta visíveis sob os filtros de categoria/representante ativos
+function ccActiveKeys() {
+  let keys = Object.keys(META_ERP_DATA.metas || {});
+  if (_ccF.cat) keys = keys.filter(k => _ccKeyCat(k) === _ccF.cat);
+  if (_ccF.rep) keys = keys.filter(k => _ccKeyMatchesRep(k, _ccF.rep));
+  return keys;
+}
+// Rótulo de dado compacto para R$ (1,2M · 350K · 980)
+function ccFmtCompact(v) {
+  if (!v) return '';
+  const a = Math.abs(v);
+  if (a >= 1e6) return (v/1e6).toLocaleString('pt-BR',{maximumFractionDigits:1}) + 'M';
+  if (a >= 1e3) return (v/1e3).toLocaleString('pt-BR',{maximumFractionDigits:0}) + 'K';
+  return String(Math.round(v));
+}
+
+// ── Gráfico de COLUNAS verticais (1 série) com rótulo de dado no topo ──────
+// items:[{label,value}]; opts:{ W, color, fmt(v), highlight:idx|-1 }
+function ccColsSVG(items, opts) {
+  opts = opts || {};
+  const W = opts.W || 360, H = 190, pl = 12, pr = 12, pt = 22, pb = 26;
+  const iW = W-pl-pr, iH = H-pt-pb, n = items.length;
+  if (!n) return '<div class="pf-empty-chart">Sem dados.</div>';
+  const max = Math.max(...items.map(i => +i.value || 0), 1);
+  const slot = iW/n, bw = Math.min(slot*0.6, 46);
+  const col = opts.color || NAVY, fmt = opts.fmt || (v => v || '');
+  const hi = (opts.highlight == null) ? -1 : opts.highlight;
+  let g = '';
+  for (let k=0;k<=2;k++){ const yy = pt+iH*k/2; g += `<line x1="${pl}" y1="${yy.toFixed(1)}" x2="${W-pr}" y2="${yy.toFixed(1)}" stroke="var(--border)" stroke-width="1"/>`; }
+  items.forEach((it,i) => {
+    const v = +it.value || 0, h = v/max*iH, cx = pl+slot*i+slot/2, y = pt+iH-h;
+    const active = (hi===-1) || (hi===i), fill = active ? col : '#cbd5e1';
+    g += `<rect x="${(cx-bw/2).toFixed(1)}" y="${y.toFixed(1)}" width="${bw.toFixed(1)}" height="${Math.max(0,h).toFixed(1)}" rx="4" fill="${fill}"/>`;
+    if (v>0) g += `<text x="${cx.toFixed(1)}" y="${(y-5).toFixed(1)}" font-size="9.5" fill="var(--navy)" text-anchor="middle" font-weight="700" font-family="Inter,system-ui,sans-serif">${fmt(v)}</text>`;
+    g += `<text x="${cx.toFixed(1)}" y="${H-9}" font-size="9" fill="${active?'var(--navy)':'var(--muted)'}" text-anchor="middle" font-weight="${hi===i?'700':'400'}" font-family="Inter,system-ui,sans-serif">${it.label}</text>`;
+  });
+  return `<svg viewBox="0 0 ${W} ${H}" style="width:100%;height:auto;display:block">${g}</svg>`;
+}
+// ── Gráfico de COLUNAS verticais AGRUPADAS (2 séries) + rótulos + legenda ───
+function ccGroupedColsSVG(labels, sA, sB, opts) {
+  opts = opts || {};
+  const W = opts.W || 720, H = 205, pl = 12, pr = 12, pt = 28, pb = 28;
+  const iW = W-pl-pr, iH = H-pt-pb, n = labels.length;
+  if (!n) return '<div class="pf-empty-chart">Sem dados.</div>';
+  const max = Math.max(...sA.values, ...sB.values, 1);
+  const slot = iW/n, bw = Math.min(slot*0.3, 20);
+  const hi = (opts.highlight == null) ? -1 : opts.highlight;
+  let g = '';
+  for (let k=0;k<=2;k++){ const yy = pt+iH*k/2; g += `<line x1="${pl}" y1="${yy.toFixed(1)}" x2="${W-pr}" y2="${yy.toFixed(1)}" stroke="var(--border)" stroke-width="1"/>`; }
+  labels.forEach((l,i) => {
+    const cx = pl+slot*i+slot/2, va = +sA.values[i]||0, vb = +sB.values[i]||0;
+    const ha = va/max*iH, hb = vb/max*iH, ya = pt+iH-ha, yb = pt+iH-hb;
+    const dim = (hi!==-1 && hi!==i), ca = dim?'#cbd5e1':sA.color, cb = dim?'#e2e8f0':sB.color;
+    g += `<rect x="${(cx-bw-1.5).toFixed(1)}" y="${ya.toFixed(1)}" width="${bw}" height="${Math.max(0,ha).toFixed(1)}" rx="3" fill="${ca}"/>`;
+    g += `<rect x="${(cx+1.5).toFixed(1)}" y="${yb.toFixed(1)}" width="${bw}" height="${Math.max(0,hb).toFixed(1)}" rx="3" fill="${cb}"/>`;
+    if (va>0) g += `<text x="${(cx-bw/2-1.5).toFixed(1)}" y="${(ya-4).toFixed(1)}" font-size="8.5" fill="var(--navy)" text-anchor="middle" font-weight="700" font-family="Inter,system-ui,sans-serif">${va}</text>`;
+    if (vb>0) g += `<text x="${(cx+bw/2+1.5).toFixed(1)}" y="${(yb-4).toFixed(1)}" font-size="8.5" fill="${sB.color}" text-anchor="middle" font-weight="700" font-family="Inter,system-ui,sans-serif">${vb}</text>`;
+    g += `<text x="${cx.toFixed(1)}" y="${H-9}" font-size="9" fill="${dim?'var(--muted)':'var(--navy)'}" text-anchor="middle" font-family="Inter,system-ui,sans-serif">${l}</text>`;
+  });
+  g += `<rect x="${pl}" y="6" width="10" height="10" rx="2" fill="${sA.color}"/><text x="${pl+15}" y="14.5" font-size="10" fill="var(--text)" font-family="Inter,system-ui,sans-serif">${sA.name}</text>`;
+  const lx = pl + 28 + sA.name.length*6;
+  g += `<rect x="${lx}" y="6" width="10" height="10" rx="2" fill="${sB.color}"/><text x="${lx+15}" y="14.5" font-size="10" fill="var(--text)" font-family="Inter,system-ui,sans-serif">${sB.name}</text>`;
+  return `<svg viewBox="0 0 ${W} ${H}" style="width:100%;height:auto;display:block">${g}</svg>`;
+}
 
 async function renderCentralComercial() {
   const container = document.getElementById('admin-content');
@@ -7665,11 +8455,12 @@ async function renderCentralComercial() {
   await loadPedidosPerf();
   perfClearCache();
 
-  const ano = +_ccAno;
-  const f = { ano:String(ano), mes:'todos', semana:'todos', ini:'', fim:'' };
-  const keys = Object.keys(META_ERP_DATA.metas || {});
+  const ano = +_ccF.ano;
+  const mesSel = (_ccF.mes !== 'todos') ? +_ccF.mes : -1;
+  const f = { ano:String(ano), mes:_ccF.mes, semana:'todos', ini:'', fim:'' };
+  const keys = ccActiveKeys();   // recortado por categoria/representante
 
-  // Por chave: meta (year-aware) + realizado (oficial)
+  // Por chave: meta (year-aware) + realizado (oficial). Mês entra via f (pedidos/fechamento).
   const linhas = keys.map(k => {
     const d = META_ERP_DATA.metas[k] || {};
     const meta = metaForKey(k, ano) || 0;
@@ -7679,7 +8470,8 @@ async function renderCentralComercial() {
              pct: meta>0?real/meta:null, props:op.props.length, ped:op.vend.length, pipeline:op.pipeline };
   });
 
-  const metaExcl = (ano === META_BASE_YEAR) ? (META_ERP_DATA.meta_total_exclusao || 0) : 0;
+  // Exclusão da meta consolidada só vale no total (sem recorte de categoria/representante)
+  const metaExcl = (ano === META_BASE_YEAR && !_ccF.cat && !_ccF.rep) ? (META_ERP_DATA.meta_total_exclusao || 0) : 0;
   const metaTot = linhas.reduce((a,r)=>a+r.meta,0) - metaExcl;
   const realTot = linhas.reduce((a,r)=>a+r.real,0);
   const pctTot = metaTot>0 ? realTot/metaTot : null;
@@ -7688,7 +8480,9 @@ async function renderCentralComercial() {
   const projTot = (isCur && mesesDec>0) ? realTot/mesesDec*12 : realTot;
   const projPct = metaTot>0 ? projTot/metaTot : null;
 
-  const ind = commercialIndicators(DATA);
+  // Escopo de propostas conforme categoria/representante (indicadores, funil, séries mensais)
+  const scoped = ccScopeProps();
+  const ind = commercialIndicators(scoped);
 
   const pctCls = p => p==null?'':p>=1?'good':p>=0.7?'warn':'bad';
   const kpis = [
@@ -7730,30 +8524,67 @@ async function renderCentralComercial() {
     count: ind.abertas.filter(p => (p.etapa||'').toUpperCase() === (e.value||'').toUpperCase()).length
   }));
 
-  // Gráficos: tendência mensal (vendas), conversão mensal, evolução anual
-  const vendasMes = Array(12).fill(0), propMes = Array(12).fill(0), pedMes = Array(12).fill(0);
-  DATA.forEach(p => {
-    const fech = cpParseDate(p.data_fechamento), ab = cpParseDate(p.data_abertura);
-    if ((p.status||'').toUpperCase()==='VENDIDO' && fech && new Date(fech).getFullYear()===ano) { const mo=new Date(fech).getMonth(); vendasMes[mo]+=Number(p.valor_vendido)||0; pedMes[mo]++; }
-    if (ab && new Date(ab).getFullYear()===ano) propMes[new Date(ab).getMonth()]++;
+  // ── Séries mensais (ano selecionado · escopo categoria/representante) ───────
+  // Faturamento R$ = vl_liquido dos PEDIDOS (ERP) vinculados por nr_pedido,
+  // alocado pelo MÊS do pedido (dt_pedido). Deduplica por cd_pedido.
+  const fatMes = Array(12).fill(0);
+  const seenCd = new Set();
+  scoped.forEach(p => {
+    if ((p.status||'').toUpperCase() !== 'VENDIDO') return;
+    const cd = String(p.nr_pedido||'').replace(/\D/g,'');
+    if (!cd || seenCd.has(cd) || !PEDIDOS_IDX || !PEDIDOS_IDX[cd]) return;
+    seenCd.add(cd);
+    const pp = PEDIDOS_IDX[cd][0];                 // todas as linhas têm o mesmo vl_liquido (total do pedido)
+    const t = cpParseDate(pp.dt_pedido); if (!t) return;
+    const dd = new Date(t); if (dd.getFullYear() !== ano) return;
+    fatMes[dd.getMonth()] += Number(pp.vl_liquido) || 0;
+  });
+  // Conversão por SAFRA: das propostas ABERTAS no mês X (data_abertura),
+  // quantas viraram pedido (status VENDIDO). conv = pedidos / propostas da safra.
+  const propMes = Array(12).fill(0), pedMes = Array(12).fill(0);
+  scoped.forEach(p => {
+    const ab = cpParseDate(p.data_abertura); if (!ab) return;
+    const dd = new Date(ab); if (dd.getFullYear() !== ano) return;
+    const mo = dd.getMonth(); propMes[mo]++;
+    if ((p.status||'').toUpperCase()==='VENDIDO') pedMes[mo]++;
   });
   const convMes = propMes.map((pr,i)=> pr>0 ? Math.round(pedMes[i]/pr*100) : 0);
-  // Evolução anual (realizado por ano, todas as chaves)
+  // Evolução anual (realizado por ano nas chaves ativas)
   const years = [...new Set(DATA.flatMap(p=>[cpParseDate(p.data_abertura),cpParseDate(p.data_fechamento)].filter(Boolean).map(t=>new Date(t).getFullYear())))].filter(y=>y>=2023).sort((a,b)=>a-b);
   const evolAnual = years.map(y => ({ label:String(y), value: Math.round(keys.reduce((a,k)=>a+keyRealizado(k,{ano:String(y),mes:'todos',semana:'todos',ini:'',fim:''}).used,0)/1e6), color: NAVY }));
 
-  const anoOpts = metaYearsAvailable().map(y=>`<option value="${y}"${String(y)===_ccAno?' selected':''}>${y}</option>`).join('');
-  const hasVendas = vendasMes.some(v=>v>0);
+  // Opções dos filtros
+  const anoOpts = metaYearsAvailable().map(y=>`<option value="${y}"${String(y)===String(_ccF.ano)?' selected':''}>${y}</option>`).join('');
+  const mesOpts = `<option value="todos"${_ccF.mes==='todos'?' selected':''}>Ano inteiro</option>` + PF_MESES.map((m,i)=>`<option value="${i}"${String(_ccF.mes)===String(i)?' selected':''}>${m}</option>`).join('');
+  const catOpts = `<option value="">Todas categorias</option>` + CATEGORIA_GROUPS.map(c=>`<option value="${c.key}"${_ccF.cat===c.key?' selected':''}>${c.label}</option>`).join('');
+  const repNames = uniqueVals([...DATA.map(p=>p.representante), ...DATA.map(p=>p.interno)]).filter(Boolean);
+  const repOpts = `<option value="">Todos</option>` + repNames.map(r=>`<option value="${String(r).replace(/"/g,'&quot;')}"${_ccF.rep===r?' selected':''}>${r}</option>`).join('');
+  const hasFiltro = !!(_ccF.cat || _ccF.rep || _ccF.mes!=='todos' || String(_ccF.ano)!==String(new Date().getFullYear()));
+  const catLabel = _ccF.cat ? (CATEGORIA_GROUPS.find(c=>c.key===_ccF.cat)||{}).label : '';
+  const escopoTxt = `ano ${ano}` + (catLabel?` · ${catLabel}`:'') + (_ccF.rep?` · ${_ccF.rep}`:'');
+  const mesResumo = mesSel>=0
+    ? `<div style="background:var(--white);border:1px solid var(--border);border-left:3px solid var(--navy);border-radius:8px;padding:9px 13px;font-size:12.5px;color:var(--text);margin:0 0 14px">No mês de <strong>${PF_MESES[mesSel]}/${ano}</strong>: faturamento <strong>${fmtBRLShort(fatMes[mesSel])}</strong> · safra de <strong>${propMes[mesSel]}</strong> propostas · <strong>${pedMes[mesSel]}</strong> convertidas · conversão <strong>${convMes[mesSel]}%</strong></div>`
+    : '';
+  const hasFat = fatMes.some(v=>v>0);
+  const hasConv = propMes.some(v=>v>0);
 
   container.innerHTML = `
     <div class="eq-wrap">
       <div class="eq-head">
         <div>
           <div class="eq-head-title">Central Comercial</div>
-          <div class="eq-head-sub">Visão executiva consolidada · fonte ERP + CRM</div>
+          <div class="eq-head-sub">Visão executiva consolidada · fonte ERP (pedidos) + CRM (propostas)</div>
         </div>
-        <div class="pf-fgrp"><label>Ano</label><select onchange="ccSetAno(this.value)">${anoOpts}</select></div>
       </div>
+
+      <div class="pf-filters">
+        <div class="pf-fgrp"><label>Categoria</label><select onchange="ccSetF('cat',this.value)">${catOpts}</select></div>
+        <div class="pf-fgrp"><label>Representante</label><select onchange="ccSetF('rep',this.value)">${repOpts}</select></div>
+        <div class="pf-fgrp"><label>Ano</label><select onchange="ccSetF('ano',this.value)">${anoOpts}</select></div>
+        <div class="pf-fgrp"><label>Mês</label><select onchange="ccSetF('mes',this.value)">${mesOpts}</select></div>
+        ${hasFiltro?`<button class="btn-tbl" style="margin-bottom:1px" onclick="ccResetF()">Limpar filtros</button>`:''}
+      </div>
+
       <div class="pf-kpis" style="margin-bottom:18px">${kpisHtml}</div>
 
       <div class="pf-sec-title">Indicadores operacionais</div>
@@ -7776,21 +8607,26 @@ async function renderCentralComercial() {
         </div>
       </div>
 
-      <div class="pf-sec-title">Análises (ano ${ano})</div>
+      <div class="pf-sec-title">Análises (${escopoTxt})</div>
+      ${mesResumo}
       <div class="pf-charts">
         <div class="pf-chart wide">
-          <div class="pf-chart-title">Tendência Mensal de Faturamento</div>
-          ${hasVendas ? pfLineSVG([{values:vendasMes,color:NAVY}], PF_MESES, 560, true) : '<div class="pf-empty-chart">Sem vendas no ano.</div>'}
+          <div class="pf-chart-title">Faturamento Mensal (R$) — pedidos ERP por mês de faturamento</div>
+          ${hasFat ? ccColsSVG(PF_MESES.map((m,i)=>({label:m,value:fatMes[i]})), {W:720,color:NAVY,fmt:ccFmtCompact,highlight:mesSel}) : '<div class="pf-empty-chart">Sem faturamento no período.</div>'}
+        </div>
+        <div class="pf-chart wide">
+          <div class="pf-chart-title">Propostas × Pedidos — por safra mensal de abertura</div>
+          ${hasConv ? ccGroupedColsSVG(PF_MESES, {name:'Propostas',color:SLATE_LT,values:propMes}, {name:'Pedidos',color:NAVY,values:pedMes}, {W:720,highlight:mesSel}) : '<div class="pf-empty-chart">Sem propostas no período.</div>'}
         </div>
         <div class="pf-chart">
-          <div class="pf-chart-title">Conversão Mensal (%)</div>
-          ${pfLineSVG([{values:convMes,color:NAVY}], PF_MESES)}
+          <div class="pf-chart-title">Conversão Mensal (%) — safra do mês de abertura</div>
+          ${hasConv ? ccColsSVG(PF_MESES.map((m,i)=>({label:m,value:convMes[i]})), {W:360,color:'#16a34a',fmt:v=>v+'%',highlight:mesSel}) : '<div class="pf-empty-chart">Sem dados de conversão.</div>'}
         </div>
         <div class="pf-chart">
           <div class="pf-chart-title">Evolução Anual (R$ milhões)</div>
           ${evolAnual.length ? pfBarsSVG(evolAnual) : '<div class="pf-empty-chart">Sem histórico.</div>'}
         </div>
-        <div class="pf-chart">
+        <div class="pf-chart wide">
           <div class="pf-chart-title">Distribuição do Funil (propostas abertas)</div>
           ${pfFunilHTML(funilStages)}
         </div>
