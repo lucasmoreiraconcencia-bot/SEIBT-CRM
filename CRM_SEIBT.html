@@ -5954,24 +5954,45 @@ function applyUserFilter() {
 
     const match = _matchNome; // helper global: trata "NOME - EMP" e "EMP-NOME"
 
+    // Diagnóstico: abre console (F12) para ver o que está bloqueando
+    console.log('[filterBySession] tipo_acesso="'+tipo+'" valor_acesso="'+(SESSION.valor_acesso||'')
+      +'" nome="'+(SESSION.nome||'')+'" alvo="'+alvo+'" categorias="'+(SESSION.categorias||'')+'"');
+
     // ── Acesso total ─────────────────────────────────────────────────────────
     if (tipo === 'todos' || tipo === 'gestor') return list;
 
     // Sem alvo → não há como restringir por nome; não esconde tudo (fail-open).
     if (!alvo) return list;
 
-    // Casa o nome do usuário em QUALQUER papel da proposta (representante,
-    // interno ou responsável). Resolve nomes que aparecem em campos diferentes
-    // (ex.: SEDENIR como representante numas e responsável noutras) — vale para
-    // representante / interno / externo / especialista. Espelha scopeForSession.
-    const mine = p => match(p.representante, alvo) || match(p.interno, alvo) || match(p.responsavel, alvo);
+    // Criador da proposta: está como interno OU responsavel
+    const isCriador = p => match(p.interno, alvo) || match(p.responsavel, alvo);
+    // Representante da proposta é a própria SEIBT (mercado doméstico direto)
+    const isSeibtRep = p => /SEIBT/i.test(p.representante || '');
 
-    if (tipo === 'especialista') {
-      return list.filter(p => mine(p) ||
-        extUsers.some(eu => match(p.interno, eu) || match(p.representante, eu) || match(p.responsavel, eu)));
+    let mine;
+    if (tipo === 'representante' || tipo === 'externo') {
+      // Regra para representante (inclui transição interno→rep):
+      //  1) É o representante da proposta
+      //  2) É peças E foi quem criou (seu histórico de peças como interno)
+      //  3) SEIBT é o rep E foi quem criou (mercado doméstico que ele atendia)
+      mine = p =>
+        match(p.representante, alvo) ||
+        (isClassifPecas(p) && isCriador(p)) ||
+        (isSeibtRep(p) && isCriador(p));
+    } else {
+      // interno / especialista / outros: escopo amplo (qualquer papel)
+      mine = p => match(p.representante, alvo) || isCriador(p);
     }
-    // representante / interno / externo (e qualquer outro tipo nomeado)
-    return list.filter(mine);
+
+    const result = (tipo === 'especialista')
+      ? list.filter(p => mine(p) ||
+          extUsers.some(eu => match(p.interno, eu) || match(p.representante, eu) || match(p.responsavel, eu)))
+      : list.filter(mine);
+
+    console.log('[filterBySession] total='+list.length+' após filtro='+result.length
+      +' | amostra sem match:', list.slice(0,3).map(p=>({rep:p.representante,int:p.interno,res:p.responsavel})));
+
+    return result;
   }
 
   // ── Filtro de visibilidade (Nacional / Exportação / Ambas) ──────────────
@@ -6638,8 +6659,10 @@ function _matchNome(campo, alvo) {
   if (ca === aa) return true;
   const ct = _nameTokens(campo), at = _nameTokens(alvo);
   if (!at.length || !ct.length) return false;
-  // todos os tokens significativos do nome buscado devem estar presentes no campo
-  return at.every(t => ct.includes(t));
+  // Bidirecional: o menor conjunto de tokens deve estar contido no maior.
+  // Resolve "SEDENIR XAVIER" (alvo) vs "SEDENIR" (campo) e vice-versa.
+  const [shorter, longer] = at.length <= ct.length ? [at, ct] : [ct, at];
+  return shorter.every(t => longer.includes(t));
 }
 
 function PerformanceCompute(nome, f) {
