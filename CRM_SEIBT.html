@@ -185,14 +185,27 @@ body.sidebar-collapsed .main{margin-left:var(--sidebar-mini)}
 
 /* Table */
 .table-wrap{background:var(--white);border:1px solid var(--border);border-radius:var(--radius-lg);box-shadow:var(--shadow-sm)}
-.table-header{display:grid;grid-template-columns:70px 1fr 110px 120px 100px 100px 110px 130px 36px;padding:0 16px;height:38px;align-items:center;background:var(--bg);border-bottom:2px solid var(--border);font-size:11px;font-weight:600;color:var(--muted);letter-spacing:0;gap:8px;position:sticky;top:56px;z-index:10;border-radius:var(--radius-lg) var(--radius-lg) 0 0;box-shadow:0 2px 4px rgba(0,0,0,.06)}
+.table-header{display:grid;grid-template-columns:32px 70px 1fr 110px 120px 100px 100px 110px 130px 36px;padding:0 16px;height:38px;align-items:center;background:var(--bg);border-bottom:2px solid var(--border);font-size:11px;font-weight:600;color:var(--muted);letter-spacing:0;gap:8px;position:sticky;top:56px;z-index:10;border-radius:var(--radius-lg) var(--radius-lg) 0 0;box-shadow:0 2px 4px rgba(0,0,0,.06)}
 .table-body{overflow-y:auto;max-height:calc(100vh - 300px)}
 .table-body::-webkit-scrollbar{width:4px}
 .table-body::-webkit-scrollbar-track{background:transparent}
 .table-body::-webkit-scrollbar-thumb{background:var(--border-md);border-radius:2px}
 .row-wrap{border-bottom:1px solid var(--border)}
 .row-wrap:last-child{border-bottom:none}
-.proposal-row{display:grid;grid-template-columns:70px 1fr 110px 120px 100px 100px 110px 130px 36px;padding:0 16px;height:46px;align-items:center;gap:8px;cursor:pointer;transition:background .1s;font-size:12.5px}
+.proposal-row{display:grid;grid-template-columns:32px 70px 1fr 110px 120px 100px 100px 110px 130px 36px;padding:0 16px;height:46px;align-items:center;gap:8px;cursor:pointer;transition:background .1s;font-size:12.5px}
+.proposal-row.row-selected{background:#eff6ff}
+.prop-check{width:16px;height:16px;cursor:pointer;accent-color:var(--navy);flex-shrink:0}
+.bulk-bar{position:fixed;bottom:0;left:0;right:0;z-index:200;background:#0f2744;color:#fff;display:flex;align-items:center;gap:16px;padding:12px 24px;box-shadow:0 -3px 16px rgba(0,0,0,.22);transform:translateY(100%);transition:transform .2s ease;font-size:13px}
+.bulk-bar.visible{transform:translateY(0)}
+.bulk-count{font-weight:700;font-size:14px;white-space:nowrap}
+.bulk-select{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.25);color:#fff;padding:7px 12px;border-radius:7px;font-size:12.5px;font-family:inherit;cursor:pointer;min-width:180px}
+.bulk-select option{background:#1e3a5f;color:#fff}
+.bulk-motivo{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.25);color:#fff;padding:7px 12px;border-radius:7px;font-size:12.5px;font-family:inherit;flex:1;max-width:280px;display:none}
+.bulk-motivo::placeholder{color:rgba(255,255,255,.45)}
+.bulk-btn-ok{background:#22c55e;color:#fff;border:none;padding:8px 18px;border-radius:7px;font-size:12.5px;font-weight:700;cursor:pointer;font-family:inherit}
+.bulk-btn-ok:disabled{background:rgba(255,255,255,.2);cursor:not-allowed}
+.bulk-btn-cancel{background:none;border:1px solid rgba(255,255,255,.3);color:rgba(255,255,255,.8);padding:8px 14px;border-radius:7px;font-size:12px;cursor:pointer;font-family:inherit}
+.bulk-btn-cancel:hover{border-color:rgba(255,255,255,.7);color:#fff}
 .proposal-row:hover{background:var(--bg-hover)}
 .proposal-row.expanded{background:var(--blue-lt)}
 .col-nr{font-weight:700;color:var(--navy);font-size:12px;letter-spacing:.2px;font-variant-numeric:tabular-nums}
@@ -2262,6 +2275,7 @@ body { font-family: var(--font-sans); -webkit-font-smoothing: antialiased; text-
 
     <div class="table-wrap" id="table-wrap">
       <div class="table-header">
+        <span><input type="checkbox" class="prop-check" id="chk-all-page" title="Selecionar página" onclick="toggleSelectAllPage(this)"></span>
         <span>N.</span>
         <span>Cliente</span>
         <span>Categoria</span>
@@ -2274,6 +2288,21 @@ body { font-family: var(--font-sans); -webkit-font-smoothing: antialiased; text-
       </div>
       <div class="table-body" id="table-body"></div>
       <div class="pagination" id="pagination"></div>
+    </div>
+
+    <!-- Barra de ação em massa -->
+    <div class="bulk-bar" id="bulk-bar">
+      <span class="bulk-count" id="bulk-count">0 selecionadas</span>
+      <select class="bulk-select" id="bulk-status" onchange="onBulkStatusChange()">
+        <option value="">— Escolher status —</option>
+        <option value="PERDIDO">Perdido</option>
+        <option value="DESISTÊNCIA">Desistência</option>
+        <option value="STAND-BY">Stand-by</option>
+        <option value="PROPOSTA COMPLEMENTAR">Proposta Complementar</option>
+      </select>
+      <input class="bulk-motivo" type="text" id="bulk-motivo" placeholder="Motivo da perda (obrigatório)">
+      <button class="bulk-btn-ok" id="bulk-btn-ok" onclick="bulkApplyStatus()" disabled>Aplicar</button>
+      <button class="bulk-btn-cancel" onclick="bulkClearSelection()">Cancelar</button>
     </div>
 
     <!-- Kanban Board -->
@@ -3719,6 +3748,8 @@ function updateKPIs() {
   if (badge) { badge.textContent = activeCount; badge.style.display = activeCount > 0 ? 'inline-flex' : 'none'; }
   if (btn)   btn.classList.toggle('has-filters', activeCount > 0);
   if (sumEl) sumEl.textContent = activeCount > 0 ? `${activeCount} filtro${activeCount>1?'s':''} ativo${activeCount>1?'s':''}` : '';
+  _selectedProposals.clear();
+  if (typeof updateBulkBar === 'function') updateBulkBar();
 }
 
 // ── Configuração dinâmica de Status e Etapas ─────────────────────────────
@@ -3851,8 +3882,10 @@ function renderTable() {
     const dateCell = isAdmin
       ? `<span class="col-date date-editable" title="Clique para editar data" onclick="editDate(event,'${p.uid}','${p.data_abertura||''}')">${dateDisplay}</span>`
       : `<span class="col-date">${dateDisplay}</span>`;
+    const isSel = _selectedProposals.has(p.uid);
     html += `<div class="row-wrap" id="rw-${p.uid}">
-  <div class="proposal-row${exp?' expanded':''}" onclick="toggleRow('${p.uid}')">
+  <div class="proposal-row${exp?' expanded':''}${isSel?' row-selected':''}" onclick="toggleRow('${p.uid}')">
+    <span onclick="event.stopPropagation()"><input type="checkbox" class="prop-check" ${isSel?'checked':''} onchange="toggleProposalSelect('${p.uid}',this)"></span>
     <span class="col-nr">${String(p.nr).padStart(4,'0')}</span>
     <span class="col-cli" title="${(p.cliente||'').replace(/"/g,'')}">${p.cliente||'—'}</span>
     <span>${classifChip(p.classificacao)}</span>
@@ -3870,6 +3903,7 @@ function renderTable() {
   renderPagination();
   // Renderiza documentos em todos os painéis expandidos
   expandedRows.forEach(uid => renderDocs(uid));
+  updateBulkBar();
 }
 
 const CAL_ICON = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>`;
@@ -7334,10 +7368,10 @@ function renderAtividadesPanel() {
   const anoSel = _inicioAno;                     // ano selecionado (ou 'todos')
   const isAnoAtual = String(anoSel) === String(new Date().getFullYear());
   const props = scopeForInicio();                // escopo JÁ filtrado por ano + categoria + usuário
-  // Follow-ups: não-admin vê só os próprios; admin respeita filtro de usuário (ou todos)
+  // Não-admin vê só follow-ups que ele mesmo registrou; admin usa props já filtrado
   const fuOwner = (SESSION && SESSION.role !== 'admin')
     ? (SESSION.nome || SESSION.valor_acesso || '')
-    : (_inicioUser || null);
+    : null;
   const ind = commercialIndicators(props, fuOwner);
   const today = _todayMid();
 
@@ -7405,6 +7439,23 @@ function renderAtividadesPanel() {
     `<div class="act-ag-row"><span class="act-ag-time">${ff.tipo_proximo_passo||'Contato'}</span><span class="act-ag-cli">${ff._cliente||'—'}</span><span style="color:var(--muted);font-size:11px">${ff._resp||''}</span></div>`).join('')
     : `<div class="act-ag-empty">${ACT_ICO.cal}<span>Nenhum compromisso para hoje</span></div>`;
 
+  // Próximos follow-ups (além de hoje, até 60 dias à frente)
+  const futuros = ind.flat
+    .filter(ff => { const t = cpParseDate(ff.proximo_contato); return t && t > today && t < today + 60*86400000; })
+    .sort((a,b) => cpParseDate(a.proximo_contato) - cpParseDate(b.proximo_contato));
+  const proximosHtml = futuros.length
+    ? futuros.slice(0,20).map(ff => {
+        const d = new Date(cpParseDate(ff.proximo_contato));
+        const dStr = d.toLocaleDateString('pt-BR',{weekday:'short',day:'2-digit',month:'short'});
+        return `<div class="act-ag-row">
+          <span class="act-ag-time" style="min-width:110px">${dStr}</span>
+          <span class="act-ag-time" style="color:var(--muted);min-width:90px">${ff.tipo_proximo_passo||'Contato'}</span>
+          <span class="act-ag-cli">${ff._cliente||'—'}</span>
+          <span style="color:var(--muted);font-size:11px">${ff._resp||''}</span>
+        </div>`;
+      }).join('')
+    : `<div class="act-ag-empty">${ACT_ICO.cal}<span>Nenhum follow-up agendado nos próximos 60 dias</span></div>`;
+
   // Histórico de propostas (recentes)
   const recentes = props.slice().sort((a,b)=>cpParseDate(b.data_abertura)-cpParseDate(a.data_abertura)).slice(0,8);
   const histHtml = recentes.map(p =>
@@ -7459,6 +7510,12 @@ function renderAtividadesPanel() {
       </div>
       <div class="act-agenda">${agendaHtml}</div>
 
+      <div class="act-sec-head" style="margin-top:20px">
+        <div class="act-sec-title">Próximos follow-ups</div>
+        <span style="font-size:11px;color:var(--muted)">${futuros.length} agendados nos próximos 60 dias</span>
+      </div>
+      <div class="act-agenda">${proximosHtml}</div>
+
       <div class="cc-cols">
         <div>
           <div class="act-sec-title">Histórico de propostas</div>
@@ -7498,7 +7555,7 @@ function openActTileDrawer(type) {
   const props = scopeForInicio();   // mesmo escopo (ano + categoria + usuário) dos tiles
   const fuOwner = (SESSION && SESSION.role !== 'admin')
     ? (SESSION.nome || SESSION.valor_acesso || '')
-    : (_inicioUser || null);
+    : null;
   const ind   = commercialIndicators(props, fuOwner);
   const now   = new Date();
   const isAnoAtual = String(_inicioAno) === String(now.getFullYear());
@@ -11348,6 +11405,110 @@ async function salvarNovoStatus(uid) {
       console.warn('atualizar_status error:', e.message);
     }
   }
+}
+
+// ── Seleção em massa ──────────────────────────────────────────────────────
+const _selectedProposals = new Set();
+
+function updateBulkBar() {
+  const n = _selectedProposals.size;
+  const bar = document.getElementById('bulk-bar');
+  const cnt = document.getElementById('bulk-count');
+  if (!bar) return;
+  if (n > 0) { bar.classList.add('visible'); } else { bar.classList.remove('visible'); }
+  if (cnt) cnt.textContent = n + (n === 1 ? ' selecionada' : ' selecionadas');
+  // Sync select-all checkbox
+  const chkAll = document.getElementById('chk-all-page');
+  if (chkAll) {
+    const start = currentPage * PAGE_SIZE;
+    const pageUids = filteredData.slice(start, start + PAGE_SIZE).map(p => p.uid);
+    chkAll.checked = pageUids.length > 0 && pageUids.every(uid => _selectedProposals.has(uid));
+    chkAll.indeterminate = !chkAll.checked && pageUids.some(uid => _selectedProposals.has(uid));
+  }
+}
+
+function toggleProposalSelect(uid, cb) {
+  if (cb.checked) { _selectedProposals.add(uid); } else { _selectedProposals.delete(uid); }
+  const rw = document.getElementById('rw-' + uid);
+  if (rw) { const row = rw.querySelector('.proposal-row'); if (row) row.classList.toggle('row-selected', cb.checked); }
+  updateBulkBar();
+}
+
+function toggleSelectAllPage(cb) {
+  const start = currentPage * PAGE_SIZE;
+  filteredData.slice(start, start + PAGE_SIZE).forEach(p => {
+    if (cb.checked) { _selectedProposals.add(p.uid); } else { _selectedProposals.delete(p.uid); }
+  });
+  renderTable();
+  updateBulkBar();
+}
+
+function bulkClearSelection() {
+  _selectedProposals.clear();
+  document.getElementById('bulk-status').value = '';
+  const motivo = document.getElementById('bulk-motivo');
+  if (motivo) { motivo.style.display = 'none'; motivo.value = ''; }
+  const btnOk = document.getElementById('bulk-btn-ok');
+  if (btnOk) btnOk.disabled = true;
+  renderTable();
+  updateBulkBar();
+}
+
+function onBulkStatusChange() {
+  const status = document.getElementById('bulk-status').value;
+  const motivo = document.getElementById('bulk-motivo');
+  const btnOk  = document.getElementById('bulk-btn-ok');
+  const isPerdido = status === 'PERDIDO';
+  if (motivo) motivo.style.display = isPerdido ? 'inline-block' : 'none';
+  if (btnOk)  btnOk.disabled = !status;
+}
+
+async function bulkApplyStatus() {
+  const status = document.getElementById('bulk-status').value;
+  if (!status) { alert('Escolha um status para aplicar.'); return; }
+  const uids = Array.from(_selectedProposals);
+  if (!uids.length) return;
+
+  let motivoPerda = '';
+  if (status === 'PERDIDO') {
+    const motivoEl = document.getElementById('bulk-motivo');
+    motivoPerda = motivoEl ? motivoEl.value.trim() : '';
+    if (!motivoPerda) { alert('Informe o motivo da perda para continuar.'); motivoEl && motivoEl.focus(); return; }
+  }
+
+  if (!confirm(`Aplicar "${status}" em ${uids.length} proposta(s)?\n\nEssa ação não pode ser desfeita.`)) return;
+
+  const today = new Date().toLocaleDateString('pt-BR');
+  let ok = 0, fail = 0;
+
+  for (const uid of uids) {
+    const ov = { status };
+    if (status === 'PERDIDO') { ov.motivo_perda = motivoPerda; ov.data_fechamento = today; }
+    overrides[uid] = Object.assign(overrides[uid] || {}, ov);
+    const p = DATA.find(x => x.uid === uid);
+    if (p) Object.assign(p, ov);
+    expandedRows.delete(uid);
+
+    if (GSHEETS_URL && !GSHEETS_URL.includes('COLE_AQUI') && SESSION && SESSION.token) {
+      try {
+        const params = new URLSearchParams({ action: 'atualizar_status', token: SESSION.token, uid, status });
+        if (motivoPerda)          params.set('motivo_perda',    motivoPerda);
+        if (status === 'PERDIDO') params.set('data_fechamento', today);
+        const res  = await fetch(GSHEETS_URL + '?' + params);
+        const json = await res.json();
+        if (json.ok) { ok++; } else { fail++; console.warn('bulk status error uid=' + uid, json.error); }
+      } catch(e) { fail++; console.warn('bulk status fetch error', e.message); }
+    } else { ok++; }
+  }
+
+  localStorage.setItem('seibt_overrides_v1', JSON.stringify(overrides));
+  bulkClearSelection();
+  applyFilters();
+  updateBadges();
+  showFeedback(
+    `Status "${status}" aplicado em ${ok} proposta(s).` + (fail > 0 ? ` (${fail} com erro no servidor)` : ''),
+    fail > 0 ? 'err' : 'ok'
+  );
 }
 
 // ── Retenção Anual ─────────────────────────────────────────────────────────
