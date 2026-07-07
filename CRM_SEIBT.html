@@ -7179,13 +7179,21 @@ function scopeForSession() {
   );
 }
 // Ano selecionado no painel Início (default = ano corrente). 'todos' = sem filtro.
-let _inicioAno = String(new Date().getFullYear());
-function inicioSetAno(a) { _inicioAno = a; renderAtividadesPanel(); }
-// Aplica o filtro de ano do Início sobre o escopo base.
+let _inicioAno  = String(new Date().getFullYear());
+let _inicioUser = '';
+let _inicioCat  = '';
+function inicioSetAno(a)  { _inicioAno  = a; renderAtividadesPanel(); }
+function inicioSetUser(v) { _inicioUser = v; renderAtividadesPanel(); }
+function inicioSetCat(v)  { _inicioCat  = v; renderAtividadesPanel(); }
+function inicioResetF()   { _inicioAno = String(new Date().getFullYear()); _inicioUser = ''; _inicioCat = ''; renderAtividadesPanel(); }
+// Aplica os filtros do Início (ano + categoria + usuário) sobre o escopo base.
 function scopeForInicio() {
-  const base = scopeForSession();
-  if (!_inicioAno || _inicioAno === 'todos') return base;
-  return base.filter(p => String(getYear(p)) === String(_inicioAno));
+  let base = scopeForSession();
+  if (_inicioAno && _inicioAno !== 'todos') base = base.filter(p => String(getYear(p)) === String(_inicioAno));
+  if (_inicioCat)  base = base.filter(p => _propCategoriaKey(p) === _inicioCat);
+  if (_inicioUser) base = base.filter(p =>
+    _matchNome(p.representante, _inicioUser) || _matchNome(p.interno, _inicioUser) || _matchNome(p.responsavel, _inicioUser));
+  return base;
 }
 // Ícones de linha usados nos KPIs do Início
 const ACT_ICO = {
@@ -7325,9 +7333,11 @@ function renderAtividadesPanel() {
   if (!box) return;
   const anoSel = _inicioAno;                     // ano selecionado (ou 'todos')
   const isAnoAtual = String(anoSel) === String(new Date().getFullYear());
-  const props = scopeForInicio();                // escopo do usuário JÁ filtrado pelo ano
-  // Follow-ups atribuídos a quem os registrou (não-admin); admin vê todos
-  const fuOwner = (SESSION && SESSION.role !== 'admin') ? (SESSION.nome || SESSION.valor_acesso || '') : null;
+  const props = scopeForInicio();                // escopo JÁ filtrado por ano + categoria + usuário
+  // Follow-ups: não-admin vê só os próprios; admin respeita filtro de usuário (ou todos)
+  const fuOwner = (SESSION && SESSION.role !== 'admin')
+    ? (SESSION.nome || SESSION.valor_acesso || '')
+    : (_inicioUser || null);
   const ind = commercialIndicators(props, fuOwner);
   const today = _todayMid();
 
@@ -7416,18 +7426,30 @@ function renderAtividadesPanel() {
   const anoOpts = anosDisp.map(a => `<option value="${a}"${String(anoSel)===a?' selected':''}>${a}</option>`).join('')
     + `<option value="todos"${anoSel==='todos'?' selected':''}>Todos os anos</option>`;
 
+  const catOpts = `<option value="">Todas categorias</option>`
+    + CATEGORIA_GROUPS.map(c => `<option value="${c.key}"${_inicioCat===c.key?' selected':''}>${c.label}</option>`).join('');
+  const isAdmin = !!(SESSION && SESSION.role === 'admin');
+  const allUsers = isAdmin
+    ? uniqueVals([...DATA.map(p=>p.representante), ...DATA.map(p=>p.interno), ...DATA.map(p=>p.responsavel)]).filter(Boolean).sort()
+    : [];
+  const userOpts = `<option value="">Todos os usuários</option>`
+    + allUsers.map(u => `<option value="${u.replace(/"/g,'&quot;')}"${_inicioUser===u?' selected':''}>${u}</option>`).join('');
+  const hasFiltro = !!((_inicioCat) || (_inicioUser) || (String(anoSel) !== String(new Date().getFullYear())));
+
   const saud = (() => { const h = new Date().getHours(); return h<12?'Bom dia':h<18?'Boa tarde':'Boa noite'; })();
   box.innerHTML = `
     <div class="act-wrap">
-      <div style="margin-bottom:18px;display:flex;align-items:flex-end;justify-content:space-between;gap:16px;flex-wrap:wrap">
+      <div style="margin-bottom:16px;display:flex;align-items:flex-end;justify-content:space-between;gap:16px;flex-wrap:wrap">
         <div>
           <div style="font-size:18px;font-weight:700;color:var(--navy)">${saud}, ${(SESSION&&SESSION.nome)||''}</div>
           <div style="font-size:12px;color:var(--muted)">${new Date().toLocaleDateString('pt-BR',{weekday:'long',day:'2-digit',month:'long',year:'numeric'})}</div>
         </div>
-        <div style="display:flex;align-items:center;gap:8px">
-          <span style="font-size:12px;color:var(--muted);font-weight:500">Ano</span>
-          <select class="filter-select active" style="min-width:120px" onchange="inicioSetAno(this.value)">${anoOpts}</select>
-        </div>
+      </div>
+      <div class="pf-filters" style="margin-bottom:16px">
+        <div class="pf-fgrp"><label>Ano</label><select onchange="inicioSetAno(this.value)">${anoOpts}</select></div>
+        <div class="pf-fgrp"><label>Categoria</label><select onchange="inicioSetCat(this.value)">${catOpts}</select></div>
+        ${isAdmin ? `<div class="pf-fgrp"><label>Usuário</label><select onchange="inicioSetUser(this.value)">${userOpts}</select></div>` : ''}
+        ${hasFiltro ? `<button class="btn-tbl" onclick="inicioResetF()" style="margin-left:auto">Limpar filtros</button>` : ''}
       </div>
       <div class="act-cards">${tilesHtml}${metaTile}</div>
 
@@ -7473,8 +7495,10 @@ function _actMetaKeyForSession() {
   return null;
 }
 function openActTileDrawer(type) {
-  const props = scopeForInicio();   // mesmo escopo (e ano) dos tiles
-  const fuOwner = (SESSION && SESSION.role !== 'admin') ? (SESSION.nome || SESSION.valor_acesso || '') : null;
+  const props = scopeForInicio();   // mesmo escopo (ano + categoria + usuário) dos tiles
+  const fuOwner = (SESSION && SESSION.role !== 'admin')
+    ? (SESSION.nome || SESSION.valor_acesso || '')
+    : (_inicioUser || null);
   const ind   = commercialIndicators(props, fuOwner);
   const now   = new Date();
   const isAnoAtual = String(_inicioAno) === String(now.getFullYear());
@@ -8365,7 +8389,14 @@ function commercialIndicators(props, fuOwner) {
     return !temFu && dias > 30;
   });
   const flat = fuOwner ? _flatFollowupsByOwner(fuOwner) : _flatFollowups(props);
-  const fuAtrasados = flat.filter(ff => { const t = cpParseDate(ff.proximo_contato); return t && t < today; });
+  const terminalUids = new Set(props.filter(p => {
+    const s = (p.status||'').toUpperCase();
+    return s === 'VENDIDO' || s === 'PERDIDO' || s === 'DESISTÊNCIA' || s === 'DESISTENCIA';
+  }).map(p => p.uid));
+  const fuAtrasados = flat.filter(ff => {
+    const t = cpParseDate(ff.proximo_contato);
+    return t && t < today && !terminalUids.has(ff._uid);
+  });
   const fuHoje = flat.filter(ff => { const t = cpParseDate(ff.proximo_contato); return t && t >= today && t < today + 86400000; });
   const visitasAgendadas = flat.filter(ff => { const t = cpParseDate(ff.proximo_contato); return t && t >= today; });
   return { abertas, vencidas, semMov, fuAtrasados, fuHoje, visitasAgendadas, flat };
