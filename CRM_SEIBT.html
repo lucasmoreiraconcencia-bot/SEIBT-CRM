@@ -1945,6 +1945,13 @@ body { font-family: var(--font-sans); -webkit-font-smoothing: antialiased; text-
 /* Cards de atividade: sem barra-topo grossa, acabamento elevation-1 */
 .act-tile::before{display:none}
 
+/* Coluna "+ Etapa" do Kanban (admin adiciona etapa ao funil da categoria em foco) */
+.kanban-addcol{flex:0 0 150px;display:flex;flex-direction:column;align-items:center;gap:8px;padding-top:8px}
+.kanban-addbtn{display:inline-flex;align-items:center;gap:6px;padding:9px 14px;border:1.5px dashed var(--border-md);background:var(--white);border-radius:var(--radius-md);color:var(--navy);font-weight:600;font-size:12.5px;cursor:pointer;transition:all var(--t-base);width:100%;justify-content:center}
+.kanban-addbtn:hover{border-color:var(--navy);background:var(--blue-lt)}
+.kanban-addbtn svg{width:15px;height:15px}
+.kanban-addcol-hint{font-size:10px;color:var(--muted);text-align:center}
+
 /* Foco acessível consistente */
 :focus-visible{outline:none;box-shadow:0 0 0 3px var(--brand-200)}
 @media (prefers-reduced-motion: reduce){*,*::before,*::after{transition:none!important;animation:none!important}}
@@ -3922,7 +3929,7 @@ function etapaChip(et) {
     const _EC=['#94a3b8','#64748b','#3b82f6','#8b5cf6','#06b6d4','#0ea5e9','#6366f1','#f59e0b'];
     const seen = new Set(list.map(x => (x.value||'').toUpperCase()));
     let ci = 0;
-    ['representante','vendedor_interno'].forEach(t => {
+    ['maquinas','pecas'].forEach(t => {
       (CRM_CONFIG.funis[t]||[]).forEach(f => {
         const k=(f.value||'').toUpperCase();
         if (!seen.has(k)) { list.push({value:f.value,label:f.label,color:f.color||_EC[ci%_EC.length]}); seen.add(k); ci++; }
@@ -4763,12 +4770,11 @@ function openFollowupModal(uid) {
   selectedTemp = '';
   hideFeedback();
 
-  // Populate etapa dropdown from config
-  // CORREÇÃO P6: usa o funil do Kanban (currentFunilStages) em vez da lista legada,
+  // Popula o dropdown de etapa com o funil da CATEGORIA desta proposta (mesmo do Kanban),
   // para que as etapas do modal e as colunas do Kanban sejam idênticas.
   const etapaSel = document.getElementById('follow-etapa');
   if (etapaSel) {
-    const etapaList = currentFunilStages();
+    const etapaList = funilStagesForProp(p);
     etapaSel.innerHTML = '<option value="">— Selecione a etapa —</option>' +
       etapaList.map(e => `<option value="${e.value}">${e.label}</option>`).join('');
     etapaSel.value = '';
@@ -5420,11 +5426,12 @@ function openEditFu(uid, fuId) {
   });
 
   // Etapas
-  // CORREÇÃO P6: usa o funil do Kanban (currentFunilStages). Se o follow-up já tinha
+  // Usa o funil da CATEGORIA da proposta (mesmo do Kanban). Se o follow-up já tinha
   // uma etapa antiga fora do funil atual, ela é adicionada como opção para não se perder.
   const etapaSel = document.getElementById('efu-etapa');
   if (etapaSel) {
-    const etapaList = currentFunilStages().slice();
+    const _prop = DATA.find(x => x.uid === currentFollowupUid) || {};
+    const etapaList = funilStagesForProp(_prop).slice();
     const cur = fu.etapa || '';
     if (cur && !etapaList.some(e => (e.value||'') === cur)) etapaList.push({ value:cur, label:cur });
     etapaSel.innerHTML = '<option value="">— Selecione —</option>' +
@@ -9268,29 +9275,65 @@ async function transfLoadLog() {
 }
 
 // ════════════════════════════════════════════════════════════════════════
-// FASE 8 — FUNIS DE VENDAS (dois funis independentes, editáveis)
+// FUNIS DE VENDAS — por CATEGORIA de produto (não mais por tipo de usuário)
+// ── Máquinas / Sistemas / Partes de Sistemas usam UM funil (contato 30/60/90).
+// ── Peças usam OUTRO funil (contato 10/20/30). A escolha é automática, pela
+//    categoria da proposta. "Sem Etapa" é a 1ª coluna sintética do Kanban.
+// Os values seguem o mesmo padrão de _slugFunil(label) (eqNorm) para que renomear
+// uma etapa no editor gere o mesmo value — mantendo as propostas no lugar.
 // ════════════════════════════════════════════════════════════════════════
-const DEFAULT_FUNIL_REP = [
-  { value:'LEAD', label:'Lead' }, { value:'CONTATO', label:'Contato' },
-  { value:'PROPOSTA', label:'Proposta' }, { value:'NEGOCIACAO', label:'Negociação' },
-  { value:'FECHADO', label:'Fechado' }
+const DEFAULT_FUNIL_MAQ = [
+  { value:'ENGENHARIACUSTOS',  label:'Engenharia/Custos'  },
+  { value:'ORCAMENTOENVIADO',  label:'Orçamento Enviado'  },
+  { value:'ANALISECLIENTE',    label:'Análise Cliente'    },
+  { value:'CONTATO30DIAS',     label:'Contato 30 dias'    },
+  { value:'CONTATO60DIAS',     label:'Contato 60 dias'    },
+  { value:'CONTATO90DIAS',     label:'Contato 90 dias'    },
+  { value:'ATUALIZARPROPOSTA', label:'Atualizar Proposta' },
+  { value:'CONGELADO',         label:'Congelado'          },
+  { value:'NEGOCIACAO',        label:'Negociação'         },
+  { value:'FECHAMENTO',        label:'Fechamento'         },
 ];
-const DEFAULT_FUNIL_INT = [
-  { value:'ORCAMENTO', label:'Orçamento' }, { value:'AGUARDANDO', label:'Aguardando Cliente' },
-  { value:'PEDIDO', label:'Pedido' }, { value:'FATURADO', label:'Faturado' }
+const DEFAULT_FUNIL_PECAS = [
+  { value:'ENGENHARIACUSTOS',  label:'Engenharia/Custos'  },
+  { value:'ORCAMENTOENVIADO',  label:'Orçamento Enviado'  },
+  { value:'ANALISECLIENTE',    label:'Análise Cliente'    },
+  { value:'CONTATO10DIAS',     label:'Contato 10 dias'    },
+  { value:'CONTATO20DIAS',     label:'Contato 20 dias'    },
+  { value:'CONTATO30DIAS',     label:'Contato 30 dias'    },
+  { value:'ATUALIZARPROPOSTA', label:'Atualizar Proposta' },
+  { value:'CONGELADO',         label:'Congelado'          },
+  { value:'NEGOCIACAO',        label:'Negociação'         },
+  { value:'FECHAMENTO',        label:'Fechamento'         },
 ];
 function ensureFunis() {
   if (!CRM_CONFIG.funis) CRM_CONFIG.funis = {};
-  if (!Array.isArray(CRM_CONFIG.funis.representante)) CRM_CONFIG.funis.representante = JSON.parse(JSON.stringify(DEFAULT_FUNIL_REP));
-  if (!Array.isArray(CRM_CONFIG.funis.vendedor_interno)) CRM_CONFIG.funis.vendedor_interno = JSON.parse(JSON.stringify(DEFAULT_FUNIL_INT));
+  if (!Array.isArray(CRM_CONFIG.funis.maquinas)) CRM_CONFIG.funis.maquinas = JSON.parse(JSON.stringify(DEFAULT_FUNIL_MAQ));
+  if (!Array.isArray(CRM_CONFIG.funis.pecas))    CRM_CONFIG.funis.pecas    = JSON.parse(JSON.stringify(DEFAULT_FUNIL_PECAS));
+  // Limpa o modelo antigo (por tipo de usuário) para não sujar a config salva.
+  delete CRM_CONFIG.funis.representante;
+  delete CRM_CONFIG.funis.vendedor_interno;
 }
-// CORREÇÃO P6: fonte única das etapas do funil da sessão atual — a MESMA usada
-// pelo Kanban. Vendedor interno usa o funil interno; demais usam o de representantes.
-// Assim o dropdown de etapa do modal e as colunas do Kanban ficam sempre iguais.
+// Chave do funil a partir da categoria de produto: só Peças usa o funil de peças;
+// máquinas, sistemas, partes de sistemas (e o resto) usam o funil de máquinas.
+function _funilKeyForCat(catKey) { return catKey === 'pecas' ? 'pecas' : 'maquinas'; }
+// Etapas do funil aplicável a uma proposta específica (pela categoria dela).
+function funilStagesForProp(p) {
+  ensureFunis();
+  return CRM_CONFIG.funis[_funilKeyForCat(_propCategoriaKey(p || {}))] || [];
+}
+// Categoria ativa no Kanban: pela view atual (Peças/Máquinas/…) ou pelo filtro de
+// categoria. Em "Todas" (sem categoria definida) retorna '' → cai no funil de máquinas.
+function _activeKanbanCatKey() {
+  const viewCat = { pecas:'pecas', maquinas:'maquinas', sistemas:'sistemas', servicos:'servicos', outros:'outros', exportacao:'exportacao' };
+  if (viewCat[currentView]) return viewCat[currentView];
+  if (filters.classif) return _propCategoriaKey({ classificacao: filters.classif });
+  return '';
+}
+// Compat: etapas do funil "em foco" (default máquinas). Usado por chamadas legadas.
 function currentFunilStages() {
   ensureFunis();
-  const key = (SESSION && SESSION.tipo_acesso === 'interno') ? 'vendedor_interno' : 'representante';
-  return CRM_CONFIG.funis[key] || [];
+  return CRM_CONFIG.funis[_funilKeyForCat(_activeKanbanCatKey())] || [];
 }
 function renderFunisPanel() {
   ensureFunis();
@@ -9315,10 +9358,10 @@ function renderFunisPanel() {
   };
   container.innerHTML = `
     <div class="users-header"><span class="section-title">Funis de Vendas</span></div>
-    <div style="font-size:11.5px;color:var(--muted);margin-bottom:14px">Cada perfil usa seu próprio funil. Criar, renomear, reordenar e excluir etapas é independente entre os dois.</div>
+    <div style="font-size:11.5px;color:var(--muted);margin-bottom:14px">O funil é escolhido automaticamente pela categoria da proposta: <b>Peças</b> usa o funil de peças; <b>Máquinas, Sistemas e Partes de Sistemas</b> usam o outro. Você também pode adicionar etapas direto no Kanban.</div>
     <div class="cc-cols">
-      ${col('representante','Funil — Representantes')}
-      ${col('vendedor_interno','Funil — Vendedores Internos')}
+      ${col('maquinas','Funil — Máquinas, Sistemas e Partes')}
+      ${col('pecas','Funil — Peças')}
     </div>`;
 }
 function _slugFunil(s){ return eqNorm(s).slice(0,20) || ('ETAPA'+Date.now()); }
@@ -9339,8 +9382,8 @@ function _loadFunisFromServer() {
     .then(json => {
       if (json && json.ok && json.funis) {
         ensureFunis();
-        if (json.funis.representante)    CRM_CONFIG.funis.representante    = json.funis.representante;
-        if (json.funis.vendedor_interno) CRM_CONFIG.funis.vendedor_interno = json.funis.vendedor_interno;
+        if (Array.isArray(json.funis.maquinas)) CRM_CONFIG.funis.maquinas = json.funis.maquinas;
+        if (Array.isArray(json.funis.pecas))    CRM_CONFIG.funis.pecas    = json.funis.pecas;
         saveConfig();
         if (typeof viewMode !== 'undefined' && viewMode === 'kanban') renderKanban();
       }
@@ -11413,7 +11456,8 @@ function renderKanban() {
   if (!container) return;
 
   ensureFunis();
-  const _funilKey = (SESSION && SESSION.tipo_acesso === 'interno') ? 'vendedor_interno' : 'representante';
+  // Funil escolhido pela CATEGORIA em foco (Peças × Máquinas/Sistemas/Partes).
+  const _funilKey = _funilKeyForCat(_activeKanbanCatKey());
   const _funilStages = CRM_CONFIG.funis[_funilKey];
   const _KCOL = ['#94a3b8','#64748b','#3b82f6','#8b5cf6','#06b6d4','#0ea5e9','#6366f1','#f59e0b'];
   const etapaList = _funilStages.map((s, i) => ({ value:s.value, label:s.label, color:s.color||_KCOL[i%_KCOL.length] }));
@@ -11449,7 +11493,7 @@ function renderKanban() {
     return true;
   });
 
-  container.innerHTML = visibleColumns.map(col => {
+  const colsHtml = visibleColumns.map(col => {
     const cards  = byEtapa[col.value] || [];
     const total  = cards.reduce((a, p) => a + (p.receita_estimada || 0), 0);
     const sumHtml = total > 0
@@ -11477,6 +11521,33 @@ function renderKanban() {
       </div>
     </div>`;
   }).join('');
+
+  // Coluna extra "+ Etapa": só o admin pode incluir etapas direto no Kanban.
+  // A etapa entra no funil da categoria em foco (Peças ou Máquinas/Sistemas).
+  const funilLabel = _funilKey === 'pecas' ? 'Peças' : 'Máquinas/Sistemas';
+  const addColHtml = (SESSION && SESSION.role === 'admin')
+    ? `<div class="kanban-addcol">
+         <button class="kanban-addbtn" onclick="kanbanAddEtapa()" title="Adicionar etapa ao funil de ${funilLabel}">
+           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+           <span>Etapa</span>
+         </button>
+         <span class="kanban-addcol-hint">Funil: ${funilLabel}</span>
+       </div>`
+    : '';
+  container.innerHTML = colsHtml + addColHtml;
+}
+// Admin adiciona uma etapa ao funil da categoria atualmente em foco no Kanban.
+function kanbanAddEtapa() {
+  if (!(SESSION && SESSION.role === 'admin')) return;
+  ensureFunis();
+  const key = _funilKeyForCat(_activeKanbanCatKey());
+  const nomeFunil = key === 'pecas' ? 'Peças' : 'Máquinas/Sistemas';
+  const nome = prompt('Nova etapa para o funil de ' + nomeFunil + ':');
+  if (!nome || !nome.trim()) return;
+  CRM_CONFIG.funis[key].push({ value:_slugFunil(nome.trim()), label:nome.trim() });
+  saveConfig();
+  _saveFunisToServer();
+  renderKanban();
 }
 
 function buildKanbanCard(p) {
