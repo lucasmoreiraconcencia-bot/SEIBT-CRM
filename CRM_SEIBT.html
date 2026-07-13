@@ -4077,9 +4077,14 @@ function expandPanel(p) {
       <div class="exp-value">${p.data_fechamento||'—'}</div></div>`;
   }
   if (su==='ABERTO'||su.includes('STAND')) {
-    const etapaList = (CRM_CONFIG && CRM_CONFIG.etapa_list) || DEFAULT_ETAPA_LIST;
+    // Usa o funil da CATEGORIA desta proposta (mesmo do Kanban) — não a lista legada.
+    // Se a proposta tiver uma etapa antiga fora do funil atual, mantém como opção
+    // para não perder a seleção existente.
+    const etapaList = funilStagesForProp(p).slice();
+    const curEt = p.etapa || '';
+    if (curEt && !etapaList.some(e => (e.value||'') === curEt)) etapaList.push({ value:curEt, label:curEt });
     const etapaOpts = etapaList.map(e =>
-      `<option value="${e.value}"${(p.etapa||'')===e.value?' selected':''}>${e.label}</option>`
+      `<option value="${e.value}"${curEt===e.value?' selected':''}>${e.label}</option>`
     ).join('');
     detFields += `
     <div class="exp-field"><div class="exp-label">Etapa</div>
