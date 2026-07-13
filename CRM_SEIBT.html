@@ -391,11 +391,14 @@ body.sidebar-collapsed .main{margin-left:var(--sidebar-mini)}
 .cp-section:last-child{margin-bottom:0}
 .cp-section-title{font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.6px;margin-bottom:12px;padding-bottom:6px;border-bottom:1px solid var(--border)}
 .cp-grid{display:grid;grid-template-columns:1fr 1fr;gap:13px 20px}
-.cp-nextbox{background:var(--blue-lt);border:1px solid var(--blue-mid);border-radius:var(--radius);padding:12px 14px;display:flex;align-items:center;justify-content:space-between;gap:10px}
+.cp-nextbox{background:var(--blue-lt);border:1px solid var(--blue-mid);border-radius:var(--radius);padding:12px 14px;display:flex;flex-direction:column;gap:8px}
+.cp-nextbox-top{display:flex;align-items:center;justify-content:space-between;gap:10px}
 .cp-nextbox .exp-next-label{font-size:10px;font-weight:700;color:var(--blue);text-transform:uppercase;letter-spacing:.4px;margin-bottom:3px}
 .cp-nextbox .exp-next-text{font-size:13px;font-weight:600;color:var(--navy)}
 .cp-nextbox-date{font-size:11.5px;color:var(--blue);display:inline-flex;align-items:center;gap:5px;white-space:nowrap}
 .cp-nextbox-date svg{width:13px;height:13px}
+.cp-nextbox-notas{font-size:12px;color:var(--navy);line-height:1.5;padding-top:8px;border-top:1px dashed var(--blue-mid)}
+.cp-resumo-box{background:var(--bg-hover);border-radius:var(--radius);padding:12px 14px;font-size:12.5px;color:var(--text);line-height:1.6;white-space:pre-wrap}
 .cp-act-item{display:flex;gap:10px;padding:9px 0;border-bottom:1px solid var(--bg-hover);font-size:12.5px;align-items:flex-start}
 .cp-act-item:last-child{border-bottom:none}
 .cp-act-dot{width:8px;height:8px;border-radius:50%;background:var(--blue);margin-top:5px;flex-shrink:0}
@@ -4729,6 +4732,81 @@ function selectTemp(btn) {
   selectedTemp = btn.dataset.val;
 }
 
+// Monta o HTML dos 4 indicadores compactos (Último contato / Sem movimentação /
+// Temperatura / Próxima ação) do topo da janela da proposta. Extraído para ser
+// reaproveitado também logo após registrar/editar um follow-up (sem precisar
+// fechar e reabrir a janela para ver o valor atualizado).
+function _buildCpIndicatorsHtml(p, sorted, daysSinceLast) {
+  const lastTxt = daysSinceLast === null ? 'Sem contatos'
+    : daysSinceLast === 0 ? 'Hoje' : daysSinceLast + ' dia' + (daysSinceLast===1?'':'s') + ' atrás';
+  const lastCls = daysSinceLast === null ? 'muted' : daysSinceLast < 7 ? 'ok' : daysSinceLast < 21 ? 'warn' : 'urgent';
+  const semMov  = daysSinceLast !== null ? daysSinceLast : (p.dias_aberto || null);
+  const movCls  = semMov === null ? 'muted' : semMov < 15 ? 'ok' : semMov < 30 ? 'warn' : 'urgent';
+  const lastTemp = (sorted.find(f => f.temperatura) || {}).temperatura || '';
+  const tempMap  = { Quente:'Quente', Morna:'Morna', Fria:'Fria' };
+  const proxAcao = p.proxima_acao || '';
+  return `
+    <div class="cp-ind"><div class="cp-ind-lbl">Último contato</div><div class="cp-ind-val ${lastCls}">${lastTxt}</div></div>
+    <div class="cp-ind"><div class="cp-ind-lbl">Sem movimentação</div><div class="cp-ind-val ${movCls}">${semMov===null?'—':semMov+' dia'+(semMov===1?'':'s')}</div></div>
+    <div class="cp-ind"><div class="cp-ind-lbl">Temperatura</div><div class="cp-ind-val ${lastTemp?'':'muted'}">${lastTemp?(tempMap[lastTemp]||lastTemp):'—'}</div></div>
+    <div class="cp-ind"><div class="cp-ind-lbl">Próxima ação</div><div class="cp-ind-val ${proxAcao?'':'muted'}" title="${(proxAcao||'').replace(/"/g,'')}">${proxAcao||'—'}</div></div>`;
+}
+
+// Aplica na proposta em memória (+ overrides) a etapa e a próxima ação
+// definidas num follow-up (criado ou editado) — é isto que move o card no
+// Kanban e atualiza o chip de etapa na lista.
+function _syncPropostaFromFollowup(p, { etapa, proximo, tipoProx }) {
+  const ov = {};
+  if (etapa && etapa !== p.etapa) {
+    p.etapa = etapa;
+    p.etapa_entrada_em = new Date().toISOString().slice(0,10);
+    ov.etapa = etapa;
+    ov.etapa_entrada_em = p.etapa_entrada_em;
+  }
+  if (proximo) {
+    p.data_proxima_acao = proximo;
+    p.proxima_acao = tipoProx || 'Contato';
+    ov.data_proxima_acao = proximo;
+    ov.proxima_acao = p.proxima_acao;
+  }
+  if (Object.keys(ov).length) {
+    overrides[p.uid] = Object.assign(overrides[p.uid] || {}, ov);
+    localStorage.setItem('seibt_overrides_v1', JSON.stringify(overrides));
+  }
+  return ov;
+}
+
+// Após registrar/editar um follow-up: reflete a mudança no chip de etapa da
+// lista, redesenha o Kanban se estiver aberto, e — se a própria janela da
+// proposta estiver aberta — atualiza seus indicadores/resumo na hora, sem
+// precisar fechar e reabrir.
+function _refreshFollowupUI(uid) {
+  const p = DATA.find(x => x.uid === uid);
+  if (!p) return;
+
+  const rowEl = document.getElementById('row-' + uid);
+  if (rowEl) {
+    const chipEl = rowEl.querySelector('.col-etapa');
+    if (chipEl) chipEl.innerHTML = etapaChip(p.etapa);
+  }
+
+  if (typeof viewMode !== 'undefined' && viewMode === 'kanban') renderKanban();
+
+  if (currentFollowupUid === uid) {
+    const fus = followUps[uid] || [];
+    const sorted = fus.slice().sort((a,b) => (b.data_contato||'').localeCompare(a.data_contato||''));
+    const daysSinceLast = sorted.length ? Math.floor((Date.now() - parseFuDate(sorted[0].data_contato)) / 86400000) : null;
+    const isExpModal = (p.moeda||'BRL') === 'USD' || (p.uid||'').startsWith('EXP-');
+    const fmtVal = v => isExpModal
+      ? (v ? '$ '+Number(v).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2}) : '—')
+      : (v ? 'R$ '+Number(v).toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2}) : '—');
+    const indEl = document.getElementById('cp-indicators');
+    if (indEl) indEl.innerHTML = _buildCpIndicatorsHtml(p, sorted, daysSinceLast);
+    buildCpResumo(p, { isExpModal, fmtVal, sorted, daysSinceLast });
+    buildCpHistorico(p, sorted);
+  }
+}
+
 function openFollowupModal(uid) {
   const p = DATA.find(x => x.uid === uid);
   if (!p) return;
@@ -4759,21 +4837,7 @@ function openFollowupModal(uid) {
     : (v ? 'R$ '+Number(v).toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2}) : '—');
   // ── Indicadores compactos (lê antes de editar) ─────────────────────────
   const indEl = document.getElementById('cp-indicators');
-  if (indEl) {
-    const lastTxt = daysSinceLast === null ? 'Sem contatos'
-      : daysSinceLast === 0 ? 'Hoje' : daysSinceLast + ' dia' + (daysSinceLast===1?'':'s') + ' atrás';
-    const lastCls = daysSinceLast === null ? 'muted' : daysSinceLast < 7 ? 'ok' : daysSinceLast < 21 ? 'warn' : 'urgent';
-    const semMov  = daysSinceLast !== null ? daysSinceLast : (p.dias_aberto || null);
-    const movCls  = semMov === null ? 'muted' : semMov < 15 ? 'ok' : semMov < 30 ? 'warn' : 'urgent';
-    const lastTemp = (sorted.find(f => f.temperatura) || {}).temperatura || '';
-    const tempMap  = { Quente:'Quente', Morna:'Morna', Fria:'Fria' };
-    const proxAcao = p.proxima_acao || '';
-    indEl.innerHTML = `
-      <div class="cp-ind"><div class="cp-ind-lbl">Último contato</div><div class="cp-ind-val ${lastCls}">${lastTxt}</div></div>
-      <div class="cp-ind"><div class="cp-ind-lbl">Sem movimentação</div><div class="cp-ind-val ${movCls}">${semMov===null?'—':semMov+' dia'+(semMov===1?'':'s')}</div></div>
-      <div class="cp-ind"><div class="cp-ind-lbl">Temperatura</div><div class="cp-ind-val ${lastTemp?'':'muted'}">${lastTemp?(tempMap[lastTemp]||lastTemp):'—'}</div></div>
-      <div class="cp-ind"><div class="cp-ind-lbl">Próxima ação</div><div class="cp-ind-val ${proxAcao?'':'muted'}" title="${(proxAcao||'').replace(/"/g,'')}">${proxAcao||'—'}</div></div>`;
-  }
+  if (indEl) indEl.innerHTML = _buildCpIndicatorsHtml(p, sorted, daysSinceLast);
 
   // Badges das abas
   const pdfCount = (typeof loadDocs === 'function' ? loadDocs(uid).length : 0);
@@ -4879,11 +4943,18 @@ function buildCpResumo(p, ctx) {
   const tempMap = { Quente:'Quente', Morna:'Morna', Fria:'Fria' };
   const f = (lbl, val) => `<div class="exp-field"><div class="exp-label">${lbl}</div><div class="exp-value">${val}</div></div>`;
 
+  const lastFuAll  = sorted[0] || null;
+  const lastNotas  = (lastFuAll && lastFuAll.notas_proximo && lastFuAll.notas_proximo.trim()) ? lastFuAll.notas_proximo : '';
+  const lastResumo = (lastFuAll && lastFuAll.resumo_reuniao && lastFuAll.resumo_reuniao.trim()) ? lastFuAll.resumo_reuniao : '';
+
   let nextBox = '<div class="cp-empty" style="padding:18px 12px">Nenhuma próxima ação agendada.</div>';
   if (p.proxima_acao || p.data_proxima_acao) {
     nextBox = `<div class="cp-nextbox">
-      <div><div class="exp-next-label">Próxima ação</div><div class="exp-next-text">${p.proxima_acao||'—'}</div></div>
-      ${p.data_proxima_acao ? `<div class="cp-nextbox-date">${CAL_ICON} ${p.data_proxima_acao}</div>` : ''}
+      <div class="cp-nextbox-top">
+        <div><div class="exp-next-label">Próxima ação</div><div class="exp-next-text">${p.proxima_acao||'—'}</div></div>
+        ${p.data_proxima_acao ? `<div class="cp-nextbox-date">${CAL_ICON} ${p.data_proxima_acao}</div>` : ''}
+      </div>
+      ${lastNotas ? `<div class="cp-nextbox-notas">${lastNotas}</div>` : ''}
     </div>`;
   }
 
@@ -4917,6 +4988,10 @@ function buildCpResumo(p, ctx) {
           <div class="cp-section-title">Próxima ação</div>
           ${nextBox}
         </div>
+        ${lastResumo ? `<div class="cp-section">
+          <div class="cp-section-title">Resumo do último contato</div>
+          <div class="cp-resumo-box">${lastResumo}</div>
+        </div>` : ''}
         <div class="cp-section">
           <div class="cp-section-title">Últimas atividades</div>
           ${actsHtml}
@@ -5172,12 +5247,12 @@ function saveNewFollowup() {
   renderFollowupHistory(uid);
   checkUpcomingFollowups();
 
-  // Atualiza proxima_acao e etapa na proposta em memória
+  // Atualiza proxima_acao e etapa na proposta em memória — mantém Kanban, lista
+  // e a própria janela da proposta sincronizados imediatamente com este follow-up.
   const p = DATA.find(x => x.uid === uid);
   if (p) {
-    if (etapa)  { p.etapa = etapa; overrides[uid] = Object.assign(overrides[uid]||{}, { etapa }); }
-    if (proximo){ p.data_proxima_acao = proximo; p.proxima_acao = tipoProx || 'Contato'; }
-    localStorage.setItem('seibt_overrides_v1', JSON.stringify(overrides));
+    _syncPropostaFromFollowup(p, { etapa, proximo, tipoProx });
+    _refreshFollowupUI(uid);
   }
 
   // Persiste no Supabase via Apps Script (GET com URLSearchParams)
@@ -5523,6 +5598,16 @@ async function saveEditFollowup() {
   saveFollowupsToStorage();
   renderFollowupHistory(uid);
 
+  // Igual ao registrar um follow-up novo: se a etapa/próxima ação foram
+  // corrigidas aqui, o Kanban, a lista e a própria janela da proposta
+  // precisam refletir isso na hora — antes, editar um follow-up não mexia
+  // em nada disso.
+  const p = DATA.find(x => x.uid === uid);
+  if (p) {
+    _syncPropostaFromFollowup(p, { etapa, proximo, tipoProx });
+    _refreshFollowupUI(uid);
+  }
+
   if (toast) { toast.textContent='Salvo!'; toast.className='form-toast ok'; }
   setTimeout(closeEditFuModal, 800);
 
@@ -5538,6 +5623,20 @@ async function saveEditFollowup() {
           etapa, editado_em:fu.editado_em })
       });
     } catch(e) { console.warn('[editFollowup]', e.message); }
+  }
+
+  // Também sincroniza a proposta (etapa/próxima ação) no Supabase — mesmo
+  // PATCH que salvarFollowup() já faz no backend quando o follow-up é criado.
+  if (p && (etapa || proximo)) {
+    try {
+      const patchProp = { updated_at: new Date().toISOString() };
+      if (etapa)   patchProp.etapa = etapa;
+      if (proximo) { patchProp.data_proxima_acao = proximo; patchProp.proxima_acao = tipoProx || 'Contato'; }
+      await fetch(`${SUPABASE_URL}/rest/v1/propostas?uid=eq.${encodeURIComponent(uid)}`, {
+        method:'PATCH', headers: Object.assign(supaHdr(true), { 'Prefer':'return=minimal' }),
+        body: JSON.stringify(patchProp)
+      });
+    } catch(e) { console.warn('[editFollowup propostas]', e.message); }
   }
 }
 
