@@ -1945,6 +1945,11 @@ body { font-family: var(--font-sans); -webkit-font-smoothing: antialiased; text-
 /* Cards de atividade: sem barra-topo grossa, acabamento elevation-1 */
 .act-tile::before{display:none}
 
+/* Reordenar colunas do Kanban (admin arrasta o cabeçalho de uma etapa) */
+.kanban-col-header.kanban-col-draggable{cursor:grab}
+.kanban-col-header.kanban-col-draggable:active{cursor:grabbing}
+.kanban-col.col-dragging{opacity:.4}
+
 /* Coluna "+ Etapa" do Kanban (admin adiciona etapa ao funil da categoria em foco) */
 .kanban-addcol{flex:0 0 150px;display:flex;flex-direction:column;align-items:center;gap:8px;padding-top:8px}
 .kanban-addbtn{display:inline-flex;align-items:center;gap:6px;padding:9px 14px;border:1.5px dashed var(--border-md);background:var(--white);border-radius:var(--radius-md);color:var(--navy);font-weight:600;font-size:12.5px;cursor:pointer;transition:all var(--t-base);width:100%;justify-content:center}
@@ -3200,6 +3205,10 @@ body { font-family: var(--font-sans); -webkit-font-smoothing: antialiased; text-
       </div>
     </div>
     <div class="form-group">
+      <label class="form-label">Resumo da reunião / O que foi tratado</label>
+      <textarea id="efu-resumo" class="form-textarea" style="min-height:72px" placeholder="Ex: Cliente demonstrou interesse, aguarda aprovação do gestor. Prazo de retorno: 1 semana..."></textarea>
+    </div>
+    <div class="form-group">
       <label class="form-label">Notas para o próximo contato</label>
       <textarea id="efu-notas" class="form-textarea" style="min-height:60px" placeholder="Informações para o próximo contato..."></textarea>
     </div>
@@ -4267,6 +4276,29 @@ function expandPanel(p) {
         </div>
         <button class="btn-close-prop" id="sc-btn-${p.uid}"
           onclick="salvarNovoStatus('${p.uid}')" style="display:none;width:100%;margin-top:10px">Confirmar</button>
+      </div>
+    </div>`;
+  } else if (su === 'VENDIDO' && SESSION && SESSION.role === 'admin') {
+    // Corrige um pedido lançado na proposta errada: reabre esta proposta (volta
+    // para ABERTO e limpa nº do pedido/valor/data), liberando o nº de pedido
+    // para ser registrado na proposta correta.
+    // Visível SÓ para o Administrador (não para gestor/tipo_acesso 'todos').
+    rightCards += `
+    <div class="act-card">
+      <button class="act-card-hdr" onclick="toggleActCard(this)">
+        <span class="act-card-icon red">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-3"/></svg>
+        </span>
+        <span class="act-card-title">Reabrir Proposta</span>
+        ${CHV_ICO}
+      </button>
+      <div class="act-card-body">
+        <div style="font-size:11.5px;color:var(--muted);line-height:1.5;margin-bottom:10px">
+          Use isto se o pedido foi lançado na proposta errada. Volta o status para
+          <b>Aberto</b> e limpa nº do pedido, valor vendido e data de fechamento —
+          liberando o nº do pedido para ser registrado na proposta correta.
+        </div>
+        <button class="btn-close-prop" style="width:100%;background:var(--error)" onclick="reabrirProposta('${p.uid}')">Reabrir Proposta</button>
       </div>
     </div>`;
   }
@@ -5423,6 +5455,7 @@ function openEditFu(uid, fuId) {
   document.getElementById('efu-acao').value          = fu.acao            || '';
   document.getElementById('efu-proximo').value       = fu.proximo_contato || '';
   document.getElementById('efu-tipo-proximo').value  = fu.tipo_proximo_passo || '';
+  document.getElementById('efu-resumo').value        = fu.resumo_reuniao  || '';
   document.getElementById('efu-notas').value         = fu.notas_proximo   || '';
 
   // Temperatura
@@ -5469,6 +5502,7 @@ async function saveEditFollowup() {
   const acao       = document.getElementById('efu-acao').value.trim();
   const proximo    = document.getElementById('efu-proximo').value;
   const tipoProx   = document.getElementById('efu-tipo-proximo').value;
+  const resumo     = document.getElementById('efu-resumo').value.trim();
   const notas      = document.getElementById('efu-notas').value.trim();
   const etapa      = document.getElementById('efu-etapa')?.value || '';
   const toast      = document.getElementById('efu-toast');
@@ -5485,7 +5519,7 @@ async function saveEditFollowup() {
   // Atualiza local
   Object.assign(fu, { data_contato:data, canal, acao, temperatura:_editFuTemp,
                        proximo_contato:proximo, tipo_proximo_passo:tipoProx,
-                       notas_proximo:notas, etapa, editado_em:new Date().toISOString() });
+                       resumo_reuniao:resumo, notas_proximo:notas, etapa, editado_em:new Date().toISOString() });
   saveFollowupsToStorage();
   renderFollowupHistory(uid);
 
@@ -5500,7 +5534,7 @@ async function saveEditFollowup() {
       await fetch(`${SUPABASE_URL}/rest/v1/followups?id=eq.${supId}`, {
         method:'PATCH', headers:hdrs,
         body: JSON.stringify({ data_contato:data, canal, acao, temperatura:_editFuTemp,
-          proximo_contato:proximo, tipo_proximo_passo:tipoProx, notas_proximo:notas,
+          proximo_contato:proximo, tipo_proximo_passo:tipoProx, resumo_reuniao:resumo, notas_proximo:notas,
           etapa, editado_em:fu.editado_em })
       });
     } catch(e) { console.warn('[editFollowup]', e.message); }
@@ -9911,6 +9945,63 @@ async function saveCloseProposal(uid) {
   }
 }
 
+// ── Reabrir Proposta (corrige pedido lançado na proposta errada) ────────────
+// Volta status→ABERTO e limpa nº do pedido/valor vendido/data de fechamento.
+// Isso libera o nº do pedido para ser registrado na proposta correta: como
+// "Registrar Pedido" grava na tabela `pedidos` por nº do pedido (upsert), ao
+// registrar o mesmo nº na proposta certa o registro do ERP se corrige sozinho.
+async function reabrirProposta(uid) {
+  if (!(SESSION && SESSION.role === 'admin')) return; // ação restrita ao Administrador
+  const p = DATA.find(x => x.uid === uid);
+  if (!p) return;
+
+  const confirmMsg = 'Reabrir a proposta Nº ' + String(p.nr).padStart(4,'0') + ' (' + (p.cliente||'—') + ')?\n\n'
+    + 'Pedido atual: ' + (p.nr_pedido || '—') + '\n\n'
+    + 'O status volta para Aberto e o nº do pedido/valor/data de fechamento são apagados desta proposta. '
+    + 'Use isso apenas se o pedido foi lançado na proposta errada.';
+  if (!confirm(confirmMsg)) return;
+
+  const ov = { status: 'ABERTO', nr_pedido: null, valor_vendido: null, data_fechamento: null };
+
+  // Persiste localmente primeiro (funciona offline)
+  overrides[uid] = Object.assign(overrides[uid] || {}, ov);
+  localStorage.setItem('seibt_overrides_v1', JSON.stringify(overrides));
+  Object.assign(p, ov);
+  expandedRows.delete(uid);
+  applyFilters();
+  updateBadges();
+  updateKPIs();
+
+  // Write-back direto na tabela propostas do Supabase (mesmo padrão de saveCloseProposal)
+  try {
+    const res = await fetch(
+      `${SUPABASE_URL}/rest/v1/propostas?uid=eq.${encodeURIComponent(uid)}`, {
+      method: 'PATCH',
+      headers: Object.assign(supaHdr(true), { 'Prefer': 'return=minimal' }),
+      body: JSON.stringify(ov)
+    });
+    if (!res.ok) {
+      console.warn('[reabrirProposta] Supabase PATCH falhou:', res.status, await res.text());
+      alert('A proposta foi reaberta neste navegador, mas houve um erro ao salvar no servidor. Tente novamente com internet ativa.');
+    }
+  } catch(e) {
+    console.warn('[reabrirProposta] Supabase network error:', e.message);
+  }
+
+  // Best-effort: sinaliza o status no GSheets também (endpoint não limpa nr_pedido/
+  // valor/data — quem faz isso é o PATCH direto ao Supabase acima, já concluído)
+  if (GSHEETS_URL && !GSHEETS_URL.includes('COLE_AQUI') && SESSION && SESSION.token) {
+    try {
+      const params = new URLSearchParams({ action:'atualizar_campos', token:SESSION.token, uid, status:'ABERTO' });
+      const res  = await fetch(GSHEETS_URL + '?' + params);
+      const json = await res.json();
+      if (!json.ok) console.warn('reabrirProposta GSheets:', json.error);
+    } catch(e) { console.warn('reabrirProposta GSheets network error:', e.message); }
+  }
+
+  alert('Proposta reaberta. Agora registre o pedido na proposta correta.');
+}
+
 // ── Configurações: Status & Etapas ───────────────────────────────────────
 
 function renderConfigPanel() {
@@ -10353,6 +10444,7 @@ async function saveDataAbertura(uid, isoDate, displayDate) {
 
 let viewMode = 'list';
 let dragUid   = null;
+let dragColIdx = null; // índice (dentro do funil) da coluna sendo arrastada, ou null
 
 function setViewMode(mode) {
   viewMode = mode;
@@ -11498,6 +11590,11 @@ function renderKanban() {
     return true;
   });
 
+  // Reordenar colunas (arrastando o cabeçalho) só vale para as etapas REAIS do
+  // funil — "Sem Etapa" e as terminais (Vendido/Perdido/Stand-by) são sintéticas
+  // (calculadas por status) e ficam sempre fixas nas pontas. Só o admin reordena,
+  // porque a ordem é do funil compartilhado (afeta todos os usuários).
+  const canDragCols = !!(SESSION && SESSION.role === 'admin');
   const colsHtml = visibleColumns.map(col => {
     const cards  = byEtapa[col.value] || [];
     const total  = cards.reduce((a, p) => a + (p.receita_estimada || 0), 0);
@@ -11506,12 +11603,17 @@ function renderKanban() {
       : '';
     const colId  = 'kcol-' + col.value.replace(/[^a-z0-9]/gi, '_');
     const realVal = ['__none__','__vendido__','__perdido__','__standby__'].includes(col.value) ? '' : col.value;
+    const stageIdx = etapaList.findIndex(e => e.value === col.value); // -1 = coluna sintética
+    const isMovable = canDragCols && stageIdx !== -1;
+    const headerDragAttrs = isMovable
+      ? ` draggable="true" ondragstart="kanbanColDragStart(event,${stageIdx})" ondragend="kanbanColDragEnd(event)"`
+      : '';
 
-    return `<div class="kanban-col" id="${colId}"
+    return `<div class="kanban-col" id="${colId}" data-stage-idx="${stageIdx}"
         ondragover="kanbanDragOver(event,'${realVal}')"
         ondrop="kanbanDrop(event,'${realVal}')"
         ondragleave="kanbanDragLeave(event)">
-      <div class="kanban-col-header">
+      <div class="kanban-col-header${isMovable?' kanban-col-draggable':''}"${headerDragAttrs} title="${isMovable?'Arraste para reordenar esta etapa':''}">
         <span class="kanban-col-dot" style="background:${col.color}"></span>
         <span class="kanban-col-title">${col.label}</span>
         <div class="kanban-col-meta">
@@ -11653,12 +11755,47 @@ async function kanbanDrop(event, newEtapa) {
   document.querySelectorAll('.kanban-col').forEach(el => el.classList.remove('drag-over'));
   document.querySelectorAll('.kanban-card').forEach(el => el.classList.remove('dragging'));
 
+  // ── Reordenar COLUNA (arrastando o cabeçalho de uma etapa) ────────────────
+  if (dragColIdx !== null) {
+    const fromIdx = dragColIdx;
+    dragColIdx = null;
+    if (!(SESSION && SESSION.role === 'admin')) return; // defesa em profundidade
+    const targetIdx = parseInt(event.currentTarget.dataset.stageIdx, 10);
+    if (isNaN(targetIdx) || targetIdx < 0 || targetIdx === fromIdx) return; // fora de uma etapa real
+    ensureFunis();
+    const key  = _funilKeyForCat(_activeKanbanCatKey());
+    const list = CRM_CONFIG.funis[key];
+    const [moved] = list.splice(fromIdx, 1);
+    list.splice(targetIdx, 0, moved);
+    saveConfig();
+    _saveFunisToServer();
+    renderKanban();
+    return;
+  }
+
+  // ── Mover CARTÃO para outra etapa ──────────────────────────────────────
   if (!dragUid) return;
   const uid = dragUid;
   dragUid   = null;
 
   // Reutiliza a lógica centralizada de troca de etapa
   await setEtapaFromPanel(uid, newEtapa);
+}
+
+// ── Reordenar colunas do Kanban (drag do cabeçalho da etapa) ────────────────
+function kanbanColDragStart(event, idx) {
+  if (!(SESSION && SESSION.role === 'admin')) { event.preventDefault(); return; }
+  dragColIdx = idx;
+  dragUid    = null; // garante que não seja confundido com drag de cartão
+  event.dataTransfer.effectAllowed = 'move';
+  event.dataTransfer.setData('text/plain', 'col:' + idx);
+  event.stopPropagation();
+  const colEl = event.currentTarget.closest('.kanban-col');
+  setTimeout(() => { if (colEl) colEl.classList.add('col-dragging'); }, 0);
+}
+function kanbanColDragEnd(event) {
+  dragColIdx = null;
+  document.querySelectorAll('.kanban-col').forEach(el => el.classList.remove('drag-over', 'col-dragging'));
 }
 
 // ── Alterar Etapa direto do painel expandido ─────────────────────────────
