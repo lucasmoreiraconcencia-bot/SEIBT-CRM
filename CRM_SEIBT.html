@@ -409,6 +409,59 @@ body.sidebar-collapsed .main{margin-left:var(--sidebar-mini)}
 .cp-empty svg{width:30px;height:30px;opacity:.25;margin:0 auto 12px;display:block;stroke:currentColor;fill:none}
 .cp-doc-wrap{display:flex;flex-direction:column;gap:8px}
 
+/* ── Aba Notas (mural colaborativo) ─────────────────────────────────────── */
+.cp-notas-add{display:flex;flex-direction:column;gap:8px;margin-bottom:16px}
+.cp-notas-add textarea{width:100%;min-height:64px;resize:vertical;font-family:inherit;font-size:13px;
+  padding:10px 12px;border:1px solid var(--border);border-radius:var(--radius);color:var(--text);background:var(--white)}
+.cp-notas-add textarea:focus{outline:none;border-color:var(--blue-mid)}
+.cp-notas-add-row{display:flex;justify-content:flex-end}
+.btn-nota-add{display:inline-flex;align-items:center;gap:6px;background:var(--navy);color:#fff;border:none;
+  padding:9px 16px;border-radius:var(--radius);font-size:12.5px;font-weight:500;cursor:pointer}
+.btn-nota-add:hover{opacity:.92}.btn-nota-add:disabled{opacity:.5;cursor:default}
+.btn-nota-add svg{width:15px;height:15px;stroke:currentColor;fill:none}
+.cp-notas-list{display:flex;flex-direction:column;gap:10px}
+.nota-item{border:1px solid var(--border);border-radius:12px;padding:12px 14px}
+.nota-hdr{display:flex;align-items:center;gap:8px;margin-bottom:6px}
+.nota-ava{width:26px;height:26px;border-radius:50%;background:var(--blue-lt);color:var(--blue);
+  display:inline-flex;align-items:center;justify-content:center;font-size:11px;font-weight:600;flex-shrink:0}
+.nota-autor{font-size:12.5px;font-weight:600;color:var(--navy)}
+.nota-data{font-size:11px;color:var(--muted)}
+.nota-edit-flag{font-size:10.5px;color:var(--muted);font-style:italic}
+.nota-acts{margin-left:auto;display:flex;gap:8px;align-items:center}
+.nota-lock{font-size:11px;color:var(--muted);display:inline-flex;align-items:center;gap:4px}
+.nota-lock svg{width:12px;height:12px;stroke:currentColor;fill:none}
+.btn-nota-act{width:26px;height:26px;border:none;background:transparent;color:var(--muted);cursor:pointer;
+  border-radius:6px;display:inline-flex;align-items:center;justify-content:center}
+.btn-nota-act:hover{background:var(--bg-hover);color:var(--navy)}
+.btn-nota-act.del:hover{color:var(--error)}
+.btn-nota-act svg{width:14px;height:14px;stroke:currentColor;fill:none}
+.nota-texto{font-size:12.5px;color:var(--text);line-height:1.55;white-space:pre-wrap;word-break:break-word}
+.nota-edit-box{display:flex;flex-direction:column;gap:8px;margin-top:4px}
+.nota-edit-box textarea{width:100%;min-height:56px;resize:vertical;font-family:inherit;font-size:12.5px;
+  padding:8px 10px;border:1px solid var(--blue-mid);border-radius:var(--radius);color:var(--text);background:var(--white)}
+.nota-edit-actions{display:flex;gap:8px;justify-content:flex-end}
+.nota-edit-actions button{padding:6px 12px;border-radius:var(--radius);font-size:12px;cursor:pointer;border:1px solid var(--border)}
+.nota-edit-actions .save{background:var(--navy);color:#fff;border-color:var(--navy)}
+
+/* ── Aba Arquivos: galeria de imagens ───────────────────────────────────── */
+.cp-files-upload{margin-bottom:16px}
+.btn-file-upload{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;cursor:pointer;
+  border:1.5px dashed var(--border-strong,var(--border));border-radius:var(--radius);padding:14px;
+  font-size:12.5px;color:var(--muted);background:var(--bg);transition:border-color .15s}
+.btn-file-upload:hover{border-color:var(--blue-mid);color:var(--blue)}
+.btn-file-upload.uploading{opacity:.6;pointer-events:none}
+.btn-file-upload svg{width:16px;height:16px;stroke:currentColor;fill:none}
+.cp-files-sect-title{font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;
+  letter-spacing:.5px;margin:0 0 8px;display:flex;align-items:center;gap:6px}
+.cp-img-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(96px,1fr));gap:8px;margin-bottom:18px}
+.cp-img-cell{position:relative;aspect-ratio:1;border-radius:var(--radius);overflow:hidden;border:1px solid var(--border);
+  cursor:pointer;background:var(--bg-hover)}
+.cp-img-cell img{width:100%;height:100%;object-fit:cover;display:block}
+.cp-img-cell .img-del{position:absolute;top:4px;right:4px;width:24px;height:24px;border:none;border-radius:6px;
+  background:rgba(0,0,0,.55);color:#fff;cursor:pointer;display:none;align-items:center;justify-content:center}
+.cp-img-cell:hover .img-del{display:inline-flex}
+.cp-img-cell .img-del svg{width:13px;height:13px;stroke:currentColor;fill:none}
+
 @media(max-width:760px){
   .cp-indicators{grid-template-columns:repeat(2,1fr)}
   .cp-cols{grid-template-columns:1fr;gap:0}
@@ -2909,7 +2962,8 @@ body { font-family: var(--font-sans); -webkit-font-smoothing: antialiased; text-
   <!-- Navegação por abas -->
   <div class="cp-tabs">
     <button class="cp-tab active" data-tab="resumo" onclick="switchPropTab('resumo')">Resumo</button>
-    <button class="cp-tab" data-tab="pdfs" onclick="switchPropTab('pdfs')">PDFs <span class="cp-tab-badge" id="cp-tabbadge-pdfs">0</span></button>
+    <button class="cp-tab" data-tab="notas" onclick="switchPropTab('notas')">Notas <span class="cp-tab-badge" id="cp-tabbadge-notas">0</span></button>
+    <button class="cp-tab" data-tab="pdfs" onclick="switchPropTab('pdfs')">Arquivos <span class="cp-tab-badge" id="cp-tabbadge-pdfs">0</span></button>
     <button class="cp-tab" data-tab="historico" onclick="switchPropTab('historico')">Histórico</button>
     <button class="cp-tab" data-tab="followups" onclick="switchPropTab('followups')">Follow-ups <span class="cp-tab-badge" id="cp-tabbadge-fu">0</span></button>
   </div>
@@ -2921,7 +2975,12 @@ body { font-family: var(--font-sans); -webkit-font-smoothing: antialiased; text-
       <div class="cp-scroll" id="cp-resumo-content"></div>
     </div>
 
-    <!-- Aba: PDFs -->
+    <!-- Aba: Notas (mural colaborativo por proposta) -->
+    <div class="cp-panel" id="cp-panel-notas">
+      <div class="cp-scroll" id="cp-notas-content"></div>
+    </div>
+
+    <!-- Aba: Arquivos (PDFs + galeria de imagens) -->
     <div class="cp-panel" id="cp-panel-pdfs">
       <div class="cp-scroll" id="cp-pdfs-content"></div>
     </div>
@@ -4850,6 +4909,12 @@ function openFollowupModal(uid) {
   buildCpHistorico(p, sorted);
   buildCpPdfs(uid);
 
+  // Notas colaborativas: recarrega do servidor a cada abertura (frescor entre
+  // usuários). buildCpNotas dispara loadNotas() quando o cache está indefinido
+  // e atualiza o badge ao terminar.
+  propNotas[uid] = undefined;
+  buildCpNotas(uid);
+
   document.getElementById('followup-overlay').classList.add('open');
   document.getElementById('followup-modal').classList.add('open');
   document.body.style.overflow = 'hidden';
@@ -4980,6 +5045,7 @@ function buildCpResumo(p, ctx) {
             ${f('Cidade / UF', (p.cidade||'—')+(p.uf?' / '+p.uf:''))}
             ${p.modelo ? f('Modelo', p.modelo+(p.versao?' · '+p.versao:'')) : ''}
           </div>
+          ${_aplicacaoBlockHtml(p)}
           ${p.descricao?`<div class="exp-field" style="margin-top:13px"><div class="exp-label">Descrição</div><div class="exp-value">${p.descricao}</div></div>`:''}
         </div>
       </div>
@@ -5019,30 +5085,300 @@ function buildCpHistorico(p, sorted) {
 }
 
 // Aba PDFs (markup próprio p/ evitar conflito de id com a lista expandida)
+// Detecta se um documento é imagem (pela extensão do nome ou da URL).
+function _isImageDoc(doc) {
+  const src = (doc && (doc.name || doc.url)) || '';
+  const ext = (src.split('?')[0].split('.').pop() || '').toLowerCase();
+  return ['jpg','jpeg','png','gif','webp','bmp','svg'].includes(ext);
+}
+
+// Aba ARQUIVOS: documentos (lista) + imagens (galeria). O upload reaproveita
+// uploadPDF() e o mesmo bucket; a separação é só visual, pela extensão.
 function buildCpPdfs(uid) {
   const el = document.getElementById('cp-pdfs-content');
   if (!el) return;
-  const docs = (typeof loadDocs === 'function') ? loadDocs(uid) : [];
-  if (!docs.length) { el.innerHTML = cpEmptyState('Nenhum documento vinculado a esta proposta.'); return; }
+  const all = (typeof loadDocs === 'function') ? loadDocs(uid) : [];
   const PDF_ICON = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>`;
-  el.innerHTML = '<div class="cp-doc-wrap">' + docs.map(doc => {
-    const safeUrl = doc.url.replace(/'/g, '%27');
-    const safeName = (doc.name||'').replace(/'/g, '&apos;');
-    const meta = (doc.size||'') + ' · ' + new Date(doc.uploaded_at||Date.now()).toLocaleDateString('pt-BR');
-    return `<div class="doc-item">
-      <div class="doc-icon">${PDF_ICON}</div>
-      <div class="doc-info" style="cursor:pointer" onclick="openDocViewer('${safeUrl}','${safeName}','${meta}')" title="Visualizar documento">
-        <div class="doc-name" style="color:var(--navy)">${doc.name}</div>
-        <div class="doc-meta">${meta}</div>
+  const EYE = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>`;
+  const DL  = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>`;
+  const TRASH = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6M14 11v6"/></svg>`;
+
+  // Botão de upload (mesmo fluxo do painel expandido) — aceita PDF e imagens.
+  const uploadBox = `<div class="cp-files-upload">
+    <label class="btn-file-upload" id="cp-upload-btn-${uid}">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 16 12 12 8 16"/><line x1="12" y1="12" x2="12" y2="21"/><path d="M20.39 18.39A5 5 0 0 0 18 9h-1.26A8 8 0 1 0 3 16.3"/></svg>
+      <span>Enviar PDF ou imagem</span>
+      <input type="file" accept=".pdf,.doc,.docx,.xls,.xlsx,.png,.jpg,.jpeg,.gif,.webp" style="display:none" onchange="uploadPDF('${uid}',this)">
+    </label>
+  </div>`;
+
+  if (!all.length) {
+    el.innerHTML = uploadBox + cpEmptyState('Nenhum arquivo vinculado a esta proposta.');
+    return;
+  }
+
+  const imgs = [], docs = [];
+  all.forEach((d, i) => { (_isImageDoc(d) ? imgs : docs).push(Object.assign({ _i:i }, d)); });
+
+  let html = uploadBox;
+
+  if (docs.length) {
+    html += `<div class="cp-files-sect-title">Documentos</div><div class="cp-doc-wrap">` + docs.map(doc => {
+      const safeUrl = doc.url.replace(/'/g, '%27');
+      const safeName = (doc.name||'').replace(/'/g, '&apos;');
+      const meta = (doc.size||'') + ' · ' + new Date(doc.uploaded_at||Date.now()).toLocaleDateString('pt-BR');
+      return `<div class="doc-item">
+        <div class="doc-icon">${PDF_ICON}</div>
+        <div class="doc-info" style="cursor:pointer" onclick="openDocViewer('${safeUrl}','${safeName}','${meta}')" title="Visualizar documento">
+          <div class="doc-name" style="color:var(--navy)">${doc.name}</div>
+          <div class="doc-meta">${meta}</div>
+        </div>
+        <button class="btn-icon" style="width:30px;height:30px;flex-shrink:0" onclick="openDocViewer('${safeUrl}','${safeName}','${meta}')" title="Visualizar">${EYE}</button>
+        <a class="btn-icon" style="width:30px;height:30px;flex-shrink:0;display:flex;align-items:center;justify-content:center" href="${doc.url}" target="_blank" rel="noopener" title="Download / abrir">${DL}</a>
+        <button class="btn-icon" style="width:30px;height:30px;flex-shrink:0;color:var(--error)" onclick="deletePDF('${uid}',${doc._i})" title="Remover">${TRASH}</button>
+      </div>`;
+    }).join('') + '</div>';
+  }
+
+  if (imgs.length) {
+    html += `<div class="cp-files-sect-title" style="margin-top:${docs.length?'18px':'0'}">Imagens</div><div class="cp-img-grid">` + imgs.map(img => {
+      const safeUrl = img.url.replace(/'/g, '%27');
+      const safeName = (img.name||'').replace(/'/g, '&apos;');
+      const meta = (img.size||'') + ' · ' + new Date(img.uploaded_at||Date.now()).toLocaleDateString('pt-BR');
+      return `<div class="cp-img-cell" onclick="openDocViewer('${safeUrl}','${safeName}','${meta}')" title="${safeName}">
+        <img src="${img.url}" alt="${safeName}" loading="lazy">
+        <button class="img-del" onclick="event.stopPropagation();deletePDF('${uid}',${img._i})" title="Remover imagem">${TRASH}</button>
+      </div>`;
+    }).join('') + '</div>';
+  }
+
+  el.innerHTML = html;
+}
+
+// ══════════════════════════════════════════════════════════════════════
+//  APLICAÇÃO + NOTAS COLABORATIVAS (modal da proposta)
+// ══════════════════════════════════════════════════════════════════════
+
+// Notas carregadas por proposta (cache em memória): propNotas[uid] = [ {...}, ... ]
+let propNotas = {};
+
+// Escapa texto livre antes de injetar em innerHTML (notas/aplicação são digitadas).
+function _htmlEsc(s) {
+  return String(s == null ? '' : s)
+    .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+}
+function _notaIniciais(nome) {
+  const parts = String(nome || '').trim().split(/\s+/).filter(Boolean);
+  if (!parts.length) return '?';
+  return ((parts[0][0] || '') + (parts.length > 1 ? parts[parts.length-1][0] : '')).toUpperCase();
+}
+function _notaData(iso) {
+  if (!iso) return '';
+  const d = new Date(iso);
+  if (isNaN(d)) return '';
+  return d.toLocaleDateString('pt-BR') + ' ' + d.toLocaleTimeString('pt-BR', { hour:'2-digit', minute:'2-digit' });
+}
+
+// ── Aplicação (finalidade do equipamento) — bloco na aba Resumo ────────────
+function _aplicacaoBlockHtml(p) {
+  const EDIT = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>`;
+  const txt = (p.aplicacao || '').trim();
+  return `<div class="exp-field" id="cp-aplic-view" style="margin-top:13px;background:var(--blue-lt);border:1px solid var(--blue-mid);border-radius:var(--radius);padding:10px 12px">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px">
+        <div class="exp-label" style="color:var(--blue);margin:0">Aplicação</div>
+        <button class="btn-icon" style="width:24px;height:24px;margin-left:auto;color:var(--blue)" onclick="editAplicacao()" title="Editar aplicação">${EDIT}</button>
       </div>
-      <button class="btn-icon" style="width:30px;height:30px;flex-shrink:0" onclick="openDocViewer('${safeUrl}','${safeName}','${meta}')" title="Visualizar">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
-      </button>
-      <a class="btn-icon" style="width:30px;height:30px;flex-shrink:0;display:flex;align-items:center;justify-content:center" href="${doc.url}" target="_blank" rel="noopener" title="Download / abrir">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-      </a>
+      <div class="exp-value ${txt?'':'muted'}" style="${txt?'':'color:var(--muted)'}">${txt ? _htmlEsc(txt) : 'Sem aplicação informada. Clique no lápis para adicionar a finalidade do equipamento.'}</div>
+    </div>
+    <div id="cp-aplic-edit" style="display:none;margin-top:13px">
+      <div class="exp-label" style="color:var(--blue);margin-bottom:5px">Aplicação</div>
+      <textarea id="cp-aplic-input" class="form-textarea" style="min-height:64px" placeholder="Ex: Moagem de resíduos plásticos pós-consumo — linha de reciclagem PEAD."></textarea>
+      <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:8px">
+        <button class="nota-edit-actions" style="padding:6px 12px;border:1px solid var(--border);border-radius:var(--radius);font-size:12px;cursor:pointer;background:var(--white)" onclick="cancelAplicacao()">Cancelar</button>
+        <button style="padding:6px 12px;border:1px solid var(--navy);border-radius:var(--radius);font-size:12px;cursor:pointer;background:var(--navy);color:#fff" onclick="saveAplicacao()">Salvar</button>
+      </div>
     </div>`;
-  }).join('') + '</div>';
+}
+function editAplicacao() {
+  const p = DATA.find(x => x.uid === currentFollowupUid);
+  const view = document.getElementById('cp-aplic-view');
+  const edit = document.getElementById('cp-aplic-edit');
+  const inp  = document.getElementById('cp-aplic-input');
+  if (!view || !edit || !inp) return;
+  inp.value = (p && p.aplicacao) || '';
+  view.style.display = 'none';
+  edit.style.display = 'block';
+  inp.focus();
+}
+function cancelAplicacao() {
+  const view = document.getElementById('cp-aplic-view');
+  const edit = document.getElementById('cp-aplic-edit');
+  if (view) view.style.display = '';
+  if (edit) edit.style.display = 'none';
+}
+async function saveAplicacao() {
+  const uid = currentFollowupUid;
+  const p = DATA.find(x => x.uid === uid);
+  const inp = document.getElementById('cp-aplic-input');
+  if (!p || !inp) return;
+  const val = inp.value.trim();
+
+  // Memória + override local (fonte de verdade no front)
+  p.aplicacao = val;
+  overrides[uid] = Object.assign(overrides[uid] || {}, { aplicacao: val });
+  localStorage.setItem('seibt_overrides_v1', JSON.stringify(overrides));
+
+  // Re-renderiza a aba Resumo com o novo valor
+  _refreshFollowupUI(uid);
+
+  // Persiste no Supabase (PATCH direto, mesmo padrão de saveReceita/reabrirProposta)
+  try {
+    const res = await fetch(`${SUPABASE_URL}/rest/v1/propostas?uid=eq.${encodeURIComponent(uid)}`, {
+      method: 'PATCH', headers: Object.assign(supaHdr(true), { 'Prefer':'return=minimal' }),
+      body: JSON.stringify({ aplicacao: val || null })
+    });
+    if (!res.ok) console.warn('[saveAplicacao] HTTP', res.status);
+  } catch(e) { console.warn('[saveAplicacao]', e.message); }
+}
+
+// ── Notas colaborativas ────────────────────────────────────────────────────
+function updateNotasBadge(uid) {
+  const b = document.getElementById('cp-tabbadge-notas');
+  if (b) b.textContent = (propNotas[uid] || []).length;
+}
+async function loadNotas(uid) {
+  try {
+    const r = await fetch(`${SUPABASE_URL}/rest/v1/proposta_notas?uid=eq.${encodeURIComponent(uid)}&order=criado_em.desc`, { headers: supaHdr() });
+    if (r.ok) propNotas[uid] = await r.json();
+    else if (!propNotas[uid]) propNotas[uid] = [];
+  } catch(e) {
+    console.warn('[loadNotas]', e.message);
+    if (!propNotas[uid]) propNotas[uid] = [];
+  }
+  return propNotas[uid] || [];
+}
+function buildCpNotas(uid) {
+  const el = document.getElementById('cp-notas-content');
+  if (!el) return;
+  const addBox = `<div class="cp-notas-add">
+      <textarea id="cp-nota-input" placeholder="Escrever uma nota sobre esta proposta — próximos passos, decisões, contatos…"></textarea>
+      <div class="cp-notas-add-row">
+        <button class="btn-nota-add" onclick="addNota('${uid}')">${PLUS_ICON}Adicionar nota</button>
+      </div>
+    </div>`;
+
+  const notas = propNotas[uid];
+  if (notas === undefined) {
+    el.innerHTML = addBox + '<div class="cp-empty" style="padding:24px">Carregando notas…</div>';
+    loadNotas(uid).then(() => { if (currentFollowupUid === uid) buildCpNotas(uid); updateNotasBadge(uid); });
+    return;
+  }
+
+  const EDIT = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>`;
+  const TRASH = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6M14 11v6"/></svg>`;
+  const LOCK = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>`;
+
+  const myEmail = ((SESSION && SESSION.email) || '').toLowerCase();
+  const list = notas.length ? notas.map(n => {
+    const mine = !!myEmail && (n.autor_email || '').toLowerCase() === myEmail;
+    const editFlag = n.editado_em ? ' <span class="nota-edit-flag">(editada)</span>' : '';
+    const acts = mine
+      ? `<button class="btn-nota-act" onclick="editNota('${uid}','${n.id}')" title="Editar">${EDIT}</button>
+         <button class="btn-nota-act del" onclick="deleteNota('${uid}','${n.id}')" title="Excluir">${TRASH}</button>`
+      : `<span class="nota-lock" title="Só o autor edita esta nota">${LOCK} só o autor</span>`;
+    return `<div class="nota-item" id="nota-${n.id}">
+        <div class="nota-hdr">
+          <span class="nota-ava">${_notaIniciais(n.autor)}</span>
+          <span class="nota-autor">${_htmlEsc(n.autor || '—')}</span>
+          <span class="nota-data">${_notaData(n.criado_em)}${editFlag}</span>
+          <span class="nota-acts">${acts}</span>
+        </div>
+        <div class="nota-texto" id="nota-texto-${n.id}">${_htmlEsc(n.texto || '')}</div>
+      </div>`;
+  }).join('') : '<div class="cp-empty" style="padding:24px">Nenhuma nota ainda. Adicione a primeira acima.</div>';
+
+  el.innerHTML = addBox + `<div class="cp-notas-list">${list}</div>`;
+}
+async function addNota(uid) {
+  const inp = document.getElementById('cp-nota-input');
+  if (!inp) return;
+  const texto = inp.value.trim();
+  if (!texto) return;
+  inp.value = '';
+  const nota = {
+    uid, texto,
+    autor:       (SESSION && SESSION.nome)  || '—',
+    autor_email: (SESSION && SESSION.email) || '',
+    criado_em:   new Date().toISOString()
+  };
+  if (!propNotas[uid]) propNotas[uid] = [];
+  try {
+    const r = await fetch(`${SUPABASE_URL}/rest/v1/proposta_notas`, {
+      method: 'POST', headers: Object.assign(supaHdr(true), { 'Prefer':'return=representation' }),
+      body: JSON.stringify(nota)
+    });
+    if (r.ok) { const rows = await r.json(); propNotas[uid].unshift((Array.isArray(rows) ? rows[0] : rows) || nota); }
+    else { propNotas[uid].unshift(nota); }
+  } catch(e) { console.warn('[addNota]', e.message); propNotas[uid].unshift(nota); }
+  buildCpNotas(uid);
+  updateNotasBadge(uid);
+}
+function editNota(uid, id) {
+  const n = (propNotas[uid] || []).find(x => String(x.id) === String(id));
+  if (!n) return;
+  // Defesa em profundidade: só o autor edita
+  const myEmail = ((SESSION && SESSION.email) || '').toLowerCase();
+  if (!myEmail || (n.autor_email || '').toLowerCase() !== myEmail) return;
+  const el = document.getElementById('nota-texto-' + id);
+  if (!el) return;
+  el.outerHTML = `<div class="nota-edit-box" id="nota-texto-${id}">
+      <textarea id="nota-edit-input-${id}">${_htmlEsc(n.texto || '')}</textarea>
+      <div class="nota-edit-actions">
+        <button onclick="cancelNotaEdit('${uid}','${id}')">Cancelar</button>
+        <button class="save" onclick="saveNotaEdit('${uid}','${id}')">Salvar</button>
+      </div>
+    </div>`;
+  const ta = document.getElementById('nota-edit-input-' + id);
+  if (ta) ta.focus();
+}
+function cancelNotaEdit(uid) { buildCpNotas(uid); }
+async function saveNotaEdit(uid, id) {
+  const n = (propNotas[uid] || []).find(x => String(x.id) === String(id));
+  const ta = document.getElementById('nota-edit-input-' + id);
+  if (!n || !ta) return;
+  const myEmail = ((SESSION && SESSION.email) || '').toLowerCase();
+  if (!myEmail || (n.autor_email || '').toLowerCase() !== myEmail) return;
+  const texto = ta.value.trim();
+  if (!texto) return;
+  n.texto = texto;
+  n.editado_em = new Date().toISOString();
+  buildCpNotas(uid);
+  if (n.id) {
+    try {
+      await fetch(`${SUPABASE_URL}/rest/v1/proposta_notas?id=eq.${n.id}`, {
+        method: 'PATCH', headers: Object.assign(supaHdr(true), { 'Prefer':'return=minimal' }),
+        body: JSON.stringify({ texto, editado_em: n.editado_em })
+      });
+    } catch(e) { console.warn('[saveNotaEdit]', e.message); }
+  }
+}
+async function deleteNota(uid, id) {
+  const arr = propNotas[uid] || [];
+  const idx = arr.findIndex(x => String(x.id) === String(id));
+  if (idx === -1) return;
+  const n = arr[idx];
+  const myEmail = ((SESSION && SESSION.email) || '').toLowerCase();
+  if (!myEmail || (n.autor_email || '').toLowerCase() !== myEmail) return;
+  if (!confirm('Excluir esta nota? Esta ação não pode ser desfeita.')) return;
+  arr.splice(idx, 1);
+  buildCpNotas(uid);
+  updateNotasBadge(uid);
+  if (n.id) {
+    try {
+      await fetch(`${SUPABASE_URL}/rest/v1/proposta_notas?id=eq.${n.id}`, { method: 'DELETE', headers: supaHdr() });
+    } catch(e) { console.warn('[deleteNota]', e.message); }
+  }
 }
 
 function closeFollowupModal() {
@@ -5726,6 +6062,17 @@ function saveDocs(uid, docs) {
   if (prop) prop.docs_urls = docs.map(d => d.url);
 }
 
+// Após enviar/remover um arquivo, atualiza tanto a lista do painel expandido
+// quanto a aba "Arquivos" do modal (se aberta para esta proposta) e o badge.
+function _refreshDocsUI(uid) {
+  renderDocs(uid);
+  if (currentFollowupUid === uid) {
+    buildCpPdfs(uid);
+    const b = document.getElementById('cp-tabbadge-pdfs');
+    if (b) b.textContent = (typeof loadDocs === 'function' ? loadDocs(uid).length : 0);
+  }
+}
+
 function renderDocs(uid) {
   const listEl = document.getElementById('doc-list-'+uid);
   if (!listEl) return;
@@ -5889,7 +6236,7 @@ async function uploadPDF(uid, input) {
     const docs = loadDocs(uid);
     docs.push({ name:file.name, url:publicUrl, size:sizeStr, uploaded_at:new Date().toISOString(), path });
     saveDocs(uid, docs);
-    renderDocs(uid);
+    _refreshDocsUI(uid);
 
     // Tenta persistir URLs no Supabase (PATCH propostas.docs_urls)
     _syncDocsToSupabase(uid, docs);
@@ -5911,7 +6258,7 @@ async function deletePDF(uid, docIdx) {
   const doc = docs[docIdx];
   docs.splice(docIdx, 1);
   saveDocs(uid, docs);
-  renderDocs(uid);
+  _refreshDocsUI(uid);
 
   // Remove do Supabase Storage
   if (doc.path) {
