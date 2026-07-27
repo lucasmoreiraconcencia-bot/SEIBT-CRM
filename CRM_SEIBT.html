@@ -390,6 +390,11 @@ body.sidebar-collapsed .main{margin-left:var(--sidebar-mini)}
 .cp-section{margin-bottom:22px}
 .cp-section:last-child{margin-bottom:0}
 .cp-section-title{font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.6px;margin-bottom:12px;padding-bottom:6px;border-bottom:1px solid var(--border)}
+.cp-section-title-row{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:12px;padding-bottom:6px;border-bottom:1px solid var(--border)}
+.exp-field-edit{grid-column:1 / -1;background:var(--bg-hover);border-radius:var(--radius);padding:10px 12px;margin-top:2px}
+.exp-field-edit-actions{display:flex;gap:8px;justify-content:flex-end;margin-top:8px}
+.exp-field-edit-actions button{padding:6px 12px;border:1px solid var(--border);border-radius:var(--radius);font-size:12px;cursor:pointer;background:var(--white)}
+.exp-field-edit-actions button.save{background:var(--navy);color:#fff;border-color:var(--navy)}
 .cp-grid{display:grid;grid-template-columns:1fr 1fr;gap:13px 20px}
 .cp-nextbox{background:var(--blue-lt);border:1px solid var(--blue-mid);border-radius:var(--radius);padding:12px 14px;display:flex;flex-direction:column;gap:8px}
 .cp-nextbox-top{display:flex;align-items:center;justify-content:space-between;gap:10px}
@@ -4084,6 +4089,7 @@ function renderTable() {
 
 const CAL_ICON = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>`;
 const PLUS_ICON = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>`;
+const EDIT_ICON_SM = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>`;
 
 function expandPanel(p) {
   const isExportProp = (p.moeda||'BRL') === 'USD' || (p.uid||'').startsWith('EXP-');
@@ -4803,13 +4809,22 @@ function selectTemp(btn) {
 // Temperatura / Próxima ação) do topo da janela da proposta. Extraído para ser
 // reaproveitado também logo após registrar/editar um follow-up (sem precisar
 // fechar e reabrir a janela para ver o valor atualizado).
+// Temperatura "atual" da proposta: prioriza o valor definido manualmente
+// (p.temperatura, editável direto no Resumo); sem isso, cai para a temperatura
+// do follow-up mais recente que tiver uma marcada — mesma lógica de sempre,
+// preservada para propostas antigas que nunca usaram a edição direta.
+function _currentTemp(p, sorted) {
+  if (p.temperatura) return p.temperatura;
+  return (sorted.find(f => f.temperatura) || {}).temperatura || '';
+}
+
 function _buildCpIndicatorsHtml(p, sorted, daysSinceLast) {
   const lastTxt = daysSinceLast === null ? 'Sem contatos'
     : daysSinceLast === 0 ? 'Hoje' : daysSinceLast + ' dia' + (daysSinceLast===1?'':'s') + ' atrás';
   const lastCls = daysSinceLast === null ? 'muted' : daysSinceLast < 7 ? 'ok' : daysSinceLast < 21 ? 'warn' : 'urgent';
   const semMov  = daysSinceLast !== null ? daysSinceLast : (p.dias_aberto || null);
   const movCls  = semMov === null ? 'muted' : semMov < 15 ? 'ok' : semMov < 30 ? 'warn' : 'urgent';
-  const lastTemp = (sorted.find(f => f.temperatura) || {}).temperatura || '';
+  const lastTemp = _currentTemp(p, sorted);
   const tempMap  = { Quente:'Quente', Morna:'Morna', Fria:'Fria' };
   const proxAcao = p.proxima_acao || '';
   return `
@@ -4822,7 +4837,7 @@ function _buildCpIndicatorsHtml(p, sorted, daysSinceLast) {
 // Aplica na proposta em memória (+ overrides) a etapa e a próxima ação
 // definidas num follow-up (criado ou editado) — é isto que move o card no
 // Kanban e atualiza o chip de etapa na lista.
-function _syncPropostaFromFollowup(p, { etapa, proximo, tipoProx }) {
+function _syncPropostaFromFollowup(p, { etapa, proximo, tipoProx, temperatura }) {
   const ov = {};
   if (etapa && etapa !== p.etapa) {
     p.etapa = etapa;
@@ -4835,6 +4850,10 @@ function _syncPropostaFromFollowup(p, { etapa, proximo, tipoProx }) {
     p.proxima_acao = tipoProx || 'Contato';
     ov.data_proxima_acao = proximo;
     ov.proxima_acao = p.proxima_acao;
+  }
+  if (temperatura && temperatura !== p.temperatura) {
+    p.temperatura = temperatura;
+    ov.temperatura = temperatura;
   }
   if (Object.keys(ov).length) {
     overrides[p.uid] = Object.assign(overrides[p.uid] || {}, ov);
@@ -5012,24 +5031,11 @@ function buildCpResumo(p, ctx) {
   if (!el) return;
   const { isExpModal, fmtVal, sorted } = ctx;
   const valor = fmtVal(isExpModal ? (p.valor_usd || p.receita_estimada) : p.receita_estimada);
-  const lastTemp = (sorted.find(f => f.temperatura) || {}).temperatura || '';
-  const tempMap = { Quente:'Quente', Morna:'Morna', Fria:'Fria' };
   const f = (lbl, val) => `<div class="exp-field"><div class="exp-label">${lbl}</div><div class="exp-value">${val}</div></div>`;
 
   const lastFuAll  = sorted[0] || null;
   const lastNotas  = (lastFuAll && lastFuAll.notas_proximo && lastFuAll.notas_proximo.trim()) ? lastFuAll.notas_proximo : '';
   const lastResumo = (lastFuAll && lastFuAll.resumo_reuniao && lastFuAll.resumo_reuniao.trim()) ? lastFuAll.resumo_reuniao : '';
-
-  let nextBox = '<div class="cp-empty" style="padding:18px 12px">Nenhuma próxima ação agendada.</div>';
-  if (p.proxima_acao || p.data_proxima_acao) {
-    nextBox = `<div class="cp-nextbox">
-      <div class="cp-nextbox-top">
-        <div><div class="exp-next-label">Próxima ação</div><div class="exp-next-text">${p.proxima_acao||'—'}</div></div>
-        ${p.data_proxima_acao ? `<div class="cp-nextbox-date">${CAL_ICON} ${p.data_proxima_acao}</div>` : ''}
-      </div>
-      ${lastNotas ? `<div class="cp-nextbox-notas">${lastNotas}</div>` : ''}
-    </div>`;
-  }
 
   const acts = cpActivities(p, sorted).slice(0, 6);
   const actsHtml = acts.length
@@ -5044,11 +5050,11 @@ function buildCpResumo(p, ctx) {
           <div class="cp-grid">
             ${f('Cliente', p.cliente||'—')}
             ${f('Valor', '<strong>'+valor+'</strong>')}
-            ${f('Responsável', p.responsavel||p.interno||'—')}
+            ${_responsavelFieldHtml(p)}
             ${f('Etapa atual', etapaChip(p.etapa))}
-            ${f('Status', statusChip(p.status))}
+            ${_statusFieldHtml(p)}
             ${f('Categoria', classifChip(p.classificacao))}
-            ${f('Temperatura', lastTemp?(tempMap[lastTemp]||lastTemp):'—')}
+            ${_temperaturaFieldHtml(p, sorted)}
             ${f('Data de abertura', p.data_abertura||'—')}
             ${f('Cidade / UF', (p.cidade||'—')+(p.uf?' / '+p.uf:''))}
             ${p.modelo ? f('Modelo', p.modelo+(p.versao?' · '+p.versao:'')) : ''}
@@ -5059,8 +5065,11 @@ function buildCpResumo(p, ctx) {
       </div>
       <div>
         <div class="cp-section">
-          <div class="cp-section-title">Próxima ação</div>
-          ${nextBox}
+          <div class="cp-section-title-row">
+            <div class="cp-section-title" style="margin-bottom:0;border-bottom:none;padding-bottom:0">Próxima ação</div>
+            <button class="btn-icon" style="width:22px;height:22px" onclick="editProximaAcao()" title="Alterar próxima ação">${EDIT_ICON_SM}</button>
+          </div>
+          ${_proximaAcaoBlockHtml(p, lastNotas)}
         </div>
         ${lastResumo ? `<div class="cp-section">
           <div class="cp-section-title">Resumo do último contato</div>
@@ -5248,6 +5257,313 @@ async function saveAplicacao() {
     });
     if (!res.ok) console.warn('[saveAplicacao] HTTP', res.status);
   } catch(e) { console.warn('[saveAplicacao]', e.message); }
+}
+
+// ── Temperatura (editável direto no Resumo, sem precisar registrar follow-up) ──
+let _cpTempSelected = '';
+function _temperaturaFieldHtml(p, sorted) {
+  const cur = _currentTemp(p, sorted);
+  const tempMap  = { Quente:'Quente', Morna:'Morna', Fria:'Fria' };
+  const dotColor = { Quente:'#ef4444', Morna:'#f59e0b', Fria:'#3b82f6' };
+  const viewVal = cur
+    ? `<span style="display:inline-flex;align-items:center;gap:5px"><span style="width:8px;height:8px;border-radius:50%;background:${dotColor[cur]||'#9ca3af'};display:inline-block;flex-shrink:0"></span>${tempMap[cur]||cur}</span>`
+    : '—';
+  return `<div class="exp-field" id="cp-temp-view">
+      <div class="exp-label" style="display:flex;align-items:center;gap:6px">Temperatura
+        <button class="btn-icon" style="width:20px;height:20px" onclick="editTemperatura()" title="Alterar temperatura">${EDIT_ICON_SM}</button>
+      </div>
+      <div class="exp-value">${viewVal}</div>
+    </div>
+    <div class="exp-field-edit" id="cp-temp-edit" style="display:none">
+      <div class="temp-group" style="max-width:280px">
+        <button type="button" class="temp-btn quente${cur==='Quente'?' active':''}" data-val="Quente" onclick="selectTempResumo(this)"><span class="temp-dot"></span>Quente</button>
+        <button type="button" class="temp-btn morna${cur==='Morna'?' active':''}" data-val="Morna" onclick="selectTempResumo(this)"><span class="temp-dot"></span>Morna</button>
+        <button type="button" class="temp-btn fria${cur==='Fria'?' active':''}" data-val="Fria" onclick="selectTempResumo(this)"><span class="temp-dot"></span>Fria</button>
+      </div>
+      <div class="exp-field-edit-actions">
+        <button onclick="cancelTemperatura()">Cancelar</button>
+        <button class="save" onclick="saveTemperatura()">Salvar</button>
+      </div>
+    </div>`;
+  }
+function editTemperatura() {
+  const p = DATA.find(x => x.uid === currentFollowupUid);
+  const view = document.getElementById('cp-temp-view');
+  const edit = document.getElementById('cp-temp-edit');
+  if (!p || !view || !edit) return;
+  _cpTempSelected = p.temperatura || '';
+  edit.querySelectorAll('.temp-btn').forEach(b => b.classList.toggle('active', b.dataset.val === _cpTempSelected));
+  view.style.display = 'none';
+  edit.style.display = 'block';
+}
+function selectTempResumo(btn) {
+  document.querySelectorAll('#cp-temp-edit .temp-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  _cpTempSelected = btn.dataset.val;
+}
+function cancelTemperatura() {
+  const view = document.getElementById('cp-temp-view');
+  const edit = document.getElementById('cp-temp-edit');
+  if (view) view.style.display = '';
+  if (edit) edit.style.display = 'none';
+}
+async function saveTemperatura() {
+  const uid = currentFollowupUid;
+  const p = DATA.find(x => x.uid === uid);
+  if (!p || !_cpTempSelected) return;
+  const val = _cpTempSelected;
+
+  p.temperatura = val;
+  overrides[uid] = Object.assign(overrides[uid] || {}, { temperatura: val });
+  localStorage.setItem('seibt_overrides_v1', JSON.stringify(overrides));
+  _refreshFollowupUI(uid);
+
+  try {
+    const res = await fetch(`${SUPABASE_URL}/rest/v1/propostas?uid=eq.${encodeURIComponent(uid)}`, {
+      method: 'PATCH', headers: Object.assign(supaHdr(true), { 'Prefer':'return=minimal' }),
+      body: JSON.stringify({ temperatura: val })
+    });
+    if (!res.ok) console.warn('[saveTemperatura] HTTP', res.status);
+  } catch(e) { console.warn('[saveTemperatura]', e.message); }
+}
+
+// ── Responsável (editável direto no Resumo — mesma lista de usuários cadastrados
+//    no CRM já usada no editor da lista, ver _responsavelOptions) ──────────────
+function _responsavelFieldHtml(p) {
+  const cur = p.responsavel || p.interno || '';
+  const opts = _responsavelOptions();
+  return `<div class="exp-field" id="cp-resp-view">
+      <div class="exp-label" style="display:flex;align-items:center;gap:6px">Responsável
+        <button class="btn-icon" style="width:20px;height:20px" onclick="editResponsavelResumo()" title="Alterar responsável">${EDIT_ICON_SM}</button>
+      </div>
+      <div class="exp-value">${cur ? _htmlEsc(cur) : '—'}</div>
+    </div>
+    <div class="exp-field-edit" id="cp-resp-edit" style="display:none">
+      <select id="cp-resp-select" class="form-select" style="max-width:280px">
+        <option value="">— Selecione —</option>
+        ${opts.map(n => `<option value="${_htmlEsc(n)}"${n===(p.responsavel||'')?' selected':''}>${_htmlEsc(n)}</option>`).join('')}
+      </select>
+      <div class="exp-field-edit-actions">
+        <button onclick="cancelResponsavelResumo()">Cancelar</button>
+        <button class="save" onclick="saveResponsavelResumo()">Salvar</button>
+      </div>
+    </div>`;
+}
+function editResponsavelResumo() {
+  const view = document.getElementById('cp-resp-view');
+  const edit = document.getElementById('cp-resp-edit');
+  if (!view || !edit) return;
+  view.style.display = 'none';
+  edit.style.display = 'block';
+}
+function cancelResponsavelResumo() {
+  const view = document.getElementById('cp-resp-view');
+  const edit = document.getElementById('cp-resp-edit');
+  if (view) view.style.display = '';
+  if (edit) edit.style.display = 'none';
+}
+async function saveResponsavelResumo() {
+  const uid = currentFollowupUid;
+  const p = DATA.find(x => x.uid === uid);
+  const sel = document.getElementById('cp-resp-select');
+  if (!p || !sel) return;
+  const val = sel.value;
+
+  p.responsavel = val;
+  overrides[uid] = Object.assign(overrides[uid] || {}, { responsavel: val });
+  localStorage.setItem('seibt_overrides_v1', JSON.stringify(overrides));
+  _refreshFollowupUI(uid);
+
+  if (GSHEETS_URL && !GSHEETS_URL.includes('COLE_AQUI') && SESSION && SESSION.token) {
+    try {
+      const params = new URLSearchParams({ action:'atualizar_campos', token:SESSION.token, uid, responsavel:val });
+      const r = await fetch(`${GSHEETS_URL}?${params}`);
+      const j = await r.json();
+      if (!j.ok) console.warn('[saveResponsavelResumo]', j.error);
+    } catch(e) { console.warn('[saveResponsavelResumo]', e.message); }
+  }
+}
+
+// ── Próxima Ação (editável direto no Resumo, sem precisar registrar follow-up) ──
+function _proximaAcaoBlockHtml(p, lastNotas) {
+  const hasNext = !!(p.proxima_acao || p.data_proxima_acao);
+  const view = hasNext
+    ? `<div class="cp-nextbox">
+        <div class="cp-nextbox-top">
+          <div><div class="exp-next-label">Próxima ação</div><div class="exp-next-text">${_htmlEsc(p.proxima_acao||'—')}</div></div>
+          ${p.data_proxima_acao ? `<div class="cp-nextbox-date">${CAL_ICON} ${p.data_proxima_acao}</div>` : ''}
+        </div>
+        ${lastNotas ? `<div class="cp-nextbox-notas">${_htmlEsc(lastNotas)}</div>` : ''}
+      </div>`
+    : '<div class="cp-empty" style="padding:18px 12px">Nenhuma próxima ação agendada.</div>';
+  return `<div id="cp-prox-view">${view}</div>
+    <div class="exp-field-edit" id="cp-prox-edit" style="display:none">
+      <div class="form-row">
+        <div class="form-group" style="margin-bottom:0">
+          <label class="form-label">Tipo do próximo passo</label>
+          <select id="cp-prox-tipo" class="form-select">
+            <option value="">Selecione...</option>
+            <option value="Ligar">Ligar</option>
+            <option value="E-mail">E-mail</option>
+            <option value="WhatsApp">WhatsApp</option>
+            <option value="Visita">Visita</option>
+            <option value="Videoconferencia">Videoconferência</option>
+            <option value="Enviar proposta">Enviar proposta</option>
+            <option value="Aguardar retorno">Aguardar retorno</option>
+          </select>
+        </div>
+        <div class="form-group" style="margin-bottom:0">
+          <label class="form-label">Data</label>
+          <input type="date" id="cp-prox-data" class="form-input">
+        </div>
+      </div>
+      <div class="exp-field-edit-actions">
+        <button onclick="cancelProximaAcao()">Cancelar</button>
+        <button class="save" onclick="saveProximaAcao()">Salvar</button>
+      </div>
+    </div>`;
+}
+function editProximaAcao() {
+  const p = DATA.find(x => x.uid === currentFollowupUid);
+  const view = document.getElementById('cp-prox-view');
+  const edit = document.getElementById('cp-prox-edit');
+  const tipo = document.getElementById('cp-prox-tipo');
+  const data = document.getElementById('cp-prox-data');
+  if (!p || !view || !edit || !tipo || !data) return;
+  tipo.value = p.proxima_acao || '';
+  data.value = p.data_proxima_acao || '';
+  view.style.display = 'none';
+  edit.style.display = 'block';
+}
+function cancelProximaAcao() {
+  const view = document.getElementById('cp-prox-view');
+  const edit = document.getElementById('cp-prox-edit');
+  if (view) view.style.display = '';
+  if (edit) edit.style.display = 'none';
+}
+async function saveProximaAcao() {
+  const uid = currentFollowupUid;
+  const p = DATA.find(x => x.uid === uid);
+  const tipo = document.getElementById('cp-prox-tipo');
+  const data = document.getElementById('cp-prox-data');
+  if (!p || !tipo || !data) return;
+  const tipoVal = tipo.value;
+  const dataVal = data.value;
+
+  // Sem data = sem próxima ação (permite "limpar" o que estava agendado)
+  p.proxima_acao      = dataVal ? (tipoVal || 'Contato') : '';
+  p.data_proxima_acao = dataVal || '';
+  overrides[uid] = Object.assign(overrides[uid] || {}, {
+    proxima_acao: p.proxima_acao, data_proxima_acao: p.data_proxima_acao
+  });
+  localStorage.setItem('seibt_overrides_v1', JSON.stringify(overrides));
+  _refreshFollowupUI(uid);
+
+  try {
+    const res = await fetch(`${SUPABASE_URL}/rest/v1/propostas?uid=eq.${encodeURIComponent(uid)}`, {
+      method: 'PATCH', headers: Object.assign(supaHdr(true), { 'Prefer':'return=minimal' }),
+      body: JSON.stringify({ proxima_acao: p.proxima_acao || null, data_proxima_acao: p.data_proxima_acao || null })
+    });
+    if (!res.ok) console.warn('[saveProximaAcao] HTTP', res.status);
+  } catch(e) { console.warn('[saveProximaAcao]', e.message); }
+}
+
+// ── Status (editável direto no Resumo — somente Administrador) ─────────────
+// Mesma lista/regra do card "Alterar Status" da lista (exclui ABERTO e VENDIDO,
+// que têm fluxos próprios: "Reabrir Proposta" e "Registrar Pedido"), e mesmo
+// endpoint de gravação (atualizar_status), pra não haver dois caminhos
+// divergentes escrevendo status na proposta.
+function _statusFieldHtml(p) {
+  const isAdmin = SESSION && SESSION.role === 'admin';
+  if (!isAdmin) return `<div class="exp-field"><div class="exp-label">Status</div><div class="exp-value">${statusChip(p.status)}</div></div>`;
+
+  const statusList = [...((CRM_CONFIG && CRM_CONFIG.status_list) || DEFAULT_STATUS_LIST),
+    { value:'PROPOSTA COMPLEMENTAR', label:'Proposta Complementar', color:'#7c3aed' }
+  ].filter(s => s.value !== 'ABERTO' && s.value !== 'VENDIDO');
+  const cur = (p.status || '').toUpperCase();
+
+  return `<div class="exp-field" id="cp-status-view">
+      <div class="exp-label" style="display:flex;align-items:center;gap:6px">Status
+        <button class="btn-icon" style="width:20px;height:20px" onclick="editStatusResumo()" title="Alterar status (somente Administrador)">${EDIT_ICON_SM}</button>
+      </div>
+      <div class="exp-value">${statusChip(p.status)}</div>
+    </div>
+    <div class="exp-field-edit" id="cp-status-edit" style="display:none">
+      <select id="cp-status-select" class="form-select" onchange="onStatusResumoChange()">
+        <option value="">— Selecione —</option>
+        ${statusList.map(s => `<option value="${s.value}"${s.value===cur?' selected':''}>${s.label}</option>`).join('')}
+      </select>
+      <div id="cp-status-motivo-wrap" style="display:none;margin-top:8px">
+        <label class="form-label">Motivo da perda<span class="form-req">*</span></label>
+        <textarea id="cp-status-motivo" class="form-textarea" style="min-height:52px" placeholder="Por que a proposta foi perdida?"></textarea>
+      </div>
+      <div class="exp-field-edit-actions">
+        <button onclick="cancelStatusResumo()">Cancelar</button>
+        <button class="save" onclick="saveStatusResumo()">Salvar</button>
+      </div>
+    </div>`;
+}
+function editStatusResumo() {
+  if (!(SESSION && SESSION.role === 'admin')) return; // defesa em profundidade
+  const view = document.getElementById('cp-status-view');
+  const edit = document.getElementById('cp-status-edit');
+  if (!view || !edit) return;
+  view.style.display = 'none';
+  edit.style.display = 'block';
+  onStatusResumoChange();
+}
+function onStatusResumoChange() {
+  const sel = document.getElementById('cp-status-select');
+  const motivoWrap = document.getElementById('cp-status-motivo-wrap');
+  if (!sel || !motivoWrap) return;
+  motivoWrap.style.display = sel.value === 'PERDIDO' ? 'block' : 'none';
+}
+function cancelStatusResumo() {
+  const view = document.getElementById('cp-status-view');
+  const edit = document.getElementById('cp-status-edit');
+  if (view) view.style.display = '';
+  if (edit) edit.style.display = 'none';
+}
+async function saveStatusResumo() {
+  if (!(SESSION && SESSION.role === 'admin')) return; // defesa em profundidade
+  const uid = currentFollowupUid;
+  const p   = DATA.find(x => x.uid === uid);
+  const sel = document.getElementById('cp-status-select');
+  if (!p || !sel) return;
+  const status = sel.value;
+  if (!status) return;
+
+  let motivoPerda = '';
+  if (status === 'PERDIDO') {
+    const motivoEl = document.getElementById('cp-status-motivo');
+    motivoPerda = motivoEl ? motivoEl.value.trim() : '';
+    if (!motivoPerda) { alert('Informe o motivo da perda para continuar.'); if (motivoEl) motivoEl.focus(); return; }
+  }
+  const nr = uid.split('-')[0];
+  if (!confirm(`Alterar o status da proposta ${String(nr).padStart(4,'0')} para "${status}"?`)) return;
+
+  const today = new Date().toLocaleDateString('pt-BR');
+  const ov = { status };
+  if (status === 'PERDIDO') { ov.motivo_perda = motivoPerda; ov.data_fechamento = today; }
+
+  Object.assign(p, ov);
+  overrides[uid] = Object.assign(overrides[uid] || {}, ov);
+  localStorage.setItem('seibt_overrides_v1', JSON.stringify(overrides));
+  expandedRows.delete(uid);
+  applyFilters();
+  updateBadges();
+  _refreshFollowupUI(uid);
+
+  if (GSHEETS_URL && !GSHEETS_URL.includes('COLE_AQUI') && SESSION && SESSION.token) {
+    try {
+      const params = new URLSearchParams({ action:'atualizar_status', token:SESSION.token, uid, status });
+      if (motivoPerda)          params.set('motivo_perda',    motivoPerda);
+      if (status === 'PERDIDO') params.set('data_fechamento', today);
+      const res  = await fetch(GSHEETS_URL + '?' + params);
+      const json = await res.json();
+      if (!json.ok) console.warn('[saveStatusResumo]', json.error);
+    } catch(e) { console.warn('[saveStatusResumo]', e.message); }
+  }
 }
 
 // ── Notas colaborativas ────────────────────────────────────────────────────
@@ -5464,8 +5780,9 @@ function renderFollowupHistory(uid) {
       lastEl.innerHTML = `<span style="color:${c}">${dLast}d</span>`;
     }
 
-    // Temperatura mais recente
-    const lastTemp = (allHistory.find(f => f.temperatura) || {}).temperatura;
+    // Temperatura atual (mesma fonte do Resumo — ver _currentTemp)
+    const _pTemp = DATA.find(x => x.uid === uid) || {};
+    const lastTemp = _currentTemp(_pTemp, allHistory);
     const tempEl = document.getElementById('hst-temp');
     if (!lastTemp) {
       tempEl.textContent = '—';
@@ -5595,7 +5912,7 @@ function saveNewFollowup() {
   // e a própria janela da proposta sincronizados imediatamente com este follow-up.
   const p = DATA.find(x => x.uid === uid);
   if (p) {
-    _syncPropostaFromFollowup(p, { etapa, proximo, tipoProx });
+    _syncPropostaFromFollowup(p, { etapa, proximo, tipoProx, temperatura: selectedTemp });
     _refreshFollowupUI(uid);
   }
 
@@ -5948,7 +6265,7 @@ async function saveEditFollowup() {
   // em nada disso.
   const p = DATA.find(x => x.uid === uid);
   if (p) {
-    _syncPropostaFromFollowup(p, { etapa, proximo, tipoProx });
+    _syncPropostaFromFollowup(p, { etapa, proximo, tipoProx, temperatura: _editFuTemp });
     _refreshFollowupUI(uid);
   }
 
@@ -5971,11 +6288,12 @@ async function saveEditFollowup() {
 
   // Também sincroniza a proposta (etapa/próxima ação) no Supabase — mesmo
   // PATCH que salvarFollowup() já faz no backend quando o follow-up é criado.
-  if (p && (etapa || proximo)) {
+  if (p && (etapa || proximo || _editFuTemp)) {
     try {
       const patchProp = { updated_at: new Date().toISOString() };
-      if (etapa)   patchProp.etapa = etapa;
-      if (proximo) { patchProp.data_proxima_acao = proximo; patchProp.proxima_acao = tipoProx || 'Contato'; }
+      if (etapa)      patchProp.etapa = etapa;
+      if (proximo)    { patchProp.data_proxima_acao = proximo; patchProp.proxima_acao = tipoProx || 'Contato'; }
+      if (_editFuTemp) patchProp.temperatura = _editFuTemp;
       await fetch(`${SUPABASE_URL}/rest/v1/propostas?uid=eq.${encodeURIComponent(uid)}`, {
         method:'PATCH', headers: Object.assign(supaHdr(true), { 'Prefer':'return=minimal' }),
         body: JSON.stringify(patchProp)
