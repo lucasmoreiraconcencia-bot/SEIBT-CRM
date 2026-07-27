@@ -410,6 +410,7 @@ body.sidebar-collapsed .main{margin-left:var(--sidebar-mini)}
 .cp-act-dot.green{background:var(--success)}.cp-act-dot.warn{background:var(--warn)}.cp-act-dot.gray{background:var(--muted)}
 .cp-act-when{color:var(--muted);font-size:11px;min-width:60px;flex-shrink:0;font-variant-numeric:tabular-nums}
 .cp-act-txt{flex:1;color:var(--text);min-width:0}
+.cp-act-desc{font-size:11.5px;color:var(--muted);line-height:1.4;margin-top:2px}
 .cp-empty{text-align:center;padding:46px 20px;color:var(--muted);font-size:12.5px;line-height:1.6}
 .cp-empty svg{width:30px;height:30px;opacity:.25;margin:0 auto 12px;display:block;stroke:currentColor;fill:none}
 .cp-doc-wrap{display:flex;flex-direction:column;gap:8px}
@@ -5035,11 +5036,21 @@ function buildCpResumo(p, ctx) {
 
   const lastFuAll  = sorted[0] || null;
   const lastNotas  = (lastFuAll && lastFuAll.notas_proximo && lastFuAll.notas_proximo.trim()) ? lastFuAll.notas_proximo : '';
-  const lastResumo = (lastFuAll && lastFuAll.resumo_reuniao && lastFuAll.resumo_reuniao.trim()) ? lastFuAll.resumo_reuniao : '';
+  // "Resumo da reunião" é opcional e nem sempre é preenchido — cai para a
+  // "Descrição do contato" (acao), que é obrigatória em todo follow-up, pra
+  // sempre mostrar algo do que o vendedor escreveu no último contato.
+  const lastResumo = lastFuAll
+    ? ((lastFuAll.resumo_reuniao && lastFuAll.resumo_reuniao.trim()) || (lastFuAll.acao && lastFuAll.acao.trim()) || '')
+    : '';
 
   const acts = cpActivities(p, sorted).slice(0, 6);
   const actsHtml = acts.length
-    ? acts.map(a => `<div class="cp-act-item"><span class="cp-act-dot ${a.cls||''}"></span><span class="cp-act-when">${a.when}</span><span class="cp-act-txt">${a.kind==='fu' ? ('Follow-up'+(a.canal?' · '+a.canal:'')) : a.label}</span></div>`).join('')
+    ? acts.map(a => {
+        const label   = a.kind==='fu' ? ('Follow-up'+(a.canal?' · '+a.canal:'')) : a.label;
+        const snippet = (a.kind==='fu' && a.desc && a.desc.trim())
+          ? `<div class="cp-act-desc">${_htmlEsc(a.desc.length > 90 ? a.desc.slice(0,90)+'…' : a.desc)}</div>` : '';
+        return `<div class="cp-act-item"><span class="cp-act-dot ${a.cls||''}"></span><span class="cp-act-when">${a.when}</span><span class="cp-act-txt">${label}${snippet}</span></div>`;
+      }).join('')
     : '<div class="cp-empty" style="padding:18px 12px">Sem atividades registradas.</div>';
 
   el.innerHTML = `
