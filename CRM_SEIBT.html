@@ -4097,6 +4097,11 @@ function expandPanel(p) {
     ...DATA.map(x => x.representante).filter(Boolean),
     ...DATA.map(x => x.interno).filter(Boolean)
   ])].filter(Boolean).sort((a,b)=>a.localeCompare(b,'pt-BR'));
+  // Responsável só pode ser alguém com login no CRM (é essa pessoa quem vai
+  // ver a proposta em "Meus Follow-ups"/notificações). Se o cache de usuários
+  // ainda não carregou, cai para allPeople (nunca fica vazio).
+  const respOptions = _responsavelOptions();
+  const respPeople  = respOptions.length ? respOptions : allPeople;
 
   const PENCIL  = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>`;
   const CHV_ICO = `<svg class="act-card-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>`;
@@ -4124,7 +4129,7 @@ function expandPanel(p) {
         ${isEditable?`<div class="inline-edit-wrap" id="resp-edit-${p.uid}">
           <select class="inline-edit-input" id="resp-sel-${p.uid}">
             <option value="">— Selecione —</option>
-            ${allPeople.map(n=>`<option value="${n}"${n===(p.responsavel||'')?'selected':''}>${n}</option>`).join('')}
+            ${respPeople.map(n=>`<option value="${n}"${n===(p.responsavel||'')?'selected':''}>${n}</option>`).join('')}
           </select>
           <button class="btn-inline-save" onclick="saveResponsavel('${p.uid}')">Salvar</button>
           <button class="btn-inline-cancel" onclick="cancelEditInline('resp','${p.uid}')">✕</button>
@@ -4413,6 +4418,9 @@ function toggleRow(uid) {
   if (expandedRows.has(uid)) {
     const el = document.getElementById('rw-'+uid);
     if (el) el.scrollIntoView({behavior:'smooth',block:'nearest'});
+    // Se a lista de usuários ainda não chegou (login recente/rede lenta),
+    // busca agora e re-renderiza para o dropdown de Responsável não abrir vazio.
+    if (!_usersCache.length) ensureUsersCache().then(() => { if (expandedRows.has(uid)) renderTable(); });
   }
 }
 
@@ -6402,6 +6410,7 @@ function afterLogin() {
     (!filters.ano || normStr(getYear(p)) === normStr(filters.ano))));
   loadFollowupsFromStorage();
   _loadFunisFromServer();
+  ensureUsersCache(); // aquece o cache p/ o dropdown de Responsável (qualquer papel); não toca DOM
   checkUpcomingFollowups();
   updateSessionUI();
   fetchERPSupabase(); // ativo: KPI lê direto da tabela pedidos do Supabase (count + soma vl_liquido)
@@ -9967,6 +9976,30 @@ function setPerfFInt(field, value) {
 
 let _usersCache = [];
 let _usersTab = 'ativos';   // 'ativos' | 'inativos'
+
+// Carrega _usersCache sem tocar no DOM do admin — chamado no login de QUALQUER
+// papel (rep, gestor, admin), pois o campo Responsável precisa da lista de
+// usuários cadastrados mesmo fora da tela "Gestão de Usuários". A ação
+// 'users' do backend só exige token válido, não exige ser admin.
+async function ensureUsersCache() {
+  if (_usersCache.length) return _usersCache;
+  if (!GSHEETS_URL || GSHEETS_URL.includes('COLE_AQUI') || !SESSION || !SESSION.token) return _usersCache;
+  try {
+    const url  = `${GSHEETS_URL}?action=users&token=${encodeURIComponent(SESSION.token)}`;
+    const res  = await fetch(url);
+    const json = await res.json();
+    if (json.ok) _usersCache = json.users || [];
+  } catch(e) { console.warn('[ensureUsersCache]', e.message); }
+  return _usersCache;
+}
+
+// Nomes dos usuários ATIVOS cadastrados no CRM (para o dropdown "Responsável").
+// Usa o nome de exibição; se estiver vazio, cai para o e-mail.
+function _responsavelOptions() {
+  const nomes = (_usersCache || []).filter(userIsActive).map(u => (u.nome || u.email || '').trim()).filter(Boolean);
+  return [...new Set(nomes)].sort((a,b) => a.localeCompare(b,'pt-BR'));
+}
+
 async function loadUsers() {
   const container = document.getElementById('admin-content');
   container.innerHTML = '<div class="users-loading">Carregando usuarios...</div>';
@@ -10357,15 +10390,24 @@ async function saveCloseProposal(uid) {
       // 23505 = violação de índice único (pedido duplicado no banco)
       if (txt.includes('23505') || txt.includes('propostas_nr_pedido_uniq')) {
         alert('Este número de pedido já existe no banco para outra proposta.');
+      } else {
+        // Antes isto ficava só no console — o usuário via a linha sumir da
+        // lista (porque virou VENDIDO localmente) sem saber que o servidor
+        // recusou a gravação, achando que "não salvou nada".
+        alert('O pedido ficou salvo só neste computador — o servidor recusou a gravação (erro '
+          + res.status + '). Avise o suporte antes de continuar, pois outros usuários ainda não vão ver esta venda.');
       }
     } else {
       // ── Espelha na tabela `pedidos` → conta como Pedido ERP na hora ───────
       const okPed = await upsertPedidoERP(p, ov);
       if (okPed) { await fetchERPSupabase(); updateKPIs(); }
+      alert('Pedido nº ' + nrPed.trim() + ' registrado com sucesso. Proposta marcada como Vendido.');
     }
   } catch(e) {
     console.warn('[saveCloseProposal] Supabase network error:', e.message,
       '— alteração mantida localmente, será reenviada no próximo refresh.');
+    alert('Sem conexão com o servidor ao salvar o pedido. A alteração ficou só neste computador — '
+      + 'assim que a internet voltar, atualize a página e confira se a proposta está como Vendido.');
   }
 
   // Tenta write-back ao Google Sheets em segundo plano
@@ -13236,12 +13278,20 @@ function checkUpcomingFollowups() {
   const todayStr    = today.toISOString().split('T')[0];
   const tomorrowStr = tomorrow.toISOString().split('T')[0];
 
+  // Notificações são pessoais: só aparecem para quem AGENDOU aquele follow-up
+  // (fu.responsavel), não para todo mundo que enxerga a proposta.
+  const meuNome  = (SESSION && SESSION.nome) || '';
+  const meuEmail = ((SESSION && SESSION.email) || '').trim().toLowerCase();
+
   const items = [];
   for (const [uid, fus] of Object.entries(followUps)) {
     const p = DATA.find(x => x.uid === uid);
     for (const fu of fus) {
       const d = fu.proximo_contato;
       if (!d) continue;
+      const agendadoPorMim = _matchNome(fu.responsavel, meuNome) ||
+        (!!meuEmail && (fu.responsavel||'').trim().toLowerCase() === meuEmail);
+      if (!agendadoPorMim) continue;
       let tag, order;
       if (d < todayStr)    { tag='atrasado'; order=0; }
       else if (d===todayStr)   { tag='hoje';     order=1; }
