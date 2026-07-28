@@ -2202,10 +2202,6 @@ body { font-family: var(--font-sans); -webkit-font-smoothing: antialiased; text-
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
         Equipe Comercial
       </div>
-      <div class="admin-nav-item" id="anav-users" onclick="setAdminTab('users')">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" y1="8" x2="19" y2="14"/><line x1="22" y1="11" x2="16" y2="11"/></svg>
-        Gestao de Usuarios
-      </div>
       <div class="admin-nav-item" id="anav-metas" onclick="setAdminTab('metas')">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>
         Gestao de Metas
@@ -6824,7 +6820,7 @@ function afterLogin() {
     showScreen('screen-admin');
     document.getElementById('admin-user-name').textContent = SESSION.nome;
     loadMetasAnuaisSupabase();
-    setAdminTab('central');
+    setAdminTab('equipe'); // página inicial do admin: cards por pessoa
   } else {
     showScreen('screen-crm');
     applyFilters();
@@ -7612,7 +7608,9 @@ async function saveNotifConfig() {
 // ── Admin: Gestao de Usuarios ──────────────────────────────────────────────
 
 function setAdminTab(tab) {
-  ['anav-central','anav-equipe','anav-users','anav-metas','anav-transfer','anav-funis','anav-config','anav-notif','anav-crm','anav-calendar'].forEach(id => {
+  // "users" fundiu dentro de "equipe" (aba Usuários) — não é mais destino próprio.
+  if (tab === 'users') { tab = 'equipe'; _eqView = 'usuarios'; }
+  ['anav-central','anav-equipe','anav-metas','anav-transfer','anav-funis','anav-config','anav-notif','anav-crm','anav-calendar'].forEach(id => {
     const el = document.getElementById(id);
     if (el) el.classList.remove('active');
   });
@@ -7624,10 +7622,6 @@ function setAdminTab(tab) {
     document.getElementById('anav-equipe').classList.add('active');
     document.getElementById('admin-section-title').textContent = 'Equipe Comercial';
     renderEquipePanel();
-  } else if (tab === 'users') {
-    document.getElementById('anav-users').classList.add('active');
-    document.getElementById('admin-section-title').textContent = 'Gestao de Usuarios';
-    loadUsers();
   } else if (tab === 'metas') {
     document.getElementById('anav-metas').classList.add('active');
     document.getElementById('admin-section-title').textContent = 'Gestao de Metas';
@@ -7649,9 +7643,10 @@ function setAdminTab(tab) {
     document.getElementById('admin-section-title').textContent = 'Notificacoes Automaticas';
     loadNotifConfig();
   } else {
-    document.getElementById('anav-users').classList.add('active');
-    document.getElementById('admin-section-title').textContent = 'Gestao de Usuarios';
-    loadUsers();
+    document.getElementById('anav-equipe').classList.add('active');
+    document.getElementById('admin-section-title').textContent = 'Equipe Comercial';
+    _eqView = 'pessoas';
+    renderEquipePanel();
   }
 }
 
@@ -8021,34 +8016,46 @@ function unitIcon(nome) {
 }
 
 // Monta os dados de cada pessoa da equipe (consome PerformanceService)
-function buildEquipeData(loginNames) {
-  loginNames = loginNames || new Set();
+// A equipe agora é definida por quem está CADASTRADO no CRM (app_users),
+// não mais por qualquer nome que apareceu em alguma proposta importada do
+// Excel/Sheets — é isso que tirava nomes de cliente/país (ex.: "BEYNAC -
+// Argentina", "LTD&CO") da grade de Equipe Comercial. O card de cada pessoa
+// casa com as propostas dela pelo mesmo nome-matching de sempre
+// (PerformanceCompute/PerformanceComputeKey), então basta cadastrar o
+// usuário com o nome certo para o histórico dele aparecer.
+function buildEquipeData() {
   const f = { ano: String(new Date().getFullYear()), mes:'todos', semana:'todos' };
   const out = [];
-  const add = (nome, cargo) => {
+  const usuarios = (_usersCache || []).filter(userIsActive).filter(u => u.role !== 'admin');
+  usuarios.forEach(u => {
+    const nome = (u.nome || u.email || '').trim();
     if (!nome) return;
-    if (_eqExcluidos.includes(nome)) return;     // pessoa removida (saiu da empresa)
-    if (out.some(x => x.nome === nome)) return;   // evita duplicar quem está nas 2 listas
+    if (_eqExcluidos.includes(nome)) return; // removido manualmente da grade (ex.: afastado temporariamente)
+    if (out.some(x => x.nome === nome)) return;
+    const cargo = userTypeOf(u) === 'vendedor_interno' ? 'interno' : 'externo';
     // Usa PerformanceComputeKey quando existe chave oficial → realizado inclui ERP pedidos via nr_pedido
     const metaKey = eqMetaKeyFor(nome);
     const m = metaKey ? PerformanceComputeKey(metaKey, f) : PerformanceCompute(nome, f);
-    const k = eqNorm(nome);
-    out.push({ nome, cargo, vendidas: m.pedidosCount, abertas: m.abertas.length,
+    out.push({ nome, cargo, email: u.email, vendidas: m.pedidosCount, abertas: m.abertas.length,
                realizado: m.realizado, meta: m.meta, pipeline: m.pipeline||0,
                conversao: m.conversao,
                pct: m.pct==null ? null : Math.min(100, Math.round(m.pct*100)),
-               hasLogin: (k.length >= 3 && loginNames.has(k)) });
-  };
-  (CRM_PEOPLE.representantes || []).forEach(n => add(n, 'externo'));
-  (CRM_PEOPLE.internos || []).forEach(n => add(n, 'interno'));
+               hasLogin: true });
+  });
   return out.sort((a,b) => b.realizado - a.realizado);
 }
-let _eqView = 'unidades';   // 'unidades' | 'pessoas'
+let _eqView = 'pessoas';   // 'pessoas' | 'unidades' | 'usuarios' — pessoas é a página inicial do admin
 function eqSetView(v) { _eqView = v; renderEquipePanel(); }
 async function renderEquipePanel() {
   const container = document.getElementById('admin-content');
   container.innerHTML = '<div class="users-loading">Carregando…</div>';
+
+  // Aba "Usuários": cadastro/edição de login — fundida aqui, não é mais uma
+  // página separada. Não depende de propostas/metas, então nem carrega isso.
+  if (_eqView === 'usuarios') { await loadUsers(); return; }
+
   loadPeople();
+  await ensureUsersCache();
   // Admin entra direto no painel: garante que as propostas estejam carregadas
   if (DATA.length === 0 && typeof fetchLive === 'function') {
     try { await fetchLive(); } catch(e) { console.warn('Performance: falha ao carregar dados', e); }
@@ -8118,8 +8125,9 @@ async function renderEquipePanel() {
         </div>
       </div>
       <div class="pf-tabs" style="margin-bottom:14px">
-        <button class="pf-tab active" onclick="eqSetView('unidades')">Por Unidade</button>
         <button class="pf-tab" onclick="eqSetView('pessoas')">Por Pessoa</button>
+        <button class="pf-tab active" onclick="eqSetView('unidades')">Por Unidade</button>
+        <button class="pf-tab" onclick="eqSetView('usuarios')">Usuários</button>
       </div>
       <div class="eq-grid">${cards}</div>
       <div style="margin-top:16px;font-size:11.5px;color:var(--muted);line-height:1.6">
@@ -8132,8 +8140,7 @@ async function renderEquipePanel() {
 // FASE 2 — Cards individuais por pessoa (representantes + vendedores internos)
 function renderEquipePessoas(ano) {
   const container = document.getElementById('admin-content');
-  const loginNames = new Set((_usersCache||[]).filter(userIsActive).map(u => eqNorm(u.nome||u.email)));
-  const pessoas = buildEquipeData(loginNames);
+  const pessoas = buildEquipeData();
   const reps    = pessoas.filter(p => p.cargo === 'externo');
   const internos = pessoas.filter(p => p.cargo === 'interno');
 
@@ -8188,8 +8195,13 @@ function renderEquipePessoas(ano) {
   container.innerHTML = `
     <div class="eq-wrap">
       <div class="pf-tabs" style="margin-bottom:16px">
-        <button class="pf-tab" onclick="eqSetView('unidades')">Por Unidade</button>
         <button class="pf-tab active" onclick="eqSetView('pessoas')">Por Pessoa</button>
+        <button class="pf-tab" onclick="eqSetView('unidades')">Por Unidade</button>
+        <button class="pf-tab" onclick="eqSetView('usuarios')">Usuários</button>
+        <button class="btn-add-user" style="margin-left:auto" onclick="openUserModal()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          Novo Usuário
+        </button>
       </div>
       <div class="eq-banner">
         <div class="eq-banner-item"><div class="eq-banner-lbl">Realizado total</div><div class="eq-banner-val">${fmtBRLShort(totReal)}</div></div>
@@ -9503,6 +9515,20 @@ function perfRender() {
     + '<div class="pf-z2-card"><div class="pf-z2-ico">'+icoAct+'</div><div class="pf-z2-lbl">Atividades</div><div class="pf-z2-val">'+m.atividades+'</div><div class="pf-z2-sub">visitas + follow-ups</div></div>'
     + '</div>';
 
+  // ── ZONA 2b: propostas por status (histórico completo da pessoa) ─────────
+  const _statusUp = s => (s||'').toUpperCase().trim();
+  const cAberto  = m.all.filter(function(p){ var s=_statusUp(p.status); return s==='' || s==='ABERTO'; }).length;
+  const cVendido = m.all.filter(function(p){ return _statusUp(p.status)==='VENDIDO'; }).length;
+  const cPerdido = m.all.filter(function(p){ return _statusUp(p.status)==='PERDIDO'; }).length;
+  const cDesist  = m.all.filter(function(p){ var s=_statusUp(p.status); return s==='DESISTÊNCIA' || s==='DESISTENCIA'; }).length;
+  const cStandby = m.all.filter(function(p){ var s=_statusUp(p.status); return s==='STAND-BY' || s==='STAND BY'; }).length;
+  const z2bHtml = '<div class="pf-z2-grid" style="margin-top:10px">'
+    + '<div class="pf-z2-card"><div class="pf-z2-lbl">Abertas</div><div class="pf-z2-val" style="color:#2563eb">'+cAberto+'</div></div>'
+    + '<div class="pf-z2-card"><div class="pf-z2-lbl">Vendidas</div><div class="pf-z2-val" style="color:#16a34a">'+cVendido+'</div></div>'
+    + '<div class="pf-z2-card"><div class="pf-z2-lbl">Perdidas</div><div class="pf-z2-val" style="color:#dc2626">'+cPerdido+'</div></div>'
+    + '<div class="pf-z2-card"><div class="pf-z2-lbl">Desistências</div><div class="pf-z2-val" style="color:#6b7280">'+cDesist+(cStandby?' <span style="font-size:11px;color:var(--muted);font-weight:400">+ '+cStandby+' stand-by</span>':'')+'</div></div>'
+    + '</div>';
+
   // ── Séries mensais ───────────────────────────────────────────────────────
   const vendasMes = Array(12).fill(0), propMes = Array(12).fill(0), pedMes = Array(12).fill(0);
   m.all.forEach(function(p) {
@@ -9602,7 +9628,7 @@ function perfRender() {
 
   document.getElementById('admin-section-title').textContent = 'Performance — ' + nome;
   container.innerHTML = '<div class="eq-wrap">'
-    + heroHtml + z2Html + z3Html + z4Html + extraHtml
+    + heroHtml + z2Html + z2bHtml + z3Html + z4Html + extraHtml
     + '<div class="pf-tabs-head"><div class="pf-tabs">'
     + '<button class="pf-tab'+(_pfTab==='propostas'?' active':'')+'" data-t="propostas" onclick="switchPerfTab(\'propostas\')">Propostas</button>'
     + '<button class="pf-tab'+(_pfTab==='pedidos'?' active':'')+'" data-t="pedidos" onclick="switchPerfTab(\'pedidos\')">Pedidos</button>'
@@ -10545,6 +10571,18 @@ function perfRenderInterno() {
   ];
   const kpisHtml = kpis.map(k=>`<div class="pf-kpi"><div class="pf-kpi-lbl">${k.lbl}</div><div class="pf-kpi-val">${k.val}</div>${k.sub?`<div class="pf-kpi-sub">${k.sub}</div>`:''}</div>`).join('');
 
+  const _statusUpInt = s => (s||'').toUpperCase().trim();
+  const cAbertoInt  = m.all.filter(p => { const s=_statusUpInt(p.status); return s==='' || s==='ABERTO'; }).length;
+  const cVendidoInt = m.all.filter(p => _statusUpInt(p.status)==='VENDIDO').length;
+  const cPerdidoInt = m.all.filter(p => _statusUpInt(p.status)==='PERDIDO').length;
+  const cDesistInt  = m.all.filter(p => { const s=_statusUpInt(p.status); return s==='DESISTÊNCIA' || s==='DESISTENCIA'; }).length;
+  const statusHtml = `<div class="pf-kpis" style="margin-top:8px">
+      <div class="pf-kpi"><div class="pf-kpi-lbl">Abertas</div><div class="pf-kpi-val" style="color:#2563eb">${cAbertoInt}</div></div>
+      <div class="pf-kpi"><div class="pf-kpi-lbl">Vendidas</div><div class="pf-kpi-val" style="color:#16a34a">${cVendidoInt}</div></div>
+      <div class="pf-kpi"><div class="pf-kpi-lbl">Perdidas</div><div class="pf-kpi-val" style="color:#dc2626">${cPerdidoInt}</div></div>
+      <div class="pf-kpi"><div class="pf-kpi-lbl">Desistências</div><div class="pf-kpi-val" style="color:#6b7280">${cDesistInt}</div></div>
+    </div>`;
+
   const years = [...new Set(DATA.flatMap(p=>[cpParseDate(p.data_abertura),cpParseDate(p.data_fechamento)].filter(Boolean).map(t=>new Date(t).getFullYear())))].sort((a,b)=>b-a);
   const anoOpts = `<option value="todos"${f.ano==='todos'?' selected':''}>Todos</option>`+years.map(y=>`<option value="${y}"${f.ano===String(y)?' selected':''}>${y}</option>`).join('');
   const mesOpts = `<option value="todos"${f.mes==='todos'?' selected':''}>Todos</option>`+PF_MESES_FULL.map((nm,i)=>`<option value="${i}"${f.mes===String(i)?' selected':''}>${nm}</option>`).join('');
@@ -10571,9 +10609,11 @@ function perfRenderInterno() {
       </div>
       <div class="pf-sec-title">Indicadores</div>
       <div class="pf-kpis">${kpisHtml}</div>
+      ${statusHtml}
       <div class="pf-tabs-head"><div class="pf-tabs">
         <button class="pf-tab${_pfTab==='propostas'?' active':''}" data-t="propostas" onclick="switchPerfTab('propostas')">Propostas</button>
         <button class="pf-tab${_pfTab==='pedidos'?' active':''}" data-t="pedidos" onclick="switchPerfTab('pedidos')">Pedidos</button>
+        <button class="pf-tab${_pfTab==='agendadas'?' active':''}" data-t="agendadas" onclick="switchPerfTab('agendadas')">Agendadas</button>
         <button class="pf-tab${_pfTab==='followups'?' active':''}" data-t="followups" onclick="switchPerfTab('followups')">Follow-ups</button>
       </div></div>
       <div id="pf-tab-body"></div>
@@ -10682,8 +10722,13 @@ function renderUsersTable() {
   }).join('');
 
   container.innerHTML = `
+    <div class="pf-tabs" style="margin-bottom:16px">
+      <button class="pf-tab" onclick="eqSetView('pessoas')">Por Pessoa</button>
+      <button class="pf-tab" onclick="eqSetView('unidades')">Por Unidade</button>
+      <button class="pf-tab active" onclick="eqSetView('usuarios')">Usuários</button>
+    </div>
     <div class="users-header">
-      <span class="section-title">Gestao de Usuarios</span>
+      <span class="section-title">Cadastro de Usuarios</span>
       <button class="btn-add-user" onclick="openUserModal()">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
         Novo Usuario
@@ -10812,19 +10857,17 @@ async function toggleUserActive(email, ativoAtual) {
 
 function goCRM() {
   showScreen('screen-crm');
-  document.getElementById('admin-section-title').textContent = 'Gestao de Usuarios';
   ['anav-crm','anav-metas','anav-calendar'].forEach(id => {
     const el = document.getElementById(id);
     if (el) el.classList.remove('active');
   });
-  document.getElementById('anav-users').classList.add('active');
   if (DATA.length === 0 || !filteredData.length) { applyFilters(); }
   fetchLive();
 }
 
 function goAdmin() {
   showScreen('screen-admin');
-  setAdminTab('central');
+  setAdminTab('equipe');
 }
 
 // ── Fechar Proposta ───────────────────────────────────────────────────────
