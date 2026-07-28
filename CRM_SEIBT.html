@@ -7047,13 +7047,6 @@ function applyUserFilter() {
   combined.sort((a,b)=>{ const c=sortKey(b).localeCompare(sortKey(a)); return c!==0?c:(parseInt(b.nr)-parseInt(a.nr)); });
 
   // ── Filtro por papel do usuário ────────────────────────────────────────────
-  // Retorna true se a proposta é de classificação Peças (para regra especialista)
-  function isClassifPecas(p) {
-    const c = normStr(p.classificacao || '');
-    // Considera "PEÇAS" se contiver PE mas não PARTES, MÁQUINAS ou EXPORTAÇÃO
-    return c.includes('PE') && !c.includes('PARTES') && !c.includes('MÁQUINAS') && !c.includes('MAQUINAS') && !c.includes('EXPOR');
-  }
-
   function filterBySession(list) {
     if (!SESSION) return list;
     const tipo  = (SESSION.tipo_acesso || '').toLowerCase().trim();
@@ -7074,25 +7067,12 @@ function applyUserFilter() {
     // Sem alvo → não há como restringir por nome; não esconde tudo (fail-open).
     if (!alvo) return list;
 
-    // Criador da proposta: está como interno OU responsavel
+    // Criador/dono da proposta: é o representante, OU está marcado como
+    // interno OU responsavel — vale igual pra todo tipo_acesso, sem
+    // restrição por classificação (Peças/Máquinas/etc. não importa: quem
+    // está em Responsável ou Interno sempre enxerga a proposta).
     const isCriador = p => match(p.interno, alvo) || match(p.responsavel, alvo);
-    // Representante da proposta é a própria SEIBT (mercado doméstico direto)
-    const isSeibtRep = p => /SEIBT/i.test(p.representante || '');
-
-    let mine;
-    if (tipo === 'representante' || tipo === 'externo') {
-      // Regra para representante (inclui transição interno→rep):
-      //  1) É o representante da proposta
-      //  2) É peças E foi quem criou (seu histórico de peças como interno)
-      //  3) SEIBT é o rep E foi quem criou (mercado doméstico que ele atendia)
-      mine = p =>
-        match(p.representante, alvo) ||
-        (isClassifPecas(p) && isCriador(p)) ||
-        (isSeibtRep(p) && isCriador(p));
-    } else {
-      // interno / especialista / outros: escopo amplo (qualquer papel)
-      mine = p => match(p.representante, alvo) || isCriador(p);
-    }
+    const mine = p => match(p.representante, alvo) || isCriador(p);
 
     const result = (tipo === 'especialista')
       ? list.filter(p => mine(p) ||
@@ -10280,7 +10260,13 @@ async function renderTransferPanel() {
   const container = document.getElementById('admin-content');
   if (DATA.length === 0 && typeof fetchLive === 'function') { container.innerHTML='<div class="users-loading">Carregando…</div>'; try{ await fetchLive(); }catch(e){} }
   loadPeople();
-  const pessoas = [...new Set([...(CRM_PEOPLE.representantes||[]), ...(CRM_PEOPLE.internos||[])])].sort((a,b)=>a.localeCompare(b,'pt-BR'));
+  await ensureUsersCache();
+  // Novo proprietário só pode ser alguém com login no CRM (mesma regra do
+  // campo Responsável) — nunca um nome livre da planilha/histórico.
+  const respOptions = _responsavelOptions();
+  const pessoas = respOptions.length
+    ? respOptions
+    : [...new Set([...(CRM_PEOPLE.representantes||[]), ...(CRM_PEOPLE.internos||[])])].sort((a,b)=>a.localeCompare(b,'pt-BR'));
   const pessoasOpts = '<option value="">— selecione —</option>' + pessoas.map(p=>`<option value="${p.replace(/"/g,'&quot;')}">${p}</option>`).join('');
 
   container.innerHTML = `
