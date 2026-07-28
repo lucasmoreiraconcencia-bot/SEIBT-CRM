@@ -2443,12 +2443,8 @@ body { font-family: var(--font-sans); -webkit-font-smoothing: antialiased; text-
                 <select class="filter-select" id="f-classif" onchange="onFilter('classif',this)"><option value="">Todas as categorias</option></select>
               </div>
               <div class="filter-popover-item">
-                <label>Interno</label>
-                <select class="filter-select" id="f-interno" onchange="onFilter('interno',this)"><option value="">Todos (interno)</option></select>
-              </div>
-              <div class="filter-popover-item">
-                <label>Representante</label>
-                <select class="filter-select" id="f-rep" onchange="onFilter('rep',this)"><option value="">Todos (representante)</option></select>
+                <label>Responsável</label>
+                <select class="filter-select" id="f-pessoa" onchange="onFilter('pessoa',this)"><option value="">Todos (responsável)</option></select>
               </div>
             </div>
             <div class="filter-popover-footer">
@@ -3581,7 +3577,7 @@ let currentPage = 0;
 let filteredData = [];
 let kpiData = [];
 let expandedRows = new Set();
-const filters = { ano:'', classif:'', interno:'', rep:'' };
+const filters = { ano:'', classif:'', pessoa:'' };
 let _userPickedYear = false; // true após o usuário escolher um ano manualmente
 
 const fmtBRL = v => v==null ? '—' : new Intl.NumberFormat('pt-BR',{style:'currency',currency:'BRL',minimumFractionDigits:2,maximumFractionDigits:2}).format(v);
@@ -3648,16 +3644,27 @@ function uniqueVals(arr) {
 function initDropdowns(){
   const anos    = [...new Set(DATA.map(p=>getYear(p)).filter(Boolean))].sort().reverse();
   const classifs= uniqueVals(DATA.map(p=>p.classificacao));
-  const internos= uniqueVals(DATA.map(p=>p.interno));
-  const reps    = uniqueVals(DATA.map(p=>p.representante));
   const fill = (id, opts) => {
     const sel = document.getElementById(id);
     opts.forEach(v => { const o = document.createElement('option'); o.value=v; o.textContent=v; sel.appendChild(o); });
   };
   fill('f-ano',    anos);
   fill('f-classif',classifs);
-  fill('f-interno',internos);
-  fill('f-rep',    reps);
+  _fillPessoaFilter();
+}
+
+// Filtro único "Responsável" (fundiu Interno + Representante) — só usuários
+// cadastrados no CRM aparecem aqui, tanto para quem seria interno quanto para
+// quem seria representante externo. Chamado de novo quando o cache de
+// usuários termina de carregar (pode ainda estar vazio no primeiro momento).
+function _fillPessoaFilter(){
+  const sel = document.getElementById('f-pessoa');
+  if (!sel) return;
+  const cur = filters.pessoa || '';
+  sel.innerHTML = '<option value="">Todos (responsável)</option>';
+  _responsavelOptions().forEach(v => { const o = document.createElement('option'); o.value=v; o.textContent=v; sel.appendChild(o); });
+  if (cur) sel.value = cur;
+  sel.classList.toggle('active', !!cur);
 }
 
 // Grupos de categoria (mesma taxonomia da navegação por produto). Usados para
@@ -3753,8 +3760,8 @@ function onFilter(key, sel) {
 
 function clearFilters() {
   _userPickedYear = true; // "Limpar filtros" → mostra todos os anos, não reaplica padrão
-  filters.ano = filters.classif = filters.interno = filters.rep = '';
-  ['f-ano','f-classif','f-interno','f-rep'].forEach(id => {
+  filters.ano = filters.classif = filters.pessoa = '';
+  ['f-ano','f-classif','f-pessoa'].forEach(id => {
     const el = document.getElementById(id);
     if (el) { el.value = ''; el.classList.remove('active'); }
   });
@@ -3854,10 +3861,11 @@ function applyFilters() {
   if (filters.classif) scoped = scoped.filter(p => normStr(p.classificacao) === normStr(filters.classif));
   // CORREÇÃO P3: usa _matchNome (comparação bidirecional por tokens) em vez de
   // igualdade exata. Assim "SEDENIR" e "SEDENIR XAVIER" são tratados como a mesma
-  // pessoa — antes, variações de grafia faziam propostas sumirem do filtro. Alinha
-  // o comportamento desta lista com o da tela Início (scopeForInicio).
-  if (filters.interno) scoped = scoped.filter(p => _matchNome(p.interno, filters.interno));
-  if (filters.rep)     scoped = scoped.filter(p => _matchNome(p.representante, filters.rep));
+  // pessoa — antes, variações de grafia faziam propostas sumirem do filtro.
+  // Responsável e Representante viraram um filtro só: casa o nome escolhido
+  // Responsável, quando definido, é o dono EXCLUSIVO da proposta — não soma mais
+  // com Representante/Interno da planilha (ver _ownerMatches).
+  if (filters.pessoa) scoped = scoped.filter(p => _ownerMatches(p, filters.pessoa));
   if (q) scoped = scoped.filter(p =>
     (p.cliente||'').toLowerCase().includes(q) ||
     String(p.nr||'').includes(q) ||
@@ -3976,11 +3984,11 @@ function updateKPIs() {
       ctxEl.textContent = '';
     }
   }
-  const hasFilters = filters.ano||filters.classif||filters.interno||filters.rep||
+  const hasFilters = filters.ano||filters.classif||filters.pessoa||
                     document.getElementById('search-input').value||currentView!=='todas';
   document.getElementById('filter-count').textContent = hasFilters ? `Exibindo ${fmtNum(filteredData.length)} de ${fmtNum(total)}` : '';
   // Atualizar badge e estado do botão Filtros
-  const activeCount = [filters.ano, filters.classif, filters.interno, filters.rep].filter(Boolean).length;
+  const activeCount = [filters.ano, filters.classif, filters.pessoa].filter(Boolean).length;
   const badge = document.getElementById('filter-badge');
   const btn   = document.getElementById('btn-filter-toggle');
   const sumEl = document.getElementById('filter-active-summary');
@@ -4793,8 +4801,6 @@ async function fetchERPSupabase() {
 function rebuildDropdowns() {
   const anos    = [...new Set(DATA.map(p=>getYear(p)).filter(Boolean))].sort().reverse();
   const classifs= uniqueVals(DATA.map(p=>p.classificacao));
-  const internos= uniqueVals(DATA.map(p=>p.interno));
-  const reps    = uniqueVals(DATA.map(p=>p.representante));
   const rebuild = (id,opts,label) => {
     const sel=document.getElementById(id); const cur=normStr(sel.value);
     sel.innerHTML=`<option value="">${label}</option>`;
@@ -4805,8 +4811,7 @@ function rebuildDropdowns() {
   };
   rebuild('f-ano',    anos,    'Todos os anos');
   rebuild('f-classif',classifs,'Todas as categorias');
-  rebuild('f-interno',internos,'Todos (interno)');
-  rebuild('f-rep',    reps,    'Todos (representante)');
+  _fillPessoaFilter();
 }
 
 // ── Follow-up Modal ────────────────────────────────────────────────
@@ -6807,7 +6812,7 @@ function afterLogin() {
     (!filters.ano || normStr(getYear(p)) === normStr(filters.ano))));
   loadFollowupsFromStorage();
   _loadFunisFromServer();
-  ensureUsersCache(); // aquece o cache p/ o dropdown de Responsável (qualquer papel); não toca DOM
+  ensureUsersCache().then(_fillPessoaFilter); // filtro "Responsável" pode ter ficado vazio no 1º load
   loadMovimentacao(); // última movimentação real (view) p/ a métrica de paradas
   checkUpcomingFollowups();
   updateInboxBadge();
@@ -7743,6 +7748,18 @@ function perfRealizadoAno(all, ano) {
 // Prop tem representante externo (não SEIBT) — valor pertence ao rep, não ao interno
 const _isExtRep = rep => { const r = (rep||'').trim(); return r && r !== 'SEIBT'; };
 
+// Dono da proposta pra fins de visibilidade/atribuição — usado em TODO lugar que
+// decide "essa proposta é de fulano?" (filtros, Início, Central Comercial, métricas
+// de Equipe Comercial). Espelha a regra da RLS (ver supabase_responsavel_exclusivo.sql):
+// se a proposta tem Responsável definido, ele é o ÚNICO dono — Representante/Interno
+// da planilha deixam de contar, mesmo que ainda tenham o nome de outra pessoa.
+// Sem Responsável definido, cai no critério antigo (Representante, ou Interno quando
+// não há representante externo).
+function _ownerMatches(p, nome) {
+  if (p.responsavel && String(p.responsavel).trim()) return _matchNome(p.responsavel, nome);
+  return _matchNome(p.representante, nome) || (_matchNome(p.interno, nome) && !_isExtRep(p.representante));
+}
+
 // Normaliza texto: maiúsculas, sem acentos.
 function _accUp(s) {
   return String(s||'').toUpperCase()
@@ -7773,12 +7790,7 @@ function PerformanceCompute(nome, f) {
   const key = nome+'|'+f.ano+'|'+f.mes+'|'+f.semana+'|'+(f.ini||'')+'|'+(f.fim||'');
   if (PerfCache.has(key)) return PerfCache.get(key);
 
-  const all = DATA.filter(p =>
-    _matchNome(p.representante, nome) ||
-    _matchNome(p.responsavel,   nome) ||
-    // interno só recebe crédito quando a proposta não tem rep externo
-    (_matchNome(p.interno, nome) && !_isExtRep(p.representante))
-  );
+  const all = DATA.filter(p => _ownerMatches(p, nome));
   const emitidas = all.filter(p => perfDateInRange(p.data_abertura, f));
   const vendidas = all.filter(p => (p.status||'').toUpperCase()==='VENDIDO' && perfDateInRange(p.data_fechamento, f));
   const abertas  = all.filter(p => { const s=(p.status||'').toUpperCase(); return (s===''||s==='ABERTO') && perfDateInRange(p.data_abertura, f); });
@@ -8238,9 +8250,7 @@ function scopeForSession() {
   if (ta === 'todos' || ta === 'gestor' || ta === 'especialista') return DATA;
   const alvo = SESSION.valor_acesso || SESSION.nome || '';
   if (!alvo) return DATA;
-  return DATA.filter(p =>
-    _matchNome(p.interno, alvo) || _matchNome(p.representante, alvo) || _matchNome(p.responsavel, alvo)
-  );
+  return DATA.filter(p => _ownerMatches(p, alvo));
 }
 // Ano selecionado no painel Início (default = ano corrente). 'todos' = sem filtro.
 let _inicioAno  = String(new Date().getFullYear());
@@ -8255,8 +8265,7 @@ function scopeForInicio() {
   let base = scopeForSession();
   if (_inicioAno && _inicioAno !== 'todos') base = base.filter(p => String(getYear(p)) === String(_inicioAno));
   if (_inicioCat)  base = base.filter(p => _propCategoriaKey(p) === _inicioCat);
-  if (_inicioUser) base = base.filter(p =>
-    _matchNome(p.representante, _inicioUser) || _matchNome(p.interno, _inicioUser) || _matchNome(p.responsavel, _inicioUser));
+  if (_inicioUser) base = base.filter(p => _ownerMatches(p, _inicioUser));
   return base;
 }
 // Ícones de linha usados nos KPIs do Início
@@ -8549,8 +8558,7 @@ function renderAtividadesPanel() {
   // valendo hoje. Por isso o escopo da home ignora o filtro de ano.
   let props = scopeForSession();
   if (_inicioCat)  props = props.filter(p => _propCategoriaKey(p) === _inicioCat);
-  if (_inicioUser) props = props.filter(p =>
-    _matchNome(p.representante, _inicioUser) || _matchNome(p.interno, _inicioUser) || _matchNome(p.responsavel, _inicioUser));
+  if (_inicioUser) props = props.filter(p => _ownerMatches(p, _inicioUser));
 
   const M    = homeMetrics(props);
   const dups = _dupSet(M.abertas);
@@ -9020,6 +9028,30 @@ function pfFunilHTML(stages) {
     return `<div class="pf-funil-row"><div class="pf-funil-lbl" title="${s.label}">${s.label}</div><div class="pf-funil-track"><div class="pf-funil-fill" style="width:${w}%;background:${s.color}">${s.count||''}</div></div><div class="pf-funil-cnt">${s.count}</div></div>`;
   }).join('');
 }
+// Agrupa as propostas ABERTAS de uma pessoa pelo funil real da categoria de
+// cada uma (CRM_CONFIG.funis.maquinas/pecas — o mesmo que o Kanban usa), não
+// pela lista antiga DEFAULT_ETAPA_LIST (que tem outras etapas e não bate com
+// os valores reais gravados em p.etapa, dando contagem 0 em quase tudo).
+// Se a pessoa tiver propostas em mais de uma categoria, retorna um funil por
+// categoria, cada um só com as etapas daquele funil.
+function _funisPorCategoria(abertas) {
+  ensureFunis();
+  const porCat = {};
+  (abertas||[]).forEach(function(p){
+    const cat = _funilKeyForCat(_propCategoriaKey(p));
+    (porCat[cat] = porCat[cat] || []).push(p);
+  });
+  return Object.keys(porCat).map(function(cat){
+    const props = porCat[cat];
+    const semEtapa = props.filter(function(p){ return !String(p.etapa||'').trim(); }).length;
+    const stages = (CRM_CONFIG.funis[cat] || []).map(function(e){
+      return { label: e.label, color: NAVY,
+        count: props.filter(function(p){ return (p.etapa||'').toUpperCase() === (e.value||'').toUpperCase(); }).length };
+    });
+    if (semEtapa) stages.unshift({ label:'Sem Etapa', color:SLATE_LT, count: semEtapa });
+    return { nomeCat: cat==='pecas' ? 'Peças' : 'Máquinas/Sistemas', stages: stages, total: props.length };
+  }).sort(function(a,b){ return b.total - a.total; });
+}
 
 // ── Dashboard executivo: estado, filtros e abas ───────────────────────────
 let _pfData = null, _pfTab = 'propostas', _pfNome = null;
@@ -9468,21 +9500,18 @@ function perfRender() {
   const admin = fiIsAdmin();
   const metaKeyFicha = isKey ? nome : eqMetaKeyFor(nome);
 
-  // Ritmo vs meta esperada no mês corrente
-  const _mesAt = new Date().getMonth();
-  const _isCur = m.anoNum === new Date().getFullYear();
-  const _esper = (m.meta && _isCur) ? m.meta*(_mesAt+1)/12 : m.meta;
-  const _ritmo = (m.meta && _esper>0) ? m.realizado/_esper : null;
-  const statusCls = _ritmo==null ? '' : _ritmo>=1 ? 'good' : _ritmo>=0.5 ? 'warn' : 'bad';
-  const statusLabel = ({ good:'Muito ativo', warn:'Ativo', bad:'Atenção' })[statusCls] || '';
+  // Status do cabeçalho: baseado em follow-up vencido (acionável), não em
+  // ritmo de meta — números de fechamento não entram mais aqui (ver Power BI).
+  const hojeMs = _todayMid();
+  const agendados = (m.fuAll||[]).filter(function(ff){ return ff.proximo_contato && perfDateInRange(ff.proximo_contato, f); })
+    .sort(function(a,b){ return cpParseDate(a.proximo_contato) - cpParseDate(b.proximo_contato); });
+  const vencidos = agendados.filter(function(ff){ return cpParseDate(ff.proximo_contato) < hojeMs; });
+  const statusCls = vencidos.length ? 'bad' : 'good';
+  const statusLabel = vencidos.length ? vencidos.length+' follow-up'+(vencidos.length===1?'':'s')+' vencido'+(vencidos.length===1?'':'s') : 'Em dia';
 
-  // ── ZONA 1: Hero header ──────────────────────────────────────────────────
-  const metaValHtml = metaKeyFicha
-    ? '<div id="fi-meta-box" style="display:inline-flex;align-items:center;gap:6px"><span class="pf-hero-kpi-val">'
-      + (m.meta==null ? '—' : fmtBRLShort(m.meta)) + '</span>'
-      + (admin ? '<button class="pf-hero-edit" onclick="fiEditMeta(\'' + metaKeyFicha.replace(/'/g,"\\'") + '\',' + ano + ')">editar</button>' : '')
-      + '</div>'
-    : '<span class="pf-hero-kpi-val">' + (m.meta==null ? '—' : fmtBRLShort(m.meta)) + '</span>';
+  // ── ZONA 1: Hero header — só pipeline aberto e agenda, sem números de
+  // fechamento (meta/realizado/projeção ficam no Power BI, que é a fonte
+  // oficial dessas métricas). ──────────────────────────────────────────────
   const repOpts = Object.keys(METAS_REP_MAP).map(function(r){ return '<option value="'+r+'"'+(r===nome?' selected':'')+'>'+r+'</option>'; }).join('');
 
   const heroHtml = '<div class="pf-hero '+statusCls+'">'
@@ -9495,25 +9524,11 @@ function perfRender() {
     + '<option value="">Ir para representante…</option>'+repOpts+'</select>'
     + '</div>'
     + '<div class="pf-hero-kpis">'
-    + '<div><div class="pf-hero-kpi-lbl">Meta Anual</div>'+metaValHtml+'</div>'
-    + '<div><div class="pf-hero-kpi-lbl">Realizado</div><div class="pf-hero-kpi-val">'+fmtBRLShort(m.realizado)+'</div></div>'
-    + '<div><div class="pf-hero-kpi-lbl">% Atingido</div><div class="pf-hero-kpi-val big '+statusCls+'">'+(pctN==null?'—':pctN+'%')+'</div></div>'
-    + '<div><div class="pf-hero-kpi-lbl">Projeção</div><div class="pf-hero-kpi-val">'+fmtBRLShort(m.projecao)+'</div></div>'
+    + '<div><div class="pf-hero-kpi-lbl">Propostas em Aberto</div><div class="pf-hero-kpi-val big">'+m.abertas.length+'</div></div>'
     + '<div><div class="pf-hero-kpi-lbl">Pipeline Aberto</div><div class="pf-hero-kpi-val blue">'+fmtBRLShort(m.pipeline)+'</div></div>'
-    + '<div><div class="pf-hero-kpi-lbl">Média necessária</div><div class="pf-hero-kpi-val">'+(m.mediaNec==null?'—':fmtBRLShort(m.mediaNec))+'</div></div>'
+    + '<div><div class="pf-hero-kpi-lbl">Follow-ups Agendados</div><div class="pf-hero-kpi-val">'+agendados.length+'</div></div>'
+    + '<div><div class="pf-hero-kpi-lbl">Follow-ups Vencidos</div><div class="pf-hero-kpi-val '+(vencidos.length?'bad':'')+'">'+vencidos.length+'</div></div>'
     + '</div></div>';
-
-  // ── ZONA 2: 4 KPI cards ──────────────────────────────────────────────────
-  const icoFat  = '<svg viewBox="0 0 16 16" fill="none" stroke="#64748b" stroke-width="1.8"><rect x="2" y="9" width="3" height="5" rx="1"/><rect x="6.5" y="5" width="3" height="9" rx="1"/><rect x="11" y="2" width="3" height="12" rx="1"/></svg>';
-  const icoConv = '<svg viewBox="0 0 16 16" fill="none" stroke="#64748b" stroke-width="1.8"><polyline points="3 11 7 7 10 10 13 5"/></svg>';
-  const icoTick = '<svg viewBox="0 0 16 16" fill="none" stroke="#64748b" stroke-width="1.8"><circle cx="8" cy="8" r="5.5"/><circle cx="8" cy="8" r="2"/></svg>';
-  const icoAct  = '<svg viewBox="0 0 16 16" fill="none" stroke="#64748b" stroke-width="1.8"><path d="M2 8h2.5l2-5 4 10 2-5H14"/></svg>';
-  const z2Html = '<div class="pf-z2-grid">'
-    + '<div class="pf-z2-card"><div class="pf-z2-ico">'+icoFat+'</div><div class="pf-z2-lbl">Faturamento</div><div class="pf-z2-val">'+fmtBRLShort(m.realizado)+'</div><div class="pf-z2-sub">'+m.pedidosCount+' pedidos fechados</div></div>'
-    + '<div class="pf-z2-card"><div class="pf-z2-ico">'+icoConv+'</div><div class="pf-z2-lbl">Conversão</div><div class="pf-z2-val">'+(m.conversao==null?'—':(m.conversao*100).toFixed(1)+'%')+'</div><div class="pf-z2-sub">'+m.pedidosCount+' de '+m.emitidas.length+' propostas</div></div>'
-    + '<div class="pf-z2-card"><div class="pf-z2-ico">'+icoTick+'</div><div class="pf-z2-lbl">Ticket Médio</div><div class="pf-z2-val">'+fmtBRLShort(m.ticket)+'</div><div class="pf-z2-sub">'+m.pedidosCount+' pedidos</div></div>'
-    + '<div class="pf-z2-card"><div class="pf-z2-ico">'+icoAct+'</div><div class="pf-z2-lbl">Atividades</div><div class="pf-z2-val">'+m.atividades+'</div><div class="pf-z2-sub">visitas + follow-ups</div></div>'
-    + '</div>';
 
   // ── ZONA 2b: propostas por status (histórico completo da pessoa) ─────────
   const _statusUp = s => (s||'').toUpperCase().trim();
@@ -9529,27 +9544,20 @@ function perfRender() {
     + '<div class="pf-z2-card"><div class="pf-z2-lbl">Desistências</div><div class="pf-z2-val" style="color:#6b7280">'+cDesist+(cStandby?' <span style="font-size:11px;color:var(--muted);font-weight:400">+ '+cStandby+' stand-by</span>':'')+'</div></div>'
     + '</div>';
 
-  // ── Séries mensais ───────────────────────────────────────────────────────
-  const vendasMes = Array(12).fill(0), propMes = Array(12).fill(0), pedMes = Array(12).fill(0);
-  m.all.forEach(function(p) {
-    var fech = cpParseDate(p.data_fechamento), ab = cpParseDate(p.data_abertura);
-    if ((p.status||'').toUpperCase()==='VENDIDO' && fech && new Date(fech).getFullYear()===ano) { var mo=new Date(fech).getMonth(); vendasMes[mo]+=Number(p.valor_vendido)||0; pedMes[mo]++; }
-    if (ab && new Date(ab).getFullYear()===ano) propMes[new Date(ab).getMonth()]++;
-  });
-  const hasVendas = vendasMes.some(function(v){return v>0;});
-
-  // ── Funil + gargalo ───────────────────────────────────────────────────────
-  const etapaList = (typeof CRM_CONFIG!=='undefined'&&CRM_CONFIG&&CRM_CONFIG.etapa_list)||DEFAULT_ETAPA_LIST;
-  const funilStages = etapaList.filter(function(e){return (e.value||'').toUpperCase()!=='VENDIDO';}).map(function(e){
-    return { label:e.label, color:NAVY, count:m.abertas.filter(function(p){return (p.etapa||'').toUpperCase()===(e.value||'').toUpperCase();}).length };
-  });
-  funilStages.push({ label:'Vendidas', color:SLATE, count:m.vendidas.length });
-  const abertasStgs = funilStages.filter(function(s){return s.label!=='Vendidas';});
-  const gargalo = abertasStgs.length ? abertasStgs.reduce(function(a,b){return b.count>a.count?b:a;}) : null;
-  const fechCount = (abertasStgs.find(function(s){return (s.label||'').toUpperCase().indexOf('FECHAM')>=0;}) || {}).count || 0;
-  const bottleneckHtml = gargalo && gargalo.count > 0
-    ? '<div class="pf-bottleneck">Gargalo em <strong>'+gargalo.label+'</strong>: '+gargalo.count+' propostas paradas.'+(fechCount===0?' Nenhuma em Fechamento.':'')+'</div>'
-    : '';
+  // ── Funil + gargalo — onde cada proposta está no funil de vendas ─────────
+  // Um funil por categoria (Máquinas/Sistemas e Peças têm etapas diferentes) —
+  // ver _funisPorCategoria, que usa o funil real (CRM_CONFIG.funis), não a
+  // lista antiga que não batia com os valores gravados em p.etapa.
+  const funisPessoa = _funisPorCategoria(m.abertas);
+  const funisHtml = funisPessoa.length ? funisPessoa.map(function(fu){
+    const gargalo = fu.stages.length ? fu.stages.reduce(function(a,b){return b.count>a.count?b:a;}) : null;
+    const fechCount = (fu.stages.find(function(s){return (s.label||'').toUpperCase().indexOf('FECHAM')>=0;}) || {}).count || 0;
+    const bnHtml = gargalo && gargalo.count > 0
+      ? '<div class="pf-bottleneck">Gargalo em <strong>'+gargalo.label+'</strong>: '+gargalo.count+' propostas paradas.'+(fechCount===0?' Nenhuma em Fechamento.':'')+'</div>'
+      : '';
+    return '<div class="pf-z3-card" style="margin-bottom:12px"><div class="pf-chart-title">Funil '+fu.nomeCat+' — '+fu.total+' '+(fu.total===1?'proposta aberta':'propostas abertas')+'</div>'
+      + pfFunilHTML(fu.stages) + bnHtml + '</div>';
+  }).join('') : '<div class="pf-z3-card" style="margin-bottom:12px"><div class="pf-chart-title">Funil de Vendas</div><div class="pf-empty-chart">Nenhuma proposta aberta.</div></div>';
 
   // ── Filtros ──────────────────────────────────────────────────────────────
   const years = Array.from(new Set(DATA.reduce(function(acc,p){
@@ -9566,7 +9574,19 @@ function perfRender() {
     ? '<ul class="fi-feed">'+feed.map(function(e){return '<li class="fi-feed-item"><div class="fi-feed-ic '+e.k+'">'+e.ico+'</div><div><div class="fi-feed-d">'+fiRelDay(e.t)+'</div><div class="fi-feed-x">'+e.txt+'</div></div></li>';}).join('')+'</ul>'
     : '<div class="pf-empty-chart">Sem eventos recentes.</div>';
 
-  // ── ZONA 3: Filtros + painéis 60/40 ─────────────────────────────────────
+  // ── Follow-ups agendados (prévia — lista completa fica na aba "Agendadas") ──
+  const agendadosRows = agendados.slice(0,8).map(function(ff){
+    var t = cpParseDate(ff.proximo_contato);
+    var st = (t && t < hojeMs) ? '<span class="tl-tag quente">Vencida</span>' : '<span class="tl-tag fria">Agendada</span>';
+    return '<tr><td>'+(ff._cliente||'—')+'</td><td>'+fmtDateDisplay(ff.proximo_contato)+'</td><td>'+(ff.tipo_proximo_passo||'—')+'</td><td>'+st+'</td></tr>';
+  });
+  const agendadosHtml = pfTable(['Cliente','Data','Tipo','Status'], agendadosRows, 'Nenhuma ação agendada no período.')
+    + (agendados.length > 8 ? '<div style="text-align:center;padding:10px 0 2px"><button class="btn-tbl" onclick="switchPerfTab(\'agendadas\')">Ver todas as '+agendados.length+'</button></div>' : '');
+
+  // ── ZONA 3: Filtros + Funil (destaque) + Agendados + Linha do Tempo ─────
+  // Sem gráfico de barras/linha por decisão do usuário: números de fechamento
+  // ficam no Power BI. Aqui o que importa é ONDE cada proposta está no funil
+  // e O QUE tem agendado.
   const z3Html = '<div class="pf-filters">'
     + '<div class="pf-fgrp"><label>Ano</label><select onchange="setPerfF(\'ano\',this.value)">'+anoOpts+'</select></div>'
     + '<div class="pf-fgrp"><label>Mês</label><select onchange="setPerfF(\'mes\',this.value)">'+mesOpts+'</select></div>'
@@ -9575,22 +9595,11 @@ function perfRender() {
     + '<div class="pf-fgrp"><label>Até</label><input type="date" value="'+(f.fim||'')+'" onchange="setPerfF(\'fim\',this.value)"></div>'
     + '<button class="btn-tbl" onclick="setPerfF(\'reset\')" style="margin-left:auto">Limpar filtros</button>'
     + '</div>'
+    + funisHtml
     + '<div class="pf-z3">'
-    + '<div class="pf-z3-left">'
-    + '<div class="pf-z3-card"><div class="pf-chart-title">Evolução Mensal de Vendas</div>'
-    + (hasVendas ? pfLineSVG([{values:vendasMes,color:NAVY}],PF_MESES,520,true) : '<div class="pf-empty-chart">Sem vendas no ano selecionado.</div>')
-    + '</div>'
-    + '<div class="pf-z3-card"><div class="pf-chart-title">Propostas × Pedidos</div>'
-    + pfGroupedSVG(PF_MESES,propMes,pedMes,SLATE_LT,NAVY)
-    + '<div class="pf-legend"><span><span class="pf-leg-dot" style="background:'+SLATE_LT+'"></span>Propostas</span>'
-    + '<span><span class="pf-leg-dot" style="background:'+NAVY+'"></span>Pedidos</span></div>'
-    + '</div></div>'
-    + '<div class="pf-z3-right">'
-    + '<div class="pf-z3-card"><div class="pf-chart-title">Funil Comercial</div>'
-    + pfFunilHTML(funilStages)+bottleneckHtml
-    + '</div>'
-    + '<div class="pf-z3-card"><div class="pf-chart-title">Linha do Tempo</div>'+feedHtml+'</div>'
-    + '</div></div>';
+    + '<div class="pf-z3-left"><div class="pf-z3-card"><div class="pf-chart-title">Follow-ups Agendados</div>'+agendadosHtml+'</div></div>'
+    + '<div class="pf-z3-right"><div class="pf-z3-card"><div class="pf-chart-title">Linha do Tempo</div>'+feedHtml+'</div></div>'
+    + '</div>';
 
   // ── ZONA 4: Ferramentas do gestor ────────────────────────────────────────
   const oo = FI_ONEONONE[nome] || [];
@@ -9599,36 +9608,24 @@ function perfRender() {
         return '<li class="fi-tl-item"><div class="fi-tl-d">'+fmtDateDisplay(new Date(o.criado_em).toISOString().slice(0,10))+(o.autor?' · '+o.autor:'')+'</div><div class="fi-tl-x">'+(o.texto||'').replace(/</g,'&lt;')+'</div></li>';
       }).join('')+'</ul>'
     : '<div class="pf-empty-chart" style="padding:14px 6px">Sem reuniões registradas.</div>';
-  if (!_fiSim) fiSimInit(m);
   const nomeEscZ4 = nome.replace(/'/g,"\\'");
   const z4Html = '<div class="pf-z4-sep"><div class="pf-z4-sep-line"></div><div class="pf-z4-sep-lbl">Ferramentas do Gestor</div><div class="pf-z4-sep-line"></div></div>'
-    + '<div class="pf-z4-grid">'
+    + '<div class="pf-z4-grid" style="grid-template-columns:1fr">'
     + '<div class="pf-z4-card"><div class="fi-card-t">Reunião 1-on-1'+(admin?' <span class="fi-sub">feedback do gestor</span>':'')+'</div>'
     + (admin ? '<textarea id="fi-1on1-ta" class="fi-1on1-area" placeholder="Anote o feedback da última reunião com '+nome+'…"></textarea><div class="fi-1on1-bar"><button class="btn-primary-sm" onclick="fiSaveOneOnOne(\''+nomeEscZ4+'\')">Salvar anotação</button></div>' : '')
     + ooTimeline
     + '</div>'
-    + '<div class="pf-z4-card"><div class="fi-card-t">Simulador de Cenários <span class="fi-sub">what-if</span></div>'
-    + '<div class="fi-sim-row"><div class="fi-sim-lbl">Taxa de conversão <b id="fi-sim-conv-v">'+_fiSim.conv+'%</b></div>'
-    + '<input class="fi-slider" type="range" min="0" max="100" value="'+_fiSim.conv+'" oninput="fiSimSet(\'conv\',this.value)"></div>'
-    + '<div class="fi-sim-row"><div class="fi-sim-lbl">Ticket médio <b id="fi-sim-tk-v">'+fmtBRLShort(_fiSim.ticket)+'</b></div>'
-    + '<input class="fi-slider" type="range" min="0" max="'+Math.max(50000,Math.round((_fiSim.ticket||10000)*3))+'" step="1000" value="'+_fiSim.ticket+'" oninput="fiSimSet(\'ticket\',this.value)"></div>'
-    + '<div class="fi-sim-row"><div class="fi-sim-lbl">Volume de propostas <b id="fi-sim-vol-v">'+_fiSim.volume+'</b></div>'
-    + '<input class="fi-slider" type="range" min="0" max="'+Math.max(20,_fiSim.volume*3)+'" value="'+_fiSim.volume+'" oninput="fiSimSet(\'volume\',this.value)"></div>'
-    + '<div class="fi-sim-out" id="fi-sim-out"></div>'
-    + '</div></div>';
+    + '</div>';
 
-  // ── KPIs secundários ─────────────────────────────────────────────────────
-  const projCls = m.metaProjPct==null?'':m.metaProjPct>=1?'good':m.metaProjPct>=0.7?'warn':'bad';
-  const cresCls = m.crescimento==null?'':m.crescimento>=0?'good':'bad';
-  const extraHtml = '<div class="pf-kpis" style="grid-template-columns:repeat(3,1fr);margin-bottom:20px">'
-    + '<div class="pf-kpi '+projCls+'"><div class="pf-kpi-lbl">Meta Projetada</div><div class="pf-kpi-val '+projCls+'">'+(m.metaProjPct==null?'—':Math.round(m.metaProjPct*100)+'%')+'</div><div class="pf-kpi-sub">estimativa de atingimento</div></div>'
-    + '<div class="pf-kpi '+cresCls+'"><div class="pf-kpi-lbl">Crescimento vs ano ant.</div><div class="pf-kpi-val '+cresCls+'">'+(m.crescimento==null?'—':(m.crescimento>=0?'+':'')+Math.round(m.crescimento*100)+'%')+'</div><div class="pf-kpi-sub">'+fmtBRLShort(m.realPrev)+' → '+fmtBRLShort(m.realAnoCheio)+'</div></div>'
-    + '<div class="pf-kpi"><div class="pf-kpi-lbl">Clientes</div><div class="pf-kpi-val">'+m.clientesAtivos+'</div><div class="pf-kpi-sub">'+m.novosClientes+' novos no período</div></div>'
+  // ── KPIs secundários (só contagem de clientes — nada de fechamento) ──────
+  const extraHtml = '<div class="pf-kpis" style="grid-template-columns:repeat(2,1fr);margin-bottom:20px">'
+    + '<div class="pf-kpi"><div class="pf-kpi-lbl">Clientes ativos</div><div class="pf-kpi-val">'+m.clientesAtivos+'</div><div class="pf-kpi-sub">'+m.novosClientes+' novos no período</div></div>'
+    + '<div class="pf-kpi"><div class="pf-kpi-lbl">Atividades</div><div class="pf-kpi-val">'+m.atividades+'</div><div class="pf-kpi-sub">visitas + follow-ups no período</div></div>'
     + '</div>';
 
   document.getElementById('admin-section-title').textContent = 'Performance — ' + nome;
   container.innerHTML = '<div class="eq-wrap">'
-    + heroHtml + z2Html + z2bHtml + z3Html + z4Html + extraHtml
+    + heroHtml + z2bHtml + z3Html + z4Html + extraHtml
     + '<div class="pf-tabs-head"><div class="pf-tabs">'
     + '<button class="pf-tab'+(_pfTab==='propostas'?' active':'')+'" data-t="propostas" onclick="switchPerfTab(\'propostas\')">Propostas</button>'
     + '<button class="pf-tab'+(_pfTab==='pedidos'?' active':'')+'" data-t="pedidos" onclick="switchPerfTab(\'pedidos\')">Pedidos</button>'
@@ -9641,7 +9638,6 @@ function perfRender() {
     + '</div>';
 
   pfRenderTab();
-  fiSimRender();
 }
 
 // ════════════════════════════════════════════════════════════════════════
@@ -9908,8 +9904,7 @@ function isInternoKey(key) { const m = METAS_REP_MAP[key]; return !!(m && m.rep 
 // ── Escopo de propostas conforme filtros de Categoria/Representante (sem data) ──
 function ccScopeProps() {
   let list = DATA.slice();
-  if (_ccF.rep) list = list.filter(p =>
-    _matchNome(p.representante, _ccF.rep) || _matchNome(p.interno, _ccF.rep) || _matchNome(p.responsavel, _ccF.rep));
+  if (_ccF.rep) list = list.filter(p => _ownerMatches(p, _ccF.rep));
   if (_ccF.cat) list = list.filter(p => _propCategoriaKey(p) === _ccF.cat);
   return list;
 }
@@ -9921,8 +9916,7 @@ function _ccKeyCat(key) {
   return best;
 }
 function _ccKeyMatchesRep(key, rep) {
-  return DATA.filter(metaKeyMatcher(key)).some(p =>
-    _matchNome(p.representante, rep) || _matchNome(p.interno, rep) || _matchNome(p.responsavel, rep));
+  return DATA.filter(metaKeyMatcher(key)).some(p => _ownerMatches(p, rep));
 }
 // Chaves de meta visíveis sob os filtros de categoria/representante ativos
 function ccActiveKeys() {
@@ -10541,33 +10535,11 @@ function perfRenderInterno() {
   _pfData = { nome, m };
   const ano = m.anoNum;
 
-  // Divide propostas da pessoa em Máquinas × Peças/Serviços
-  const isMaq = p => (p.classificacao||'').toUpperCase().includes('MÁQUIN') || (p.classificacao||'').toUpperCase().includes('MAQUIN');
-  const vendMaq = m.vendidas.filter(isMaq), vendPec = m.vendidas.filter(p=>!isMaq(p));
-  const realMaq = vendMaq.reduce((a,p)=>a+(Number(p.valor_vendido)||0),0);
-  const realPec = vendPec.reduce((a,p)=>a+(Number(p.valor_vendido)||0),0);
-  const metaMaq = metaForKey('SEIBT MÁQ', ano) || 0;
-  const metaPec = metaForKey('SEIBT PEÇAS/SERV.', ano) || 0;
-  const blocoMeta = (titulo, real, meta) => {
-    const pct = meta>0?Math.min(100,Math.round(real/meta*100)):null;
-    const cls = pct==null?'none':pct>=80?'high':pct>=50?'mid':'low';
-    return `<div class="pf-chart">
-      <div class="pf-chart-title">${titulo}</div>
-      <div class="pf-kpis" style="grid-template-columns:1fr 1fr">
-        <div class="pf-kpi"><div class="pf-kpi-lbl">Meta unidade</div><div class="pf-kpi-val">${meta>0?fmtBRLShort(meta):'—'}</div></div>
-        <div class="pf-kpi"><div class="pf-kpi-lbl">Vendido</div><div class="pf-kpi-val">${fmtBRLShort(real)}</div></div>
-      </div>
-      <div class="eq-prog-row"><span>Atingido</span><span class="eq-prog-pct">${pct==null?'—':pct+'%'}</span></div>
-      <div class="eq-bar"><div class="eq-bar-fill ${cls}" style="width:${pct||0}%"></div></div>
-    </div>`;
-  };
-
-  const conv = m.conversao==null?'—':(m.conversao*100).toFixed(1)+'%';
+  // Sem meta/vendido por linha aqui — números de fechamento ficam no Power
+  // BI. O que importa nesta tela é pipeline aberto + onde cada proposta está.
   const kpis = [
-    { lbl:'Propostas', val:String(m.emitidas.length) },
-    { lbl:'Pedidos', val:String(m.pedidosCount) },
-    { lbl:'Conversão', val:conv, sub:`${m.pedidosCount} de ${m.emitidas.length}` },
-    { lbl:'Ticket Médio', val:fmtBRLShort(m.ticket) },
+    { lbl:'Propostas em Aberto', val:String(m.abertas.length) },
+    { lbl:'Pipeline Aberto', val:fmtBRLShort(m.pipeline) },
   ];
   const kpisHtml = kpis.map(k=>`<div class="pf-kpi"><div class="pf-kpi-lbl">${k.lbl}</div><div class="pf-kpi-val">${k.val}</div>${k.sub?`<div class="pf-kpi-sub">${k.sub}</div>`:''}</div>`).join('');
 
@@ -10587,13 +10559,32 @@ function perfRenderInterno() {
   const anoOpts = `<option value="todos"${f.ano==='todos'?' selected':''}>Todos</option>`+years.map(y=>`<option value="${y}"${f.ano===String(y)?' selected':''}>${y}</option>`).join('');
   const mesOpts = `<option value="todos"${f.mes==='todos'?' selected':''}>Todos</option>`+PF_MESES_FULL.map((nm,i)=>`<option value="${i}"${f.mes===String(i)?' selected':''}>${nm}</option>`).join('');
 
+  // Funil real por categoria (Máquinas/Peças têm etapas diferentes)
+  const funisPessoaInt = _funisPorCategoria(m.abertas);
+  const funisHtmlInt = funisPessoaInt.length ? funisPessoaInt.map(fu => `
+    <div class="pf-z3-card" style="margin-bottom:12px"><div class="pf-chart-title">Funil ${fu.nomeCat} — ${fu.total} ${fu.total===1?'proposta aberta':'propostas abertas'}</div>
+      ${pfFunilHTML(fu.stages)}
+    </div>`).join('') : '<div class="pf-z3-card" style="margin-bottom:12px"><div class="pf-chart-title">Funil de Vendas</div><div class="pf-empty-chart">Nenhuma proposta aberta.</div></div>';
+
+  // Follow-ups agendados (prévia — lista completa na aba "Agendadas")
+  const hojeMsInt = _todayMid();
+  const agendadosInt = (m.fuAll||[]).filter(ff => ff.proximo_contato && perfDateInRange(ff.proximo_contato, f))
+    .sort((a,b) => cpParseDate(a.proximo_contato) - cpParseDate(b.proximo_contato));
+  const agendadosRowsInt = agendadosInt.slice(0,8).map(ff => {
+    const t = cpParseDate(ff.proximo_contato);
+    const st = (t && t < hojeMsInt) ? '<span class="tl-tag quente">Vencida</span>' : '<span class="tl-tag fria">Agendada</span>';
+    return `<tr><td>${ff._cliente||'—'}</td><td>${fmtDateDisplay(ff.proximo_contato)}</td><td>${ff.tipo_proximo_passo||'—'}</td><td>${st}</td></tr>`;
+  });
+  const agendadosHtmlInt = pfTable(['Cliente','Data','Tipo','Status'], agendadosRowsInt, 'Nenhuma ação agendada no período.')
+    + (agendadosInt.length > 8 ? `<div style="text-align:center;padding:10px 0 2px"><button class="btn-tbl" onclick="switchPerfTab('agendadas')">Ver todas as ${agendadosInt.length}</button></div>` : '');
+
   document.getElementById('admin-section-title').textContent = 'Vendedor Interno — ' + nome;
   container.innerHTML = `
     <div class="eq-wrap">
       <button class="btn-tbl pf-back" onclick="setAdminTab('equipe')">← Voltar para Equipe</button>
       <div class="eq-card-top" style="margin-bottom:18px">
         <div class="eq-avatar" style="width:56px;height:56px;font-size:19px;background:${eqAvatarColor()}">${eqInitials(nome)}</div>
-        <div><div class="eq-head-title">${nome}</div><div class="eq-head-sub">Vendedor Interno · metas SEIBT Máquinas + Peças</div></div>
+        <div><div class="eq-head-title">${nome}</div><div class="eq-head-sub">Vendedor Interno · Máquinas + Peças</div></div>
       </div>
       <div class="pf-filters">
         <div class="pf-fgrp"><label>Ano</label><select onchange="setPerfFInt('ano',this.value)">${anoOpts}</select></div>
@@ -10602,14 +10593,11 @@ function perfRenderInterno() {
         <div class="pf-fgrp"><label>Até</label><input type="date" value="${f.fim||''}" onchange="setPerfFInt('fim',this.value)"></div>
         <button class="btn-tbl" onclick="setPerfFInt('reset')">Limpar</button>
       </div>
-      <div class="pf-sec-title">Metas por linha</div>
-      <div class="cc-cols">
-        ${blocoMeta('SEIBT Máquinas', realMaq, metaMaq)}
-        ${blocoMeta('Peças de Reposição', realPec, metaPec)}
-      </div>
       <div class="pf-sec-title">Indicadores</div>
       <div class="pf-kpis">${kpisHtml}</div>
       ${statusHtml}
+      ${funisHtmlInt}
+      <div class="pf-z3-card" style="margin-bottom:16px"><div class="pf-chart-title">Follow-ups Agendados</div>${agendadosHtmlInt}</div>
       <div class="pf-tabs-head"><div class="pf-tabs">
         <button class="pf-tab${_pfTab==='propostas'?' active':''}" data-t="propostas" onclick="switchPerfTab('propostas')">Propostas</button>
         <button class="pf-tab${_pfTab==='pedidos'?' active':''}" data-t="pedidos" onclick="switchPerfTab('pedidos')">Pedidos</button>
