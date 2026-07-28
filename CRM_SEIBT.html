@@ -411,6 +411,78 @@ body.sidebar-collapsed .main{margin-left:var(--sidebar-mini)}
 .cp-act-when{color:var(--muted);font-size:11px;min-width:60px;flex-shrink:0;font-variant-numeric:tabular-nums}
 .cp-act-txt{flex:1;color:var(--text);min-width:0}
 .cp-act-desc{font-size:11.5px;color:var(--muted);line-height:1.4;margin-top:2px}
+
+/* ══ Início v2 — foco em ação. Uma única cor de alerta (vermelho); hierarquia
+   por tamanho e espaço, não por cor. Números em tabular para alinhar. ══ */
+.hm{max-width:1180px;margin:0 auto;font-variant-numeric:tabular-nums}
+.hm-head{margin-bottom:22px}
+.hm-hi{font-size:19px;font-weight:500;color:var(--navy)}
+.hm-sub{font-size:12.5px;color:var(--muted);margin-top:2px}
+.hm-sec{margin-bottom:30px}
+.hm-sec-h{display:flex;align-items:baseline;justify-content:space-between;gap:12px;margin-bottom:12px}
+.hm-sec-t{font-size:13px;font-weight:500;color:var(--navy)}
+.hm-sec-n{font-size:12px;color:var(--muted)}
+
+/* Pipeline por idade — 3 blocos, só o último recebe alerta */
+.hm-age{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--border);border:1px solid var(--border);border-radius:8px;overflow:hidden}
+.hm-age-c{background:var(--white);padding:16px 18px}
+.hm-age-l{font-size:11.5px;color:var(--muted);margin-bottom:7px}
+.hm-age-v{font-size:23px;font-weight:500;color:var(--navy);line-height:1.1}
+.hm-age-n{font-size:12px;color:var(--muted);margin-top:4px}
+.hm-age-c.alert .hm-age-v{color:var(--error)}
+
+/* Tabela por responsável — densidade de tabela, divisória fina */
+.hm-tbl{width:100%;border-collapse:collapse;font-size:13px}
+.hm-tbl th{font-size:11.5px;font-weight:500;color:var(--muted);text-align:left;padding:0 10px 8px;border-bottom:1px solid var(--border);white-space:nowrap}
+.hm-tbl td{padding:11px 10px;border-bottom:1px solid var(--border);color:var(--text)}
+.hm-tbl tbody tr{cursor:pointer}
+.hm-tbl tbody tr:hover{background:var(--bg-hover)}
+.hm-tbl .num{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+.hm-tbl .nome{font-weight:500;color:var(--navy)}
+.hm-inbox-n{display:inline-block;min-width:26px;padding:2px 8px;border-radius:20px;font-weight:500;font-size:12px}
+.hm-inbox-n.zero{color:var(--muted)}
+.hm-inbox-n.hot{background:var(--error);color:#fff}
+.hm-bar{height:4px;border-radius:3px;background:var(--bg-hover);overflow:hidden;min-width:54px;margin-top:4px}
+.hm-bar>i{display:block;height:100%;background:var(--navy);border-radius:3px}
+
+/* Lista de itens (travadas / caixa de entrada) */
+.hm-list{border:1px solid var(--border);border-radius:8px;overflow:hidden}
+.hm-it{display:flex;align-items:center;gap:12px;padding:12px 14px;border-bottom:1px solid var(--border);font-size:13px}
+.hm-it:last-child{border-bottom:none}
+.hm-it:hover{background:var(--bg-hover)}
+.hm-it-main{flex:1;min-width:0}
+.hm-it-cli{font-weight:500;color:var(--navy);cursor:pointer;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.hm-it-meta{font-size:11.5px;color:var(--muted);margin-top:3px;display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.hm-it-val{font-variant-numeric:tabular-nums;color:var(--text);white-space:nowrap}
+.hm-it-dias{font-variant-numeric:tabular-nums;color:var(--error);white-space:nowrap;font-size:12px}
+.hm-sel{font-size:12px;padding:6px 8px;border:1px solid var(--border);border-radius:6px;background:var(--white);color:var(--text);font-family:inherit;max-width:190px}
+.hm-sel:focus{outline:none;border-color:var(--navy)}
+.hm-dup{font-size:10.5px;color:var(--error);border:1px solid var(--error);border-radius:20px;padding:1px 7px;white-space:nowrap}
+
+/* Estado vazio como recompensa, não como bloco cinza */
+.hm-done{border:1px solid var(--success);background:rgba(22,163,74,.05);border-radius:8px;padding:22px;text-align:center}
+.hm-done-i{width:34px;height:34px;margin:0 auto 10px;color:var(--success)}
+.hm-done-i svg{width:100%;height:100%;stroke:currentColor;fill:none;stroke-width:2}
+.hm-done-t{font-size:14px;font-weight:500;color:var(--navy)}
+.hm-done-s{font-size:12.5px;color:var(--muted);margin-top:3px}
+.hm-empty{padding:20px;text-align:center;color:var(--muted);font-size:12.5px}
+
+/* Avisos de dado sujo — discretos, com link para revisar */
+.hm-warn{display:flex;align-items:flex-start;gap:8px;margin-top:10px;font-size:12px;color:var(--muted);line-height:1.5}
+.hm-warn svg{width:14px;height:14px;stroke:var(--error);fill:none;stroke-width:2;flex-shrink:0;margin-top:2px}
+.hm-warn a{color:var(--navy);text-decoration:underline;cursor:pointer}
+
+/* Rodapé comparativo do representante */
+.hm-cmp{margin-top:26px;padding-top:14px;border-top:1px solid var(--border);font-size:12.5px;color:var(--muted);display:flex;gap:18px;flex-wrap:wrap;align-items:center}
+.hm-cmp b{font-weight:500;color:var(--navy)}
+
+@media(max-width:1366px){
+  .hm-tbl .col-pipe{display:none}
+}
+@media(max-width:760px){
+  .hm-age{grid-template-columns:1fr}
+  .hm-tbl .col-prox{display:none}
+}
 .cp-empty{text-align:center;padding:46px 20px;color:var(--muted);font-size:12.5px;line-height:1.6}
 .cp-empty svg{width:30px;height:30px;opacity:.25;margin:0 auto 12px;display:block;stroke:currentColor;fill:none}
 .cp-doc-wrap{display:flex;flex-direction:column;gap:8px}
@@ -6740,7 +6812,10 @@ function afterLogin() {
   loadFollowupsFromStorage();
   _loadFunisFromServer();
   ensureUsersCache(); // aquece o cache p/ o dropdown de Responsável (qualquer papel); não toca DOM
+  loadMovimentacao(); // última movimentação real (view) p/ a métrica de paradas
   checkUpcomingFollowups();
+  updateInboxBadge();
+  checkNovasImportadas();
   updateSessionUI();
   fetchERPSupabase(); // ativo: KPI lê direto da tabela pedidos do Supabase (count + soma vl_liquido)
   loadPedidosPerf().then(() => { perfClearCache(); if (currentView === 'inicio') renderAtividadesPanel(); }); // índice de pedidos para todas as métricas
@@ -8305,174 +8380,372 @@ function inicioDefinirMeta() {
   openActTileDrawer('meta');
 }
 
+// ══════════════════════════════════════════════════════════════════════════
+//  INÍCIO v2 — três métricas: caixa de entrada · paradas +15d · próxima ação
+// ══════════════════════════════════════════════════════════════════════════
+
+// Última movimentação por proposta, vinda da view proposta_movimentacao.
+// Enquanto o SQL não roda, _movMap fica vazio e _ultimaMovTs() calcula pelos
+// dados que já estão em memória — a tela funciona antes e depois da migração.
+let _movMap = {};
+async function loadMovimentacao() {
+  try {
+    const r = await fetch(`${SUPABASE_URL}/rest/v1/proposta_movimentacao?select=uid,ultima_movimentacao`, { headers: supaHdr() });
+    if (!r.ok) return; // view ainda não existe → usa o fallback local
+    const rows = await r.json();
+    const m = {};
+    (rows || []).forEach(x => { const t = cpParseDate(x.ultima_movimentacao); if (t) m[x.uid] = t; });
+    _movMap = m;
+    if (currentView === 'inicio') renderAtividadesPanel();
+  } catch(e) { console.warn('[loadMovimentacao]', e.message); }
+}
+
+// Aberta = status ABERTO (ou vazio, como o resto do app trata) e não complementar.
+function _isAbertaHome(p) {
+  const s = String(p.status || '').toUpperCase().trim();
+  return (s === '' || s === 'ABERTO') && !isComplementar(p);
+}
+function _semEtapa(p) { return !String(p.etapa || '').trim(); }
+
+function _ultimaMovTs(p) {
+  if (_movMap[p.uid]) return _movMap[p.uid];
+  let t = 0;
+  const bump = v => { const x = cpParseDate(v); if (x > t) t = x; };
+  bump(p.etapa_changed_at); bump(p.etapa_entrada_em); bump(p.updated_at);
+  (followUps[p.uid] || []).forEach(fu => { bump(fu.criado_em); bump(fu.editado_em); bump(fu.data_contato); });
+  if (!t) bump(p.data_abertura);
+  return t;
+}
+
+// As três métricas. Base sempre = propostas abertas do escopo recebido.
+function homeMetrics(props) {
+  const hoje    = _todayMid();
+  const abertas = (props || []).filter(_isAbertaHome);
+  const caixa   = abertas.filter(_semEtapa);
+  const paradas = abertas.filter(p => {
+    const t = _ultimaMovTs(p);
+    return t && (hoje - t) > 15 * 86400000;
+  });
+  const comProx = abertas.filter(p => {
+    const t = cpParseDate(p.data_proxima_acao);
+    return t && t >= hoje;   // só conta se a data for futura
+  });
+  return { abertas, caixa, paradas, comProx,
+           pctProx: abertas.length ? comProx.length / abertas.length : 0 };
+}
+
+function _idadeDias(p) {
+  const t = cpParseDate(p.data_abertura);
+  return t ? Math.floor((_todayMid() - t) / 86400000) : null;
+}
+function _diasParada(p) {
+  const t = _ultimaMovTs(p);
+  return t ? Math.floor((_todayMid() - t) / 86400000) : null;
+}
+function _valorProp(p) { return Number(p.receita_estimada) || 0; }
+
+// Possível duplicata: mesmo cliente, mesmo valor, mesma data de abertura.
+function _dupKeyProp(p) {
+  return [String(p.cliente || '').trim().toUpperCase(),
+          _valorProp(p).toFixed(2),
+          String(p.data_abertura || '').trim()].join('|');
+}
+function _dupSet(props) {
+  const c = {}, dup = new Set();
+  props.forEach(p => { const k = _dupKeyProp(p); if (!p.cliente || !_valorProp(p)) return; c[k] = (c[k] || 0) + 1; });
+  props.forEach(p => { if (c[_dupKeyProp(p)] > 1) dup.add(p.uid); });
+  return dup;
+}
+
+// Responsável efetivo (a proposta pode trazer o nome em 3 campos diferentes).
+function _respDe(p) { return (p.responsavel || p.representante || p.interno || '').trim() || '— sem responsável'; }
+
+const HM_ICO = {
+  check: '<svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>',
+  warn:  '<svg viewBox="0 0 24 24"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>',
+};
+
+// Abre a lista pedida numa gaveta, sem tirar o usuário da home.
+function _hmDrawerLista(titulo, itens) {
+  if (!itens.length) { _openActDrawer(titulo, '<div class="hm-empty">Nenhuma proposta aqui.</div>'); return; }
+  const html = '<div class="hm-list">' + itens.map(p => {
+    const d = _diasParada(p);
+    return `<div class="hm-it">
+      <div class="hm-it-main">
+        <div class="hm-it-cli" onclick="closeActDrawer();openFollowupModal('${p.uid}')">${_htmlEsc(p.cliente || '—')}</div>
+        <div class="hm-it-meta">
+          <span>Nº ${String(p.nr).padStart(4,'0')}</span>
+          <span>${_htmlEsc(p.classificacao || '—')}</span>
+          <span>${_htmlEsc(_respDe(p))}</span>
+        </div>
+      </div>
+      <div class="hm-it-val">${fmtBRLShort(_valorProp(p))}</div>
+      <div class="hm-it-dias">${d === null ? '—' : d + 'd'}</div>
+    </div>`;
+  }).join('') + '</div>';
+  _openActDrawer(titulo + ' · ' + itens.length, html);
+}
+function _hmEscopo() {
+  let props = scopeForSession();
+  if (_inicioCat) props = props.filter(p => _propCategoriaKey(p) === _inicioCat);
+  return props;
+}
+function homeVerLista(tipo, quem) {
+  const M = homeMetrics(_hmEscopo().filter(p => !quem || _respDe(p) === quem));
+  if (tipo === 'caixa') return _hmDrawerLista('Sem etapa — ' + (quem || 'equipe'), M.caixa);
+  _hmDrawerLista('Propostas abertas — ' + (quem || 'equipe'), M.abertas);
+}
+function homeVerTravadas() {
+  const M = homeMetrics(_hmEscopo());
+  _hmDrawerLista('Travadas há mais de 60 dias',
+    M.abertas.filter(p => { const d = _idadeDias(p); return d !== null && d > 60; })
+             .sort((a,b) => _valorProp(b) - _valorProp(a)));
+}
+function homeVerSuspeitas() {
+  const M = homeMetrics(_hmEscopo());
+  _hmDrawerLista('Valores acima de R$ 2 milhões — revisar',
+    M.abertas.filter(p => _valorProp(p) > 2000000).sort((a,b) => _valorProp(b) - _valorProp(a)));
+}
+
+// Troca de etapa direto na caixa de entrada, sem abrir modal.
+async function homeSetEtapa(uid, valor) {
+  if (!valor) return;
+  await setEtapaFromPanel(uid, valor);
+  renderAtividadesPanel();
+  updateInboxBadge();
+}
+
+// Badge da sidebar: caixa de entrada do próprio usuário. Some ao zerar.
+function updateInboxBadge() {
+  const item = document.querySelector('.nav-item[data-view="inicio"]');
+  if (!item) return;
+  let b = item.querySelector('.nav-badge');
+  const n = homeMetrics(scopeForSession()).caixa.length;
+  if (!n) { if (b) b.remove(); return; }
+  if (!b) { b = document.createElement('span'); b.className = 'nav-badge'; item.appendChild(b); }
+  b.textContent = n > 99 ? '99+' : n;
+  b.style.background = 'var(--error)';
+  b.style.color = '#fff';
+}
+
 function renderAtividadesPanel() {
   const box = document.getElementById('section-atividades');
   if (!box) return;
-  const anoSel = _inicioAno;                     // ano selecionado (ou 'todos')
-  const isAnoAtual = String(anoSel) === String(new Date().getFullYear());
-  const props = scopeForInicio();                // escopo JÁ filtrado por ano + categoria + usuário
-  // Não-admin vê só follow-ups que ele mesmo registrou; admin usa props já filtrado
-  const fuOwner = (SESSION && SESSION.role !== 'admin')
-    ? (SESSION.nome || SESSION.valor_acesso || '')
-    : null;
-  const ind = commercialIndicators(props, fuOwner);
-  const today = _todayMid();
-
-  // % meta do usuário (quando aplicável) — segue o ano selecionado
-  const nome = (SESSION && (SESSION.valor_acesso || SESSION.nome)) || '';
-  let metaPctTxt = '—';
-  const f = { ano:String(anoSel==='todos'?new Date().getFullYear():anoSel), mes:'todos', semana:'todos', ini:'', fim:'' };
-  try {
-    const key = _actMetaKeyForSession();   // chave própria ou fallback de Peças (especialista)
-    const m = key ? PerformanceComputeKey(key, f) : PerformanceCompute(nome, f);
-    if (m && m.pct != null) metaPctTxt = Math.round(m.pct*100) + '%';
-  } catch(e) {}
-  // Pedidos: no ano corrente conta o mês atual; em ano fechado conta o ano todo.
-  const now = new Date();
-  const pedidosCount = props.filter(p => {
-    if ((p.status||'').toUpperCase() !== 'VENDIDO') return false;
-    const t = cpParseDate(p.data_fechamento);
-    if (!t) return false; const d = new Date(t);
-    return isAnoAtual
-      ? (d.getMonth()===now.getMonth() && d.getFullYear()===now.getFullYear())
-      : true; // props já está restrito ao ano selecionado
-  }).length;
-  const pedidosLabel = isAnoAtual ? 'Pedidos do mês' : 'Pedidos no ano';
-
-  const ico   = svg => `<div class="act-tile-ic">${svg}</div>`;
-  const pill  = n   => `<div class="act-tile-ic">${n}</div>`;
-  // Tom semântico: 0 = positivo (verde/check); >0 = alerta (vermelho/aviso)
-  const alertable = (n, okIco) => n > 0
-    ? { tone:'t-alert',   ic: ico(ACT_ICO.warn) }
-    : { tone:'t-ok',      ic: ico(okIco || ACT_ICO.check) };
-  const A = ind;
-  const tiles = [
-    Object.assign({ n:A.fuAtrasados.length,      l:'Follow-ups atrasados',         k:'fuAtrasados' }, alertable(A.fuAtrasados.length)),
-    Object.assign({ n:A.fuHoje.length,           l:'Follow-ups para hoje',         k:'fuHoje' },
-                  A.fuHoje.length > 0 ? { tone:'t-info', ic: ico(ACT_ICO.clock) } : { tone:'t-ok', ic: ico(ACT_ICO.check) }),
-    { n:A.visitasAgendadas.length, l:'Visitas / contatos agendados', k:'visitas',    tone:'t-neutral',  ic: pill(A.visitasAgendadas.length) },
-    { n:A.semMov.length,           l:'Leads em espera',              k:'semMov',     tone:'t-priority', ic: ico(ACT_ICO.filter) },
-    { n:A.abertas.length,          l:'Propostas abertas',            k:'abertas',    tone:'t-primary',  ic: pill(A.abertas.length) },
-    { n:pedidosCount,              l:pedidosLabel,                   k:'pedidosMes', tone:'t-info',     ic: pill(pedidosCount) },
-    Object.assign({ n:A.vencidas.length,         l:'Propostas vencidas',           k:'vencidas' }, alertable(A.vencidas.length)),
-  ];
-  const tilesHtml = tiles.map(t =>
-    `<div class="act-tile ${t.tone}" onclick="openActTileDrawer('${t.k}')">
-       <div class="act-tile-head"><div class="act-tile-n">${t.n}</div>${t.ic}</div>
-       <div class="act-tile-l">${t.l}</div>
-     </div>`).join('');
-
-  // Cartão de meta — empty state com "Definir Meta" quando não há meta
-  const hasMeta = metaPctTxt !== '—';
-  const metaTile = `<div class="act-tile t-info" ${hasMeta?`onclick="openActTileDrawer('meta')"`:''}>
-    <div class="act-tile-head">
-      ${hasMeta ? `<div class="act-tile-n">${metaPctTxt}</div>` : `<div class="act-meta-empty">Nenhuma meta definida</div>`}
-      <div class="act-tile-ic">${ACT_ICO.target}</div>
-    </div>
-    ${hasMeta
-      ? `<div class="act-tile-l">% da meta atingido</div>`
-      : `<button class="btn-mini" onclick="event.stopPropagation();inicioDefinirMeta()">${ACT_ICO.plus}Definir Meta</button>`}
-  </div>`;
-
-  // Agenda do dia — follow-ups com próximo contato hoje + abertos
-  // CORREÇÃO P4: usa ind.latest (1 registro por proposta, sem concluídos) em vez
-  // de ind.flat, que repetia a mesma proposta e mostrava follow-ups já encerrados.
-  const agenda = ind.latest
-    .filter(ff => { const t = cpParseDate(ff.proximo_contato); return t && t >= today && t < today + 86400000; })
-    .sort((a,b) => (a.tipo_proximo_passo||'').localeCompare(b.tipo_proximo_passo||''));
-  const agendaHtml = agenda.length ? agenda.map(ff =>
-    `<div class="act-ag-row"><span class="act-ag-time">${ff.tipo_proximo_passo||'Contato'}</span><span class="act-ag-cli">${ff._cliente||'—'}</span><span style="color:var(--muted);font-size:11px">${ff._resp||''}</span></div>`).join('')
-    : `<div class="act-ag-empty">${ACT_ICO.cal}<span>Nenhum compromisso para hoje</span></div>`;
-
-  // Próximos follow-ups (além de hoje, até 60 dias à frente)
-  // CORREÇÃO P4: idem — 1 registro por proposta, sem concluídos.
-  const futuros = ind.latest
-    .filter(ff => { const t = cpParseDate(ff.proximo_contato); return t && t > today && t < today + 60*86400000; })
-    .sort((a,b) => cpParseDate(a.proximo_contato) - cpParseDate(b.proximo_contato));
-  const proximosHtml = futuros.length
-    ? futuros.slice(0,20).map(ff => {
-        const d = new Date(cpParseDate(ff.proximo_contato));
-        const dStr = d.toLocaleDateString('pt-BR',{weekday:'short',day:'2-digit',month:'short'});
-        return `<div class="act-ag-row">
-          <span class="act-ag-time" style="min-width:110px">${dStr}</span>
-          <span class="act-ag-time" style="color:var(--muted);min-width:90px">${ff.tipo_proximo_passo||'Contato'}</span>
-          <span class="act-ag-cli">${ff._cliente||'—'}</span>
-          <span style="color:var(--muted);font-size:11px">${ff._resp||''}</span>
-        </div>`;
-      }).join('')
-    : `<div class="act-ag-empty">${ACT_ICO.cal}<span>Nenhum follow-up agendado nos próximos 60 dias</span></div>`;
-
-  // Histórico de propostas (recentes)
-  const recentes = props.slice().sort((a,b)=>cpParseDate(b.data_abertura)-cpParseDate(a.data_abertura)).slice(0,8);
-  const histHtml = recentes.map(p =>
-    `<div class="act-ag-row"><span class="act-ag-time">Nº ${String(p.nr).padStart(4,'0')}</span><span class="act-ag-cli">${p.cliente||'—'}</span>${statusChip(p.status)}<span style="color:var(--muted);font-size:11px">${fmtDateDisplay(p.data_abertura)}</span></div>`).join('')
-    || '<div class="act-ag-row" style="color:var(--muted);justify-content:center">Sem propostas.</div>';
-
-  // Funil de vendas (abertas por etapa)
-  const etapaList = (CRM_CONFIG && CRM_CONFIG.etapa_list) || DEFAULT_ETAPA_LIST;
-  const funilStages = etapaList.filter(e => (e.value||'').toUpperCase()!=='VENDIDO').map(e => ({
-    label: e.label, color: NAVY,
-    count: ind.abertas.filter(p => (p.etapa||'').toUpperCase() === (e.value||'').toUpperCase()).length
-  }));
-
-  // Anos disponíveis no escopo do usuário (todos os anos), desc, com ano atual garantido
-  const anosDisp = [...new Set(scopeForSession().map(p => String(getYear(p))).filter(Boolean))];
-  const anoAtualStr = String(new Date().getFullYear());
-  if (!anosDisp.includes(anoAtualStr)) anosDisp.push(anoAtualStr);
-  anosDisp.sort((a,b) => b.localeCompare(a));
-  const anoOpts = anosDisp.map(a => `<option value="${a}"${String(anoSel)===a?' selected':''}>${a}</option>`).join('')
-    + `<option value="todos"${anoSel==='todos'?' selected':''}>Todos os anos</option>`;
-
-  const catOpts = `<option value="">Todas categorias</option>`
-    + CATEGORIA_GROUPS.map(c => `<option value="${c.key}"${_inicioCat===c.key?' selected':''}>${c.label}</option>`).join('');
   const isAdmin = !!(SESSION && SESSION.role === 'admin');
-  const allUsers = isAdmin
-    ? uniqueVals([...DATA.map(p=>p.representante), ...DATA.map(p=>p.interno), ...DATA.map(p=>p.responsavel)]).filter(Boolean).sort()
-    : [];
-  const userOpts = `<option value="">Todos os usuários</option>`
-    + allUsers.map(u => `<option value="${u.replace(/"/g,'&quot;')}"${_inicioUser===u?' selected':''}>${u}</option>`).join('');
-  const hasFiltro = !!((_inicioCat) || (_inicioUser) || (String(anoSel) !== String(new Date().getFullYear())));
 
-  const saud = (() => { const h = new Date().getHours(); return h<12?'Bom dia':h<18?'Boa tarde':'Boa noite'; })();
-  box.innerHTML = `
-    <div class="act-wrap">
-      <div style="margin-bottom:16px;display:flex;align-items:flex-end;justify-content:space-between;gap:16px;flex-wrap:wrap">
-        <div>
-          <div style="font-size:18px;font-weight:700;color:var(--navy)">${saud}, ${(SESSION&&SESSION.nome)||''}</div>
-          <div style="font-size:12px;color:var(--muted)">${new Date().toLocaleDateString('pt-BR',{weekday:'long',day:'2-digit',month:'long',year:'numeric'})}</div>
-        </div>
-      </div>
-      <div class="pf-filters" style="margin-bottom:16px">
-        <div class="pf-fgrp"><label>Ano</label><select onchange="inicioSetAno(this.value)">${anoOpts}</select></div>
-        <div class="pf-fgrp"><label>Categoria</label><select onchange="inicioSetCat(this.value)">${catOpts}</select></div>
-        ${isAdmin ? `<div class="pf-fgrp"><label>Usuário</label><select onchange="inicioSetUser(this.value)">${userOpts}</select></div>` : ''}
-        ${hasFiltro ? `<button class="btn-tbl" onclick="inicioResetF()" style="margin-left:auto">Limpar filtros</button>` : ''}
-      </div>
-      <div class="act-cards">${tilesHtml}${metaTile}</div>
+  // Pipeline aberto não tem ano: uma proposta de 2025 ainda aberta continua
+  // valendo hoje. Por isso o escopo da home ignora o filtro de ano.
+  let props = scopeForSession();
+  if (_inicioCat)  props = props.filter(p => _propCategoriaKey(p) === _inicioCat);
+  if (_inicioUser) props = props.filter(p =>
+    _matchNome(p.representante, _inicioUser) || _matchNome(p.interno, _inicioUser) || _matchNome(p.responsavel, _inicioUser));
 
-      <div class="act-sec-head">
-        <div class="act-sec-title">Agenda de hoje</div>
-        <button class="btn-primary-soft" onclick="openCalendar()">${ACT_ICO.plus}Novo Compromisso</button>
-      </div>
-      <div class="act-agenda">${agendaHtml}</div>
+  const M    = homeMetrics(props);
+  const dups = _dupSet(M.abertas);
 
-      <div class="act-sec-head" style="margin-top:20px">
-        <div class="act-sec-title">Próximos follow-ups</div>
-        <span style="font-size:11px;color:var(--muted)">${futuros.length} agendados nos próximos 60 dias</span>
-      </div>
-      <div class="act-agenda">${proximosHtml}</div>
+  // ── Bloco: pipeline aberto por idade ────────────────────────────────────
+  const faixas = [
+    { l:'Até 30 dias',     f:d => d !== null && d <= 30,           alert:false },
+    { l:'31 a 60 dias',    f:d => d !== null && d > 30 && d <= 60, alert:false },
+    { l:'Mais de 60 dias', f:d => d !== null && d > 60,            alert:true  },
+  ].map(x => {
+    const itens = M.abertas.filter(p => x.f(_idadeDias(p)));
+    return Object.assign({}, x, { itens, valor: itens.reduce((s,p) => s + _valorProp(p), 0) });
+  });
+  const ageHtml = '<div class="hm-age">' + faixas.map(x => `
+    <div class="hm-age-c${x.alert && x.itens.length ? ' alert' : ''}">
+      <div class="hm-age-l">${x.l}</div>
+      <div class="hm-age-v">${fmtBRLShort(x.valor)}</div>
+      <div class="hm-age-n">${x.itens.length} ${x.itens.length === 1 ? 'proposta' : 'propostas'}</div>
+    </div>`).join('') + '</div>';
 
-      <div class="cc-cols">
-        <div>
-          <div class="act-sec-title">Histórico de propostas</div>
-          <div class="act-agenda">${histHtml}</div>
-        </div>
-        <div>
-          <div class="act-sec-title">Funil de vendas</div>
-          <div class="pf-chart">${funnelConicHTML(funilStages)}</div>
-        </div>
+  // Dado sujo: valor acima de R$ 2 mi numa proposta aberta quase sempre é
+  // decimal trocado na importação. Sinaliza, não corrige.
+  const suspeitas = M.abertas.filter(p => _valorProp(p) > 2000000);
+  const warnValor = suspeitas.length ? `
+    <div class="hm-warn">${HM_ICO.warn}
+      <div>${suspeitas.length} ${suspeitas.length === 1 ? 'proposta aberta passa' : 'propostas abertas passam'} de R$ 2 milhões — possível erro de decimal na importação.
+      <a onclick="homeVerSuspeitas()">Revisar</a>.</div>
+    </div>` : '';
+
+  const blocoIdade = `
+    <div class="hm-sec">
+      <div class="hm-sec-h">
+        <div class="hm-sec-t">Pipeline aberto por idade</div>
+        <div class="hm-sec-n">${M.abertas.length} ${M.abertas.length === 1 ? 'proposta aberta' : 'propostas abertas'}</div>
       </div>
+      ${ageHtml}${warnValor}
     </div>`;
+
+  // ── Item de lista reutilizado (travadas / fila) ──────────────────────────
+  const itemHtml = (p, comFu) => {
+    const d = _diasParada(p);
+    return `<div class="hm-it">
+      <div class="hm-it-main">
+        <div class="hm-it-cli" onclick="openFollowupModal('${p.uid}')">${_htmlEsc(p.cliente || '—')}</div>
+        <div class="hm-it-meta">
+          <span>Nº ${String(p.nr).padStart(4,'0')}</span>
+          <span>${_htmlEsc(p.classificacao || '—')}</span>
+          ${isAdmin ? `<span>${_htmlEsc(_respDe(p))}</span>` : ''}
+          ${dups.has(p.uid) ? '<span class="hm-dup">possível duplicata</span>' : ''}
+        </div>
+      </div>
+      <div class="hm-it-val">${fmtBRLShort(_valorProp(p))}</div>
+      <div class="hm-it-dias">${d === null ? '—' : d + 'd parada'}</div>
+      ${comFu ? `<button class="btn-mini" onclick="openFollowupModal('${p.uid}')">Follow-up</button>` : ''}
+    </div>`;
+  };
+
+  const travadas = M.abertas
+    .filter(p => { const d = _idadeDias(p); return d !== null && d > 60; })
+    .sort((a,b) => _valorProp(b) - _valorProp(a));
+
+  // ── Caixa de entrada acionável (tela do representante) ───────────────────
+  const caixaLista = () => {
+    if (!M.caixa.length) return `
+      <div class="hm-done">
+        <div class="hm-done-i">${HM_ICO.check}</div>
+        <div class="hm-done-t">Caixa de entrada vazia</div>
+        <div class="hm-done-s">Todas as suas propostas abertas já estão classificadas no funil.</div>
+      </div>`;
+    const ordenada = M.caixa.slice().sort((a,b) => _valorProp(b) - _valorProp(a));
+    return '<div class="hm-list">' + ordenada.map(p => {
+      const opts = funilStagesForProp(p)
+        .map(e => `<option value="${e.value}">${_htmlEsc(e.label)}</option>`).join('');
+      return `<div class="hm-it">
+        <div class="hm-it-main">
+          <div class="hm-it-cli" onclick="openFollowupModal('${p.uid}')">${_htmlEsc(p.cliente || '—')}</div>
+          <div class="hm-it-meta">
+            <span>Nº ${String(p.nr).padStart(4,'0')}</span>
+            <span>${_htmlEsc(p.classificacao || '—')}</span>
+            <span>${fmtDateDisplay(p.data_abertura)}</span>
+            ${dups.has(p.uid) ? '<span class="hm-dup">possível duplicata</span>' : ''}
+          </div>
+        </div>
+        <div class="hm-it-val">${fmtBRLShort(_valorProp(p))}</div>
+        <select class="hm-sel" onchange="homeSetEtapa('${p.uid}', this.value)">
+          <option value="">Classificar…</option>${opts}
+        </select>
+      </div>`;
+    }).join('') + '</div>';
+  };
+
+  const saud = (() => { const h = new Date().getHours(); return h < 12 ? 'Bom dia' : h < 18 ? 'Boa tarde' : 'Boa noite'; })();
+  const catOpts = '<option value="">Todas as categorias</option>'
+    + CATEGORIA_GROUPS.map(c => `<option value="${c.key}"${_inicioCat === c.key ? ' selected' : ''}>${c.label}</option>`).join('');
+
+  let corpo = '';
+
+  if (isAdmin) {
+    // ── Tabela por responsável, ordenada por caixa de entrada desc ─────────
+    const porResp = {};
+    M.abertas.forEach(p => {
+      const k = _respDe(p);
+      if (!porResp[k]) porResp[k] = { nome:k, pipe:0, abertas:0, caixa:0, paradas:0, prox:0 };
+      porResp[k].abertas++;
+      porResp[k].pipe += _valorProp(p);
+      if (_semEtapa(p)) porResp[k].caixa++;
+    });
+    M.paradas.forEach(p => { const r = porResp[_respDe(p)]; if (r) r.paradas++; });
+    M.comProx.forEach(p => { const r = porResp[_respDe(p)]; if (r) r.prox++; });
+
+    const linhas = Object.values(porResp).sort((a,b) => b.caixa - a.caixa || b.pipe - a.pipe);
+    const tbody = linhas.map(r => {
+      const pct  = r.abertas ? Math.round(r.prox / r.abertas * 100) : 0;
+      const safe = String(r.nome).replace(/"/g, '&quot;');
+      return `<tr onclick="homeVerLista('resp','${safe}')">
+        <td class="nome">${_htmlEsc(r.nome)}</td>
+        <td class="num col-pipe">${fmtBRLShort(r.pipe)}</td>
+        <td class="num" onclick="event.stopPropagation();homeVerLista('caixa','${safe}')">
+          <span class="hm-inbox-n ${r.caixa ? 'hot' : 'zero'}">${r.caixa}</span>
+        </td>
+        <td class="num">${r.paradas || '—'}</td>
+        <td class="num col-prox">${pct}%<div class="hm-bar"><i style="width:${pct}%"></i></div></td>
+      </tr>`;
+    }).join('');
+
+    corpo = `
+      ${blocoIdade}
+      <div class="hm-sec">
+        <div class="hm-sec-h">
+          <div class="hm-sec-t">Por responsável</div>
+          <div class="hm-sec-n">${M.caixa.length} na caixa de entrada da equipe</div>
+        </div>
+        ${linhas.length ? `<table class="hm-tbl">
+          <thead><tr>
+            <th>Responsável</th>
+            <th class="num col-pipe">Pipeline aberto</th>
+            <th class="num">Caixa de entrada</th>
+            <th class="num">Paradas +15d</th>
+            <th class="num col-prox">Com próxima ação</th>
+          </tr></thead>
+          <tbody>${tbody}</tbody>
+        </table>` : '<div class="hm-list"><div class="hm-empty">Nenhuma proposta aberta no escopo atual.</div></div>'}
+      </div>
+      <div class="hm-sec">
+        <div class="hm-sec-h">
+          <div class="hm-sec-t">Travadas há mais de 60 dias</div>
+          <div class="hm-sec-n">${travadas.length} no total · ${fmtBRLShort(travadas.reduce((s,p) => s + _valorProp(p), 0))}</div>
+        </div>
+        ${travadas.length
+          ? `<div class="hm-list">${travadas.slice(0,5).map(p => itemHtml(p, false)).join('')}
+             ${travadas.length > 5 ? `<div class="hm-it" style="justify-content:center">
+               <a style="cursor:pointer;color:var(--navy);font-size:12.5px;text-decoration:underline"
+                  onclick="homeVerTravadas()">Ver todas (${travadas.length - 5} restantes)</a></div>` : ''}</div>`
+          : `<div class="hm-done"><div class="hm-done-i">${HM_ICO.check}</div>
+             <div class="hm-done-t">Nada travado</div>
+             <div class="hm-done-s">Nenhuma proposta aberta passou de 60 dias.</div></div>`}
+      </div>`;
+  } else {
+    // ── Representante: caixa de entrada primeiro, é o centro da tela ───────
+    const pctEu = Math.round(M.pctProx * 100);
+    // A RLS entrega ao representante só as propostas dele — comparar contra
+    // DATA daria a própria média rotulada como "equipe". Só mostra o
+    // comparativo quando o escopo realmente tem mais de um responsável.
+    const eqAbertas = DATA.filter(_isAbertaHome);
+    const nomes = new Set(eqAbertas.map(_respDe));
+    const temEquipe = nomes.size > 1;
+    const pctEq = temEquipe ? Math.round(homeMetrics(DATA).pctProx * 100) : null;
+
+    corpo = `
+      <div class="hm-sec">
+        <div class="hm-sec-h">
+          <div class="hm-sec-t">Sua caixa de entrada</div>
+          <div class="hm-sec-n">${M.caixa.length ? M.caixa.length + (M.caixa.length === 1 ? ' proposta sem etapa' : ' propostas sem etapa') : ''}</div>
+        </div>
+        ${caixaLista()}
+      </div>
+      ${blocoIdade}
+      <div class="hm-sec">
+        <div class="hm-sec-h">
+          <div class="hm-sec-t">Sua fila</div>
+          <div class="hm-sec-n">${M.paradas.length} ${M.paradas.length === 1 ? 'parada há mais de 15 dias' : 'paradas há mais de 15 dias'}</div>
+        </div>
+        ${M.paradas.length
+          ? `<div class="hm-list">${M.paradas.slice().sort((a,b) => _diasParada(b) - _diasParada(a)).slice(0,8).map(p => itemHtml(p, true)).join('')}</div>`
+          : `<div class="hm-done"><div class="hm-done-i">${HM_ICO.check}</div>
+             <div class="hm-done-t">Fila em dia</div>
+             <div class="hm-done-s">Nenhuma proposta sua está parada há mais de 15 dias.</div></div>`}
+      </div>
+      <div class="hm-cmp">
+        <span>Com próxima ação agendada — <b>você ${pctEu}%</b>${pctEq !== null ? ` · média da equipe ${pctEq}%` : ''}</span>
+      </div>`;
+  }
+
+  box.innerHTML = `
+    <div class="hm">
+      <div class="hm-head">
+        <div class="hm-hi">${saud}, ${_htmlEsc((SESSION && SESSION.nome) || '')}</div>
+        <div class="hm-sub">${new Date().toLocaleDateString('pt-BR',{weekday:'long',day:'2-digit',month:'long',year:'numeric'})}</div>
+      </div>
+      <div class="pf-filters" style="margin-bottom:18px">
+        <div class="pf-fgrp"><label>Categoria</label><select onchange="inicioSetCat(this.value)">${catOpts}</select></div>
+        ${_inicioCat || _inicioUser ? '<button class="btn-tbl" onclick="inicioResetF()" style="margin-left:auto">Limpar filtros</button>' : ''}
+      </div>
+      ${corpo}
+    </div>`;
+
+  updateInboxBadge();
 }
 
 // ── Tile detail drawer ────────────────────────────────────────────────────
@@ -10136,7 +10409,17 @@ function ensureFunis() {
   // Limpa o modelo antigo (por tipo de usuário) para não sujar a config salva.
   delete CRM_CONFIG.funis.representante;
   delete CRM_CONFIG.funis.vendedor_interno;
+  // Remove a etapa "TESTE" criada em ensaio. As propostas que estiverem nela
+  // voltam para a caixa de entrada e precisam ser classificadas de novo —
+  // é o comportamento certo: elas nunca tiveram etapa real.
+  ['maquinas','pecas'].forEach(k => {
+    const antes = CRM_CONFIG.funis[k].length;
+    CRM_CONFIG.funis[k] = CRM_CONFIG.funis[k].filter(e =>
+      String(e.value || '').toUpperCase() !== 'TESTE' && String(e.label || '').trim().toUpperCase() !== 'TESTE');
+    if (CRM_CONFIG.funis[k].length !== antes) _funisSujos = true;
+  });
 }
+let _funisSujos = false;
 // Chave do funil a partir da categoria de produto: só Peças usa o funil de peças;
 // máquinas, sistemas, partes de sistemas (e o resto) usam o funil de máquinas.
 function _funilKeyForCat(catKey) { return catKey === 'pecas' ? 'pecas' : 'maquinas'; }
@@ -10204,10 +10487,12 @@ function _loadFunisFromServer() {
     .then(r => r.json())
     .then(json => {
       if (json && json.ok && json.funis) {
-        ensureFunis();
-        if (Array.isArray(json.funis.maquinas)) CRM_CONFIG.funis.maquinas = json.funis.maquinas;
-        if (Array.isArray(json.funis.pecas))    CRM_CONFIG.funis.pecas    = json.funis.pecas;
+        if (Array.isArray(json.funis.maquinas)) CRM_CONFIG.funis = Object.assign(CRM_CONFIG.funis||{}, { maquinas: json.funis.maquinas });
+        if (Array.isArray(json.funis.pecas))    CRM_CONFIG.funis = Object.assign(CRM_CONFIG.funis||{}, { pecas: json.funis.pecas });
+        _funisSujos = false;
+        ensureFunis();               // roda DEPOIS: limpa "TESTE" que veio do servidor
         saveConfig();
+        if (_funisSujos && SESSION && SESSION.role === 'admin') _saveFunisToServer(); // propaga a limpeza
         if (typeof viewMode !== 'undefined' && viewMode === 'kanban') renderKanban();
       }
     })
@@ -12655,6 +12940,35 @@ async function setEtapaFromPanel(uid, newEtapa) {
       if (!json.ok) console.warn('setEtapaFromPanel:', json.error);
     } catch(e) { console.warn('setEtapaFromPanel error:', e.message); }
   }
+
+  // 6. Log de movimentação — quem moveu, de onde para onde.
+  //    É o que sustenta a métrica "parada há +15 dias" na tela inicial.
+  logMudancaEtapa(uid, oldEtapa, newEtapa);
+  _movMap[uid] = Date.now();
+}
+
+// Grava a mudança de etapa em stage_history direto do browser (JWT do usuário).
+// O Apps Script já grava nos caminhos que passam por ele; isto cobre o
+// drag-and-drop do kanban e a troca de etapa pela lista.
+async function logMudancaEtapa(uid, etapaAnterior, etapaNova) {
+  try {
+    const agora = new Date().toISOString();
+    if (etapaAnterior) {
+      await fetch(`${SUPABASE_URL}/rest/v1/stage_history?uid=eq.${encodeURIComponent(uid)}`
+        + `&etapa=eq.${encodeURIComponent(etapaAnterior)}&exited_at=is.null`, {
+        method:'PATCH', headers: Object.assign(supaHdr(true), { 'Prefer':'return=minimal' }),
+        body: JSON.stringify({ exited_at: agora })
+      });
+    }
+    await fetch(`${SUPABASE_URL}/rest/v1/stage_history`, {
+      method:'POST', headers: Object.assign(supaHdr(true), { 'Prefer':'return=minimal' }),
+      body: JSON.stringify([{
+        uid, etapa: etapaNova, entered_at: agora,
+        etapa_anterior: etapaAnterior || null,
+        usuario_email: (SESSION && SESSION.email) || null
+      }])
+    });
+  } catch(e) { console.warn('[logMudancaEtapa]', e.message); }
 }
 
 // ── Alterar Status (Perdido / Stand-by) ──────────────────────────────────
@@ -13601,6 +13915,30 @@ function closeClienteModal() {
 }
 
 // ── Notifications ─────────────────────────────────────────────────────────
+// Aviso de importação: quantas propostas novas caíram para este usuário e ainda
+// estão sem etapa. Usa o mesmo sino do header (prefixado no topo da lista).
+function checkNovasImportadas() {
+  const M = homeMetrics(scopeForSession());
+  const list = document.getElementById('notif-list');
+  if (!list || !M.caixa.length) return;
+  const n = M.caixa.length;
+  const aviso = `<div class="notif-item" onclick="setView('inicio');toggleNotifPanel()">
+      <div class="ni-top">
+        <span class="ni-cliente">${n} ${n === 1 ? 'proposta nova' : 'propostas novas'} para classificar</span>
+        <span class="ni-tag atrasado">Caixa de entrada</span>
+      </div>
+      <div class="ni-meta">Importadas da planilha, ainda sem etapa no funil</div>
+    </div>`;
+  list.innerHTML = aviso + list.innerHTML;
+  const badge = document.getElementById('notif-badge');
+  if (badge) {
+    const atual = parseInt(String(badge.textContent).replace(/\D/g,''), 10) || 0;
+    const total = atual + 1;
+    badge.textContent = total > 9 ? '9+' : total;
+    badge.style.display = 'flex';
+  }
+}
+
 function checkUpcomingFollowups() {
   const today = new Date(); today.setHours(0,0,0,0);
   const tomorrow = new Date(today); tomorrow.setDate(today.getDate()+1);
