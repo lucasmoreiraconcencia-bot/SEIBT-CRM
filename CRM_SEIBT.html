@@ -1697,13 +1697,6 @@ body.sidebar-collapsed .main{margin-left:var(--sidebar-mini)}
 .pgbar-pct.low{color:var(--error)}
 .btn-save-meta{padding:5px 12px;background:var(--blue);color:#fff;border:none;border-radius:var(--radius);cursor:pointer;font-size:11px;font-family:inherit;font-weight:600;transition:background .15s;white-space:nowrap}
 .btn-save-meta:hover{background:#1560A5}
-/* ── Funil de Pipeline ──────────────────────────────────────────────────── */
-.content.view-funil .kpi-row,
-.content.view-funil #filter-bar,
-.content.view-funil .table-wrap,
-.content.view-funil #kanban-wrap { display:none !important; }
-#section-funil { display:none; }
-.content.view-funil #section-funil { display:block; }
 /* ── Carteira de Clientes ── */
 .content.view-carteira .kpi-row,
 .content.view-carteira #filter-bar,
@@ -1832,16 +1825,6 @@ body.sidebar-collapsed .main{margin-left:var(--sidebar-mini)}
 .cli-page-btn:hover:not(:disabled){border-color:var(--blue);color:var(--blue)}
 .cli-page-btn.active{background:var(--blue);color:#fff;border-color:var(--blue)}
 .cli-page-btn:disabled{opacity:.35;cursor:default}
-
-/* ── Retenção Anual ─────────────────────────────────────────────────────── */
-.content.view-retencao .kpi-row,
-.content.view-retencao #filter-bar,
-.content.view-retencao .table-wrap,
-.content.view-retencao #kanban-wrap,
-.content.view-retencao #section-funil,
-.content.view-retencao #section-clientes { display:none !important; }
-#section-retencao { display:none; }
-.content.view-retencao #section-retencao { display:block; }
 
 .ret-header{display:flex;align-items:center;gap:8px;margin-bottom:14px;flex-wrap:wrap}
 .ret-search-wrap{flex:1;min-width:180px;max-width:320px;position:relative}
@@ -2342,10 +2325,6 @@ body { font-family: var(--font-sans); -webkit-font-smoothing: antialiased; text-
   </div>
   <nav class="nav">
     <div class="nav-section">Visão Geral</div>
-    <div class="nav-item" data-view="inicio" data-label="Início — Atividades" onclick="setView('inicio')">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
-      <span class="nav-label">Início</span>
-    </div>
     <!-- FASE 2: nova tela Agenda da Equipe -->
     <div class="nav-item" data-view="agenda" data-label="Agenda da Equipe" onclick="setView('agenda')">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/><line x1="8" y1="14" x2="10" y2="14"/><line x1="14" y1="14" x2="16" y2="14"/><line x1="8" y1="18" x2="10" y2="18"/></svg>
@@ -2368,13 +2347,9 @@ body { font-family: var(--font-sans); -webkit-font-smoothing: antialiased; text-
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 7H4a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2z"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
       <span class="nav-label">Carteira de Clientes</span>
     </div>
-    <div class="nav-item" data-view="retencao" data-label="Retenção Anual" onclick="setView('retencao')">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/><line x1="8" y1="14" x2="8.01" y2="14"/><line x1="12" y1="14" x2="12.01" y2="14"/><line x1="16" y1="14" x2="16.01" y2="14"/></svg>
-      <span class="nav-label">Retenção Anual</span>
-    </div>
-    <div class="nav-item" data-view="funil" data-label="Funil de Pipeline" onclick="setView('funil')">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>
-      <span class="nav-label">Funil de Pipeline</span>
+    <div class="nav-item" data-view="roteiro" data-label="Roteiro de Visitas" onclick="setView('roteiro')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 20l-5.447-2.724A1 1 0 0 1 3 16.382V5.618a1 1 0 0 1 1.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0 0 21 18.382V7.618a1 1 0 0 0-.553-.894L15 4m0 13V4m0 0L9 7"/></svg>
+      <span class="nav-label">Roteiro de Visitas</span>
     </div>
     <div class="nav-section">Por Status</div>
     <div id="nav-status-items"></div>
@@ -2595,17 +2570,14 @@ body { font-family: var(--font-sans); -webkit-font-smoothing: antialiased; text-
     <!-- Kanban Board -->
     <div class="kanban-wrap" id="kanban-wrap"></div>
 
-    <!-- Painel de Atividades (home do usuário) -->
-    <div id="section-atividades" style="display:none"></div>
-
     <!-- FASE 2: Agenda consolidada da Equipe (calendário semanal por pessoa) -->
     <div id="section-agenda" style="display:none"></div>
 
     <!-- Carteira de Clientes -->
     <div id="section-carteira" style="display:none"></div>
 
-    <!-- Funil de Pipeline -->
-    <div id="section-funil"></div>
+    <!-- FASE 3: Roteiro de Visitas (Kanban) -->
+    <div id="section-roteiro" style="display:none"></div>
 
     <div id="section-clientes">
       <!-- Header bar -->
@@ -2695,92 +2667,6 @@ body { font-family: var(--font-sans); -webkit-font-smoothing: antialiased; text-
       </div>
     </div>
   </div>
-
-    <!-- Retenção Anual -->
-    <div id="section-retencao">
-      <!-- Header -->
-      <div class="ret-header">
-        <div class="ret-search-wrap">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-          <input class="ret-search" id="ret-search" type="text" placeholder="Buscar cliente..." oninput="filterRetencao()">
-        </div>
-        <select class="ret-select" id="ret-cat" onchange="filterRetencao()">
-          <option value="NAVALHAS">Navalhas</option>
-          <option value="PENEIRAS">Peneiras</option>
-          <option value="ROTORES">Rotores</option>
-          <option value="ANEIS">Anéis</option>
-          <option value="MOLAS">Molas</option>
-          <option value="CORREIAS">Correias</option>
-          <option value="ROLAMENTOS">Rolamentos</option>
-          <option value="MAQUINA">Máquinas</option>
-        </select>
-        <select class="ret-select" id="ret-situacao" onchange="filterRetencao()">
-          <option value="">Todos os clientes</option>
-          <option value="nao_2025_2026">Não comprou em 2025 e 2026</option>
-          <option value="nao_2026">Não comprou em 2026</option>
-          <option value="ativo_2026">Comprou em 2026</option>
-        </select>
-        <select class="ret-select" id="ret-sort" onchange="renderRetencao()">
-          <option value="fidelidade">Mais fiel primeiro</option>
-          <option value="nome">Nome A-Z</option>
-          <option value="recente">Compra mais recente</option>
-        </select>
-        <button class="ret-refresh-btn" onclick="loadRetencaoSection(true)">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
-          Atualizar
-        </button>
-        <span class="ret-header-count" id="ret-count"></span>
-        <span class="ret-updated" id="ret-updated"></span>
-      </div>
-
-      <!-- KPIs -->
-      <div class="ret-kpi-bar">
-        <div class="ret-kpi">
-          <div class="ret-kpi-label">Total de Clientes</div>
-          <div class="ret-kpi-value" id="rkpi-total">—</div>
-          <div class="ret-kpi-sub">na categoria selecionada</div>
-        </div>
-        <div class="ret-kpi">
-          <div class="ret-kpi-label" id="rkpi-ativo-label">Ativos em 2026</div>
-          <div class="ret-kpi-value" id="rkpi-ativo">—</div>
-          <div class="ret-kpi-sub">compraram este ano</div>
-        </div>
-        <div class="ret-kpi">
-          <div class="ret-kpi-label">Perdidos</div>
-          <div class="ret-kpi-value" id="rkpi-perdidos">—</div>
-          <div class="ret-kpi-sub" id="rkpi-perdidos-sub">compraram ano anterior, não este</div>
-        </div>
-        <div class="ret-kpi">
-          <div class="ret-kpi-label">Novos</div>
-          <div class="ret-kpi-value" id="rkpi-novos">—</div>
-          <div class="ret-kpi-sub">primeira compra este ano</div>
-        </div>
-      </div>
-
-      <!-- Tabela -->
-      <div class="ret-table-wrap">
-        <div id="ret-loading">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18" style="animation:spin 1s linear infinite"><path d="M21 12a9 9 0 1 1-6.219-8.56"/></svg>
-          Carregando dados...
-        </div>
-        <div id="ret-empty">Nenhum cliente encontrado para esta categoria.</div>
-        <table id="ret-table">
-          <thead id="ret-thead">
-            <tr>
-              <th>Cliente</th>
-              <th class="ret-th-ano">2022</th>
-              <th class="ret-th-ano">2023</th>
-              <th class="ret-th-ano">2024</th>
-              <th class="ret-th-ano">2025</th>
-              <th class="ret-th-ano">2026</th>
-              <th class="ret-th-fid">Fidelidade</th>
-            </tr>
-          </thead>
-          <tbody id="ret-tbody"></tbody>
-        </table>
-        <div id="ret-pag"></div>
-      </div>
-    </div>
 
 </div>
 
@@ -2882,6 +2768,7 @@ body { font-family: var(--font-sans); -webkit-font-smoothing: antialiased; text-
       <button class="cm-tab active" id="cmtab-geral"    onclick="setCmTab('geral')">Cadastro</button>
       <button class="cm-tab"        id="cmtab-visitas"  onclick="setCmTab('visitas')">Visitas</button>
       <button class="cm-tab"        id="cmtab-equip"    onclick="setCmTab('equip')">Equipamentos</button>
+      <button class="cm-tab"        id="cmtab-contatos" onclick="setCmTab('contatos')">Contatos <span class="cp-tab-badge" id="cm-tabbadge-contatos">0</span></button>
       <button class="cm-tab"        id="cmtab-obs"      onclick="setCmTab('obs')">Observações</button>
       <button class="cm-tab"        id="cmtab-compras"  onclick="setCmTab('compras')">Hábito de Compra</button>
       <button class="cm-tab"        id="cmtab-propostas" onclick="verPropostasCliente()">
@@ -3060,6 +2947,11 @@ body { font-family: var(--font-sans); -webkit-font-smoothing: antialiased; text-
         </div>
       </div>
 
+      <!-- TAB: Contatos (1:N — nome/cargo/telefone/e-mail, um marcado como principal) -->
+      <div class="cm-pane" id="cmpane-contatos">
+        <div id="cm-contatos-content"></div>
+      </div>
+
       <!-- TAB: Observações --------------------------------------------- -->
       <div class="cm-pane" id="cmpane-obs">
         <div class="cm-block-title" style="margin-bottom:8px">Observações Gerais</div>
@@ -3078,6 +2970,195 @@ body { font-family: var(--font-sans); -webkit-font-smoothing: antialiased; text-
       </div>
 
     </div><!-- /cm-body -->
+  </div>
+</div>
+
+<!-- Cadastrar cliente novo (Carteira + Roteiro de Visitas) — Fase 2.1 -->
+<div id="novo-cliente-overlay" class="user-modal-overlay" onclick="closeNovoCliente()">
+  <div class="user-modal-card" onclick="event.stopPropagation()" id="novo-cliente-modal" style="max-width:520px">
+    <div class="user-modal-header">
+      <span class="user-modal-title">Cadastrar cliente</span>
+      <button class="cliente-modal-close" onclick="closeNovoCliente()" style="position:static">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="16" height="16"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+    <div class="user-modal-body">
+      <div class="form-group">
+        <label class="form-label">Nome do cliente<span class="form-req">*</span></label>
+        <input type="text" id="nc-nome" class="form-input" placeholder="Razão social ou nome fantasia">
+      </div>
+      <div class="form-row">
+        <div class="form-group" style="margin-bottom:0;flex:2">
+          <label class="form-label">CNPJ</label>
+          <input type="text" id="nc-cnpj" class="form-input" placeholder="00.000.000/0000-00 (opcional)">
+        </div>
+      </div>
+      <div class="form-row" style="margin-top:12px">
+        <div class="form-group" style="margin-bottom:0;flex:2">
+          <label class="form-label">Cidade</label>
+          <input type="text" id="nc-cidade" class="form-input">
+        </div>
+        <div class="form-group" style="margin-bottom:0;flex:0 0 80px">
+          <label class="form-label">UF</label>
+          <input type="text" id="nc-uf" class="form-input" maxlength="2">
+        </div>
+      </div>
+      <div class="form-group" style="margin-top:12px">
+        <label class="form-label">Segmento</label>
+        <input type="text" id="nc-segmento" class="form-input" placeholder="Opcional">
+      </div>
+      <div class="form-group" style="margin-top:12px">
+        <label class="form-label">Carteira do representante</label>
+        <input type="text" id="nc-rep" class="form-input" placeholder="Nome do representante dono da carteira">
+      </div>
+      <div id="nc-erro" style="color:var(--error);font-size:12px;margin-top:10px;min-height:16px"></div>
+    </div>
+    <div class="user-modal-footer">
+      <button class="btn-tbl" onclick="closeNovoCliente()">Cancelar</button>
+      <button class="btn-cta-primary" style="width:auto;padding:9px 18px" onclick="salvarNovoCliente()">Salvar cliente</button>
+    </div>
+  </div>
+</div>
+
+<!-- FASE 3 — Roteiro de Visitas: novo card (buscar existente ou cadastrar novo cliente) -->
+<div id="rt-novo-card-overlay" class="user-modal-overlay" onclick="if(event.target===this)closeRoteiroNovoCard()">
+  <div class="user-modal-card" style="max-width:520px">
+    <div class="user-modal-header">
+      <span class="user-modal-title">Novo card do roteiro</span>
+      <button class="cliente-modal-close" onclick="closeRoteiroNovoCard()" style="position:static">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="16" height="16"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+    <div class="user-modal-body">
+      <div class="form-group">
+        <label class="form-label">Buscar cliente existente</label>
+        <input type="text" id="rt-nc-busca" class="form-input" placeholder="Nome ou cidade…" oninput="rtNcDebounce()">
+        <div id="rt-nc-resultados" style="max-height:150px;overflow-y:auto;margin-top:6px"></div>
+      </div>
+      <div style="text-align:center;margin:10px 0;font-size:11px;color:var(--muted)">ou</div>
+      <button class="btn-tbl" style="width:100%" onclick="rtAbrirCadastroNovoCliente()">+ Cadastrar cliente novo</button>
+      <div class="form-group" style="margin-top:14px">
+        <label class="form-label">Cliente selecionado</label>
+        <div id="rt-nc-selecionado"></div>
+      </div>
+      <div class="form-group" style="margin-top:12px">
+        <label class="form-label">Tipo</label>
+        <select id="rt-nc-tipo" class="form-select">
+          <option value="visita">Visita</option>
+          <option value="contato">Contato</option>
+        </select>
+      </div>
+      <div id="rt-nc-err" style="color:var(--error);font-size:12px;margin-top:8px;min-height:16px"></div>
+    </div>
+    <div class="user-modal-footer">
+      <button class="btn-tbl" onclick="closeRoteiroNovoCard()">Cancelar</button>
+      <button class="btn-cta-primary" style="width:auto;padding:9px 18px" onclick="rtCriarCard()">Criar card</button>
+    </div>
+  </div>
+</div>
+
+<!-- FASE 3 — Roteiro de Visitas: detalhe do card -->
+<div id="rt-card-overlay" class="user-modal-overlay" onclick="if(event.target===this)closeRoteiroCardModal()">
+  <div class="user-modal-card" style="max-width:640px;max-height:88vh;display:flex;flex-direction:column">
+    <div class="user-modal-header">
+      <div>
+        <div class="user-modal-title" id="rt-cm-titulo">—</div>
+        <div style="font-size:11px;color:var(--muted)" id="rt-cm-sub"></div>
+      </div>
+      <button class="cliente-modal-close" onclick="closeRoteiroCardModal()" style="position:static">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="16" height="16"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+    <div class="user-modal-body" style="overflow-y:auto;flex:1">
+
+      <div class="cp-section">
+        <div class="cp-section-title">Ciclo atual</div>
+        <div class="cp-grid">
+          <div class="exp-field"><div class="exp-label">Responsável</div><div class="exp-value" id="rt-cm-resp">—</div></div>
+          <div class="exp-field"><div class="exp-label">Etapa</div><div class="exp-value" id="rt-cm-etapa">—</div></div>
+        </div>
+        <div class="form-row" style="margin-top:10px">
+          <div class="form-group" style="margin-bottom:0">
+            <label class="form-label">Tipo</label>
+            <select id="rt-cm-tipo" class="form-select">
+              <option value="visita">Visita</option>
+              <option value="contato">Contato</option>
+            </select>
+          </div>
+          <div class="form-group" style="margin-bottom:0">
+            <label class="form-label">Data agendada</label>
+            <input type="date" id="rt-cm-data" class="form-input">
+          </div>
+        </div>
+        <div style="display:flex;gap:8px;margin-top:10px">
+          <button class="btn-tbl" onclick="rtSalvarAgendamento()">Salvar agendamento</button>
+          <button class="btn-tbl" onclick="rtMarcarRealizado()">Marcar como realizado</button>
+          <button class="btn-cta-primary" style="width:auto;padding:7px 14px;margin-left:auto" onclick="openEncerrarCard(_rtCurrentCard.id)">Encerrar card</button>
+        </div>
+      </div>
+
+      <div class="cp-section">
+        <div class="cp-section-title">Observações do ciclo</div>
+        <textarea id="rt-cm-obs" class="form-textarea" style="min-height:60px" placeholder="Notas sobre este ciclo de contato…"></textarea>
+        <button class="btn-tbl" style="margin-top:6px" onclick="rtSalvarObs()">Salvar observação</button>
+      </div>
+
+      <div class="cp-section">
+        <div class="cp-section-title">Contato na empresa</div>
+        <div id="rt-cm-contatos"></div>
+      </div>
+
+      <div class="cp-section">
+        <div class="cp-section-title">Propostas do cliente</div>
+        <div id="rt-cm-propostas"></div>
+      </div>
+
+      <div class="cp-section">
+        <div class="cp-section-title">Histórico de ciclos anteriores</div>
+        <div id="rt-cm-historico"></div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- FASE 3 — Roteiro de Visitas: encerrar card (desfecho obrigatório) -->
+<div id="rt-encerrar-overlay" class="user-modal-overlay" onclick="if(event.target===this)closeEncerrarCard()">
+  <div class="user-modal-card" style="max-width:460px">
+    <div class="user-modal-header">
+      <span class="user-modal-title">Encerrar card</span>
+      <button class="cliente-modal-close" onclick="closeEncerrarCard()" style="position:static">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="16" height="16"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+    <div class="user-modal-body">
+      <div class="form-group">
+        <label class="form-label">Desfecho<span class="form-req">*</span></label>
+        <select id="rt-enc-desfecho" class="form-select" onchange="rtEncOnDesfechoChange()">
+          <option value="">Selecione…</option>
+          <option value="proposta">Gerou proposta</option>
+          <option value="sem_oportunidade">Sem oportunidade agora</option>
+          <option value="perdido">Cliente perdido</option>
+        </select>
+      </div>
+      <div class="form-group" id="rt-enc-campo-proposta" style="display:none">
+        <label class="form-label">Nº / UID da proposta gerada<span class="form-req">*</span></label>
+        <input type="text" id="rt-enc-proposta" class="form-input" placeholder="Ex: 804-2026">
+      </div>
+      <div class="form-group" id="rt-enc-campo-recontatar" style="display:none">
+        <label class="form-label">Recontatar em<span class="form-req">*</span></label>
+        <input type="date" id="rt-enc-recontatar" class="form-input">
+      </div>
+      <div class="form-group" id="rt-enc-campo-motivo" style="display:none">
+        <label class="form-label">Motivo da perda<span class="form-req">*</span></label>
+        <select id="rt-motivo-select" class="form-select"></select>
+      </div>
+      <div id="rt-enc-err" style="color:var(--error);font-size:12px;margin-top:6px;min-height:16px"></div>
+    </div>
+    <div class="user-modal-footer">
+      <button class="btn-tbl" onclick="closeEncerrarCard()">Cancelar</button>
+      <button class="btn-cta-primary" style="width:auto;padding:9px 18px" onclick="confirmarEncerramento()">Confirmar encerramento</button>
+    </div>
   </div>
 </div>
 
@@ -3579,7 +3660,7 @@ body { font-family: var(--font-sans); -webkit-font-smoothing: antialiased; text-
         <div class="form-row">
           <div class="form-group">
             <label class="form-label">Tipo de Usuario<span class="form-req">*</span></label>
-            <select class="form-select" id="um-user-type">
+            <select class="form-select" id="um-user-type" onchange="onUserTypeChange()">
               <option value="representante">Representante Comercial</option>
               <option value="vendedor_interno">Vendedor Interno</option>
             </select>
@@ -3619,6 +3700,19 @@ body { font-family: var(--font-sans); -webkit-font-smoothing: antialiased; text-
           <div style="font-size:10.5px;color:var(--muted);margin-top:4px">Nenhuma marcada = vê todas as categorias. Marque para restringir (ex.: só Máquinas).</div>
         </div>
       </div>
+      <!-- Fase 2.3 — vincular clientes da carteira existente ao representante -->
+      <div class="form-group" id="um-vinculo-group" style="display:none;border-top:1px solid var(--border);padding-top:14px;margin-top:4px">
+        <label class="form-label">Vincular clientes da carteira</label>
+        <div style="font-size:10.5px;color:var(--muted);margin-bottom:8px">Busca por nome/cidade e vincula os clientes selecionados a este representante. Um cliente pertence a só um representante — vincular aqui transfere de quem já era dono.</div>
+        <input class="form-input" type="text" id="um-vinc-busca" placeholder="Buscar cliente por nome ou cidade…" oninput="_umVincDebounce()">
+        <div id="um-vinc-resultados" style="max-height:180px;overflow-y:auto;border:1px solid var(--border);border-radius:var(--radius);margin-top:8px"></div>
+        <div style="display:flex;align-items:center;gap:10px;margin-top:8px">
+          <span id="um-vinc-count" style="font-size:11px;color:var(--muted)">0 selecionado(s)</span>
+          <button class="btn-tbl" style="margin-left:auto" onclick="aplicarVinculoCarteira()">Vincular selecionados</button>
+        </div>
+        <div id="um-vinc-msg" style="font-size:11.5px;margin-top:6px"></div>
+      </div>
+
       <div class="form-group">
         <label class="form-label" style="display:flex;align-items:center;gap:8px;cursor:pointer">
           <input type="checkbox" id="um-ativo" checked style="width:14px;height:14px;cursor:pointer">
@@ -3883,13 +3977,11 @@ function setView(v) {
     maquinas:'Máquinas', sistemas:'Sistemas / Partes',
     servicos:'Serviços', outros:'Assist. Técnica / Reformas',
     clientes:'Clientes — Hábito de Compra',
-    retencao:'Retenção Anual',
-    funil:'Funil de Pipeline',
     exportacao:'Exportação',
     carteira:'Carteira de Clientes'
   };
-  titles.inicio = 'Início';
   titles.agenda = 'Agenda da Equipe'; // FASE 2
+  titles.roteiro = 'Roteiro de Visitas'; // FASE 3
   let viewTitle = titles[v];
   if (!viewTitle && v && v.startsWith('st_')) {
     const sv = v.slice(3).toUpperCase();
@@ -3900,46 +3992,34 @@ function setView(v) {
   const content = document.querySelector('.content');
   if (content) {
     content.classList.toggle('view-clientes', v === 'clientes');
-    content.classList.toggle('view-retencao', v === 'retencao');
-    content.classList.toggle('view-funil',    v === 'funil');
     content.classList.toggle('view-carteira', v === 'carteira');
-    content.classList.toggle('view-inicio',   v === 'inicio');
     content.classList.toggle('view-agenda',    v === 'agenda'); // FASE 2
   }
   // Esconde/mostra seções especiais diretamente (reforço além do CSS)
-  const secFunil     = document.getElementById('section-funil');
   const secClientes  = document.getElementById('section-clientes');
-  const secRetencao  = document.getElementById('section-retencao');
   const secCarteira  = document.getElementById('section-carteira');
-  const secAtiv      = document.getElementById('section-atividades');
   const secAgenda    = document.getElementById('section-agenda'); // FASE 2
-  if (secFunil)    secFunil.style.display    = (v === 'funil')    ? 'block' : 'none';
+  const secRoteiro   = document.getElementById('section-roteiro'); // FASE 3
   if (secClientes) secClientes.style.display = (v === 'clientes') ? 'block' : 'none';
-  if (secRetencao) secRetencao.style.display = (v === 'retencao') ? 'block' : 'none';
   if (secCarteira) secCarteira.style.display = (v === 'carteira') ? 'block' : 'none';
-  if (secAtiv)     secAtiv.style.display     = (v === 'inicio')   ? 'block' : 'none';
   if (secAgenda)   secAgenda.style.display   = (v === 'agenda')   ? 'block' : 'none';
+  if (secRoteiro)  secRoteiro.style.display  = (v === 'roteiro')  ? 'block' : 'none';
 
-  // Nos painéis Início e Agenda, ocultamos KPIs/filtros/tabela da lista de propostas
-  const semLista = (v === 'inicio' || v === 'agenda');
+  // Nos painéis Agenda e Roteiro, ocultamos KPIs/filtros/tabela da lista de propostas
+  const semLista = (v === 'agenda' || v === 'roteiro');
   ['kpi-row','filter-bar','table-wrap','kanban-wrap'].forEach(id => {
     const el = document.getElementById(id);
     if (el) el.style.display = semLista ? 'none' : '';
   });
 
-  if (v === 'inicio') {
-    updateBadges(); // reseta sidebar para contagens do DATA completo (sem filtros de view)
-    renderAtividadesPanel();
-  } else if (v === 'agenda') {
+  if (v === 'agenda') {
     renderAgendaEquipe(); // FASE 2
   } else if (v === 'clientes') {
     loadClientesSection();
-  } else if (v === 'retencao') {
-    loadRetencaoSection();
-  } else if (v === 'funil') {
-    renderFunil();
   } else if (v === 'carteira') {
     loadCarteiraSection();
+  } else if (v === 'roteiro') {
+    renderRoteiroPage();
   } else {
     applyFilters();
   }
@@ -3954,9 +4034,8 @@ function isComplementar(p) {
 
 function applyFilters() {
   if (currentView === 'clientes') return;
-  if (currentView === 'retencao') return;
-  if (currentView === 'funil')    return;
   if (currentView === 'agenda')   return; // FASE 2 — Agenda tem render próprio
+  if (currentView === 'roteiro')  return; // FASE 3 — Roteiro tem render próprio
   const q = document.getElementById('search-input').value.toLowerCase().trim();
 
   // ── Escopo dos KPIs: exclui "Proposta Complementar" — não entra em nenhum total ──
@@ -7193,11 +7272,10 @@ function afterLogin() {
   ensureUsersCache().then(_fillPessoaFilter); // filtro "Responsável" pode ter ficado vazio no 1º load
   loadMovimentacao(); // última movimentação real (view) p/ a métrica de paradas
   checkUpcomingFollowups();
-  updateInboxBadge();
   checkNovasImportadas();
   updateSessionUI();
   fetchERPSupabase(); // ativo: KPI lê direto da tabela pedidos do Supabase (count + soma vl_liquido)
-  loadPedidosPerf().then(() => { perfClearCache(); if (currentView === 'inicio') renderAtividadesPanel(); }); // índice de pedidos para todas as métricas
+  loadPedidosPerf().then(() => { perfClearCache(); }); // índice de pedidos para todas as métricas
 
   if (SESSION.role === 'admin') {
     showScreen('screen-admin');
@@ -7207,7 +7285,8 @@ function afterLogin() {
   } else {
     showScreen('screen-crm');
     applyFilters();
-    fetchLive().then(() => { try { setView('inicio'); } catch(e){} });
+    // Rota padrão pós-login (Fase 5): Roteiro de Visitas — fluxo diário do representante.
+    fetchLive().then(() => { try { setView('roteiro'); } catch(e){} });
   }
 }
 
@@ -8610,23 +8689,7 @@ function scopeForSession() {
   if (!alvo) return DATA;
   return DATA.filter(p => _ownerMatches(p, alvo));
 }
-// Ano selecionado no painel Início (default = ano corrente). 'todos' = sem filtro.
-let _inicioAno  = String(new Date().getFullYear());
-let _inicioUser = '';
-let _inicioCat  = '';
-function inicioSetAno(a)  { _inicioAno  = a; renderAtividadesPanel(); }
-function inicioSetUser(v) { _inicioUser = v; renderAtividadesPanel(); }
-function inicioSetCat(v)  { _inicioCat  = v; renderAtividadesPanel(); }
-function inicioResetF()   { _inicioAno = String(new Date().getFullYear()); _inicioUser = ''; _inicioCat = ''; renderAtividadesPanel(); }
-// Aplica os filtros do Início (ano + categoria + usuário) sobre o escopo base.
-function scopeForInicio() {
-  let base = scopeForSession();
-  if (_inicioAno && _inicioAno !== 'todos') base = base.filter(p => String(getYear(p)) === String(_inicioAno));
-  if (_inicioCat)  base = base.filter(p => _propCategoriaKey(p) === _inicioCat);
-  if (_inicioUser) base = base.filter(p => _ownerMatches(p, _inicioUser));
-  return base;
-}
-// Ícones de linha usados nos KPIs do Início
+// Ícones de linha usados em telas de metas/desempenho (fora da Home — ver uso em fiSaveMeta)
 const ACT_ICO = {
   check:  '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="20 6 9 17 4 12"/></svg>',
   warn:   '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>',
@@ -8638,129 +8701,9 @@ const ACT_ICO = {
   cal:    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>',
   plus:   '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>',
 };
-// Funil de vendas em formato cônico (área ∝ volume) + taxa de conversão entre etapas.
-function funnelConicHTML(stages) {
-  if (!stages || !stages.length) return '<div class="pf-empty-chart">Sem dados de funil.</div>';
-
-  // ── Geometry ─────────────────────────────────────────────────────────────
-  // Sections connect seamlessly (no gap). Section boundaries = visible rings.
-  const VBW = 460, cx = 248;
-  const segH = 66;          // height of each section
-  const topPad = 26;        // room for the top rim ellipse to protrude upward
-  const botPad = 16;
-  const ryF = 0.155;        // rim ry = width × ryF (larger = more 3D depth)
-  const ryMax = 22, ryMin = 7;
-  const maxC = Math.max(1, ...stages.map(s => s.count));
-  const minW = 44, maxW = 256;
-  const wFor = c => c <= 0 ? minW * 0.48 : minW + (maxW - minW) * (c / maxC);
-
-  // ── Per-stage colour palette (body / specular-highlight / shadow) ────────
-  const pal = [
-    { b:'#1b3554', h:'#2d5585', s:'#0c1c30' },
-    { b:'#225070', h:'#347098', s:'#10283a' },
-    { b:'#2d6898', h:'#4888c0', s:'#163858' },
-    { b:'#4282b2', h:'#5ca4d8', s:'#1e4868' },
-    { b:'#5898c4', h:'#74b8e0', s:'#285870' },
-  ];
-
-  const widths  = stages.map(s => wFor(s.count));
-  const wBottom = Math.max(minW * 0.35, widths[widths.length - 1] * 0.38);
-
-  const H = topPad + stages.length * segH + botPad;
-  const defs = [], bodies = [], rings = [], texts = [];
-
-  // ── Pass 1: trapezoid bodies (continuous, no gap) ────────────────────────
-  stages.forEach((s, i) => {
-    const p   = pal[Math.min(i, pal.length - 1)];
-    const wT  = widths[i];
-    const wB  = i < stages.length - 1 ? widths[i + 1] : wBottom;
-    const y   = topPad + i * segH;
-    const yB  = y + segH;
-    const gid = `g3d${i}`;
-
-    // Horizontal gradient: dark left-edge → specular highlight → body → dark right-edge
-    defs.push(`<linearGradient id="${gid}" x1="0%" y1="0%" x2="100%" y2="0%">
-      <stop offset="0%"   stop-color="${p.s}"/>
-      <stop offset="24%"  stop-color="${p.h}"/>
-      <stop offset="52%"  stop-color="${p.b}"/>
-      <stop offset="80%"  stop-color="${p.s}"/>
-      <stop offset="100%" stop-color="${p.s}" stop-opacity="0.78"/>
-    </linearGradient>`);
-
-    bodies.push(`<path d="M${cx-wT/2} ${y} L${cx+wT/2} ${y} L${cx+wB/2} ${yB} L${cx-wB/2} ${yB} Z" fill="url(#${gid})"/>`);
-  });
-
-  // ── Pass 2: ring dividers at every section boundary ──────────────────────
-  stages.forEach((s, i) => {
-    const wB   = i < stages.length - 1 ? widths[i + 1] : wBottom;
-    const yB   = topPad + (i + 1) * segH;
-    const ryB  = Math.min(ryMax, Math.max(ryMin, wB * ryF));
-    const p    = pal[Math.min(i, pal.length - 1)];
-    const pN   = pal[Math.min(i + 1, pal.length - 1)];
-    const rgid = `rg${i}`;
-
-    // Radial gradient: white specular upper-left → highlight → body colour
-    defs.push(`<radialGradient id="${rgid}" cx="36%" cy="30%" r="66%">
-      <stop offset="0%"   stop-color="#ffffff" stop-opacity="0.32"/>
-      <stop offset="40%"  stop-color="${pN.h}"  stop-opacity="0.85"/>
-      <stop offset="100%" stop-color="${pN.b}"  stop-opacity="1"/>
-    </radialGradient>`);
-
-    rings.push(`<ellipse cx="${cx}" cy="${yB}" rx="${wB/2+3}" ry="${ryB+2}" fill="${p.s}" opacity="0.42"/>`); // outer shadow
-    rings.push(`<ellipse cx="${cx}" cy="${yB}" rx="${wB/2}"   ry="${ryB}"   fill="url(#${rgid})"/>`);        // ring surface
-    rings.push(`<ellipse cx="${cx}" cy="${yB}" rx="${wB*0.44}" ry="${ryB*0.60}" fill="${pN.s}" opacity="0.5"/>`); // inner depth
-  });
-
-  // ── Top rim of the funnel (most prominent) ───────────────────────────────
-  const wT0  = widths[0];
-  const ry0  = Math.min(ryMax, Math.max(ryMin, wT0 * ryF));
-  defs.push(`<radialGradient id="topRim" cx="36%" cy="30%" r="66%">
-    <stop offset="0%"   stop-color="#ffffff" stop-opacity="0.58"/>
-    <stop offset="42%"  stop-color="${pal[0].h}" stop-opacity="0.88"/>
-    <stop offset="100%" stop-color="${pal[0].b}" stop-opacity="1"/>
-  </radialGradient>`);
-  rings.push(`<ellipse cx="${cx}" cy="${topPad}" rx="${wT0/2+4}" ry="${ry0+2}" fill="${pal[0].s}" opacity="0.38"/>`);
-  rings.push(`<ellipse cx="${cx}" cy="${topPad}" rx="${wT0/2}"   ry="${ry0}"   fill="url(#topRim)"/>`);
-  rings.push(`<ellipse cx="${cx}" cy="${topPad}" rx="${wT0*0.43}" ry="${ry0*0.60}" fill="${pal[0].s}" opacity="0.26"/>`);
-
-  // ── Pass 3: text (always on top) ─────────────────────────────────────────
-  stages.forEach((s, i) => {
-    const wT  = widths[i];
-    const wB  = i < stages.length - 1 ? widths[i + 1] : wBottom;
-    const y   = topPad + i * segH;
-    const yB  = y + segH;
-    const ryB = Math.min(ryMax, Math.max(ryMin, wB * ryF));
-
-    // Stage label — left outside, right-aligned to funnel edge
-    texts.push(`<text x="${cx - wT/2 - 12}" y="${y + segH/2 + 3}" text-anchor="end" dominant-baseline="central" fill="#1e293b" font-size="11.5" font-weight="600" font-family="Inter,system-ui,sans-serif">${s.label}</text>`);
-
-    // Count — centred, white bold
-    texts.push(`<text x="${cx}" y="${y + segH/2 + 5}" text-anchor="middle" dominant-baseline="central" fill="#ffffff" font-size="21" font-weight="800" font-family="Inter,system-ui,sans-serif">${s.count}</text>`);
-
-    // Conversion % badge — floats to the right of the divider ring
-    if (i < stages.length - 1) {
-      const conv = s.count > 0 ? Math.round(stages[i+1].count / s.count * 100) : 0;
-      const bx = cx + wB/2 + 30, by = yB;
-      texts.push(`<rect x="${bx-20}" y="${by-8}" width="40" height="16" rx="8" fill="#f1f5f9" stroke="#cbd5e1" stroke-width="0.6"/>`);
-      texts.push(`<text x="${bx}" y="${by}" text-anchor="middle" dominant-baseline="central" fill="#475569" font-size="10" font-weight="700" font-family="Inter,system-ui,sans-serif">${conv}%</text>`);
-    }
-  });
-
-  return `<svg viewBox="0 0 ${VBW} ${H}" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;display:block;max-height:none;overflow:visible">
-    <defs>${defs.join('')}</defs>
-    ${bodies.join('')}${rings.join('')}${texts.join('')}
-  </svg>`;
-}
-// CTA "Definir Meta": admin vai para a Gestão de Metas; demais abrem o detalhe.
-function inicioDefinirMeta() {
-  if (SESSION && SESSION.role === 'admin') {
-    try { showScreen('screen-admin'); setAdminTab('metas'); return; } catch(e) {}
-  }
-  openActTileDrawer('meta');
-}
-
 // ══════════════════════════════════════════════════════════════════════════
-//  INÍCIO v2 — três métricas: caixa de entrada · paradas +15d · próxima ação
+//  Última movimentação de propostas — usado pelo alerta "propostas novas
+//  para classificar" do sino de notificações (checkNovasImportadas).
 // ══════════════════════════════════════════════════════════════════════════
 
 // Última movimentação por proposta, vinda da view proposta_movimentacao.
@@ -8775,7 +8718,6 @@ async function loadMovimentacao() {
     const m = {};
     (rows || []).forEach(x => { const t = cpParseDate(x.ultima_movimentacao); if (t) m[x.uid] = t; });
     _movMap = m;
-    if (currentView === 'inicio') renderAtividadesPanel();
   } catch(e) { console.warn('[loadMovimentacao]', e.message); }
 }
 
@@ -8811,853 +8753,6 @@ function homeMetrics(props) {
   });
   return { abertas, caixa, paradas, comProx,
            pctProx: abertas.length ? comProx.length / abertas.length : 0 };
-}
-
-function _idadeDias(p) {
-  const t = cpParseDate(p.data_abertura);
-  return t ? Math.floor((_todayMid() - t) / 86400000) : null;
-}
-function _diasParada(p) {
-  const t = _ultimaMovTs(p);
-  return t ? Math.floor((_todayMid() - t) / 86400000) : null;
-}
-function _valorProp(p) { return Number(p.receita_estimada) || 0; }
-
-// Possível duplicata: mesmo cliente, mesmo valor, mesma data de abertura.
-function _dupKeyProp(p) {
-  return [String(p.cliente || '').trim().toUpperCase(),
-          _valorProp(p).toFixed(2),
-          String(p.data_abertura || '').trim()].join('|');
-}
-function _dupSet(props) {
-  const c = {}, dup = new Set();
-  props.forEach(p => { const k = _dupKeyProp(p); if (!p.cliente || !_valorProp(p)) return; c[k] = (c[k] || 0) + 1; });
-  props.forEach(p => { if (c[_dupKeyProp(p)] > 1) dup.add(p.uid); });
-  return dup;
-}
-
-// Responsável efetivo (a proposta pode trazer o nome em 3 campos diferentes).
-function _respDe(p) { return (p.responsavel || p.representante || p.interno || '').trim() || '— sem responsável'; }
-
-const HM_ICO = {
-  check: '<svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>',
-  warn:  '<svg viewBox="0 0 24 24"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>',
-};
-
-// Abre a lista pedida numa gaveta, sem tirar o usuário da home.
-function _hmDrawerLista(titulo, itens) {
-  if (!itens.length) { _openActDrawer(titulo, '<div class="hm-empty">Nenhuma proposta aqui.</div>'); return; }
-  const html = '<div class="hm-list">' + itens.map(p => {
-    const d = _diasParada(p);
-    return `<div class="hm-it">
-      <div class="hm-it-main">
-        <div class="hm-it-cli" onclick="closeActDrawer();openFollowupModal('${p.uid}')">${_htmlEsc(p.cliente || '—')}</div>
-        <div class="hm-it-meta">
-          <span>Nº ${String(p.nr).padStart(4,'0')}</span>
-          <span>${_htmlEsc(p.classificacao || '—')}</span>
-          <span>${_htmlEsc(_respDe(p))}</span>
-        </div>
-      </div>
-      <div class="hm-it-val">${fmtBRLShort(_valorProp(p))}</div>
-      <div class="hm-it-dias">${d === null ? '—' : d + 'd'}</div>
-    </div>`;
-  }).join('') + '</div>';
-  _openActDrawer(titulo + ' · ' + itens.length, html);
-}
-function _hmEscopo() {
-  let props = scopeForSession();
-  if (_inicioCat) props = props.filter(p => _propCategoriaKey(p) === _inicioCat);
-  return props;
-}
-function homeVerSuspeitas() {
-  const M = homeMetrics(_hmEscopo());
-  _hmDrawerLista('Valores acima de R$ 2 milhões — revisar',
-    M.abertas.filter(p => _valorProp(p) > 2000000).sort((a,b) => _valorProp(b) - _valorProp(a)));
-}
-
-// Troca de etapa direto na caixa de entrada, sem abrir modal.
-async function homeSetEtapa(uid, valor) {
-  if (!valor) return;
-  await setEtapaFromPanel(uid, valor);
-  renderAtividadesPanel();
-  updateInboxBadge();
-}
-
-// Badge da sidebar: caixa de entrada do próprio usuário. Some ao zerar.
-function updateInboxBadge() {
-  const item = document.querySelector('.nav-item[data-view="inicio"]');
-  if (!item) return;
-  let b = item.querySelector('.nav-badge');
-  const n = homeMetrics(scopeForSession()).caixa.length;
-  if (!n) { if (b) b.remove(); return; }
-  if (!b) { b = document.createElement('span'); b.className = 'nav-badge'; item.appendChild(b); }
-  b.textContent = n > 99 ? '99+' : n;
-  b.style.background = 'var(--error)';
-  b.style.color = '#fff';
-}
-
-function renderAtividadesPanel() {
-  const box = document.getElementById('section-atividades');
-  if (!box) return;
-
-  // Home do Administrador = Centro de Controle Comercial (visão de equipe).
-  // Home do usuário comum = painel individual abaixo, inalterado.
-  if (SESSION && SESSION.role === 'admin') { renderAdminHomeDashboard(box); updateInboxBadge(); return; }
-
-  // Pipeline aberto não tem ano: uma proposta de 2025 ainda aberta continua
-  // valendo hoje. Por isso o escopo da home ignora o filtro de ano.
-  let props = scopeForSession();
-  if (_inicioCat)  props = props.filter(p => _propCategoriaKey(p) === _inicioCat);
-  if (_inicioUser) props = props.filter(p => _ownerMatches(p, _inicioUser));
-
-  const M    = homeMetrics(props);
-  const dups = _dupSet(M.abertas);
-
-  // ── Bloco: pipeline aberto por idade ────────────────────────────────────
-  const faixas = [
-    { l:'Até 30 dias',     f:d => d !== null && d <= 30,           alert:false },
-    { l:'31 a 60 dias',    f:d => d !== null && d > 30 && d <= 60, alert:false },
-    { l:'Mais de 60 dias', f:d => d !== null && d > 60,            alert:true  },
-  ].map(x => {
-    const itens = M.abertas.filter(p => x.f(_idadeDias(p)));
-    return Object.assign({}, x, { itens, valor: itens.reduce((s,p) => s + _valorProp(p), 0) });
-  });
-  const ageHtml = '<div class="hm-age">' + faixas.map(x => `
-    <div class="hm-age-c${x.alert && x.itens.length ? ' alert' : ''}">
-      <div class="hm-age-l">${x.l}</div>
-      <div class="hm-age-v">${fmtBRLShort(x.valor)}</div>
-      <div class="hm-age-n">${x.itens.length} ${x.itens.length === 1 ? 'proposta' : 'propostas'}</div>
-    </div>`).join('') + '</div>';
-
-  // Dado sujo: valor acima de R$ 2 mi numa proposta aberta quase sempre é
-  // decimal trocado na importação. Sinaliza, não corrige.
-  const suspeitas = M.abertas.filter(p => _valorProp(p) > 2000000);
-  const warnValor = suspeitas.length ? `
-    <div class="hm-warn">${HM_ICO.warn}
-      <div>${suspeitas.length} ${suspeitas.length === 1 ? 'proposta aberta passa' : 'propostas abertas passam'} de R$ 2 milhões — possível erro de decimal na importação.
-      <a onclick="homeVerSuspeitas()">Revisar</a>.</div>
-    </div>` : '';
-
-  const blocoIdade = `
-    <div class="hm-sec">
-      <div class="hm-sec-h">
-        <div class="hm-sec-t">Pipeline aberto por idade</div>
-        <div class="hm-sec-n">${M.abertas.length} ${M.abertas.length === 1 ? 'proposta aberta' : 'propostas abertas'}</div>
-      </div>
-      ${ageHtml}${warnValor}
-    </div>`;
-
-  // ── Item de lista reutilizado (travadas / fila) ──────────────────────────
-  const itemHtml = (p, comFu) => {
-    const d = _diasParada(p);
-    return `<div class="hm-it">
-      <div class="hm-it-main">
-        <div class="hm-it-cli" onclick="openFollowupModal('${p.uid}')">${_htmlEsc(p.cliente || '—')}</div>
-        <div class="hm-it-meta">
-          <span>Nº ${String(p.nr).padStart(4,'0')}</span>
-          <span>${_htmlEsc(p.classificacao || '—')}</span>
-          ${dups.has(p.uid) ? '<span class="hm-dup">possível duplicata</span>' : ''}
-        </div>
-      </div>
-      <div class="hm-it-val">${fmtBRLShort(_valorProp(p))}</div>
-      <div class="hm-it-dias">${d === null ? '—' : d + 'd parada'}</div>
-      ${comFu ? `<button class="btn-mini" onclick="openFollowupModal('${p.uid}')">Follow-up</button>` : ''}
-    </div>`;
-  };
-
-  // ── Caixa de entrada acionável (tela do representante) ───────────────────
-  const caixaLista = () => {
-    if (!M.caixa.length) return `
-      <div class="hm-done">
-        <div class="hm-done-i">${HM_ICO.check}</div>
-        <div class="hm-done-t">Caixa de entrada vazia</div>
-        <div class="hm-done-s">Todas as suas propostas abertas já estão classificadas no funil.</div>
-      </div>`;
-    const ordenada = M.caixa.slice().sort((a,b) => _valorProp(b) - _valorProp(a));
-    return '<div class="hm-list">' + ordenada.map(p => {
-      const opts = funilStagesForProp(p)
-        .map(e => `<option value="${e.value}">${_htmlEsc(e.label)}</option>`).join('');
-      return `<div class="hm-it">
-        <div class="hm-it-main">
-          <div class="hm-it-cli" onclick="openFollowupModal('${p.uid}')">${_htmlEsc(p.cliente || '—')}</div>
-          <div class="hm-it-meta">
-            <span>Nº ${String(p.nr).padStart(4,'0')}</span>
-            <span>${_htmlEsc(p.classificacao || '—')}</span>
-            <span>${fmtDateDisplay(p.data_abertura)}</span>
-            ${dups.has(p.uid) ? '<span class="hm-dup">possível duplicata</span>' : ''}
-          </div>
-        </div>
-        <div class="hm-it-val">${fmtBRLShort(_valorProp(p))}</div>
-        <select class="hm-sel" onchange="homeSetEtapa('${p.uid}', this.value)">
-          <option value="">Classificar…</option>${opts}
-        </select>
-      </div>`;
-    }).join('') + '</div>';
-  };
-
-  const saud = (() => { const h = new Date().getHours(); return h < 12 ? 'Bom dia' : h < 18 ? 'Boa tarde' : 'Boa noite'; })();
-  const catOpts = '<option value="">Todas as categorias</option>'
-    + CATEGORIA_GROUPS.map(c => `<option value="${c.key}"${_inicioCat === c.key ? ' selected' : ''}>${c.label}</option>`).join('');
-
-  // ── Representante: caixa de entrada primeiro, é o centro da tela ─────────
-  const pctEu = Math.round(M.pctProx * 100);
-  // A RLS entrega ao representante só as propostas dele — comparar contra
-  // DATA daria a própria média rotulada como "equipe". Só mostra o
-  // comparativo quando o escopo realmente tem mais de um responsável.
-  const eqAbertas = DATA.filter(_isAbertaHome);
-  const nomes = new Set(eqAbertas.map(_respDe));
-  const temEquipe = nomes.size > 1;
-  const pctEq = temEquipe ? Math.round(homeMetrics(DATA).pctProx * 100) : null;
-
-  const corpo = `
-      <div class="hm-sec">
-        <div class="hm-sec-h">
-          <div class="hm-sec-t">Sua caixa de entrada</div>
-          <div class="hm-sec-n">${M.caixa.length ? M.caixa.length + (M.caixa.length === 1 ? ' proposta sem etapa' : ' propostas sem etapa') : ''}</div>
-        </div>
-        ${caixaLista()}
-      </div>
-      ${blocoIdade}
-      <div class="hm-sec">
-        <div class="hm-sec-h">
-          <div class="hm-sec-t">Sua fila</div>
-          <div class="hm-sec-n">${M.paradas.length} ${M.paradas.length === 1 ? 'parada há mais de 15 dias' : 'paradas há mais de 15 dias'}</div>
-        </div>
-        ${M.paradas.length
-          ? `<div class="hm-list">${M.paradas.slice().sort((a,b) => _diasParada(b) - _diasParada(a)).slice(0,8).map(p => itemHtml(p, true)).join('')}</div>`
-          : `<div class="hm-done"><div class="hm-done-i">${HM_ICO.check}</div>
-             <div class="hm-done-t">Fila em dia</div>
-             <div class="hm-done-s">Nenhuma proposta sua está parada há mais de 15 dias.</div></div>`}
-      </div>
-      <div class="hm-cmp">
-        <span>Com próxima ação agendada — <b>você ${pctEu}%</b>${pctEq !== null ? ` · média da equipe ${pctEq}%` : ''}</span>
-      </div>`;
-
-  box.innerHTML = `
-    <div class="hm">
-      <div class="hm-head">
-        <div class="hm-hi">${saud}, ${_htmlEsc((SESSION && SESSION.nome) || '')}</div>
-        <div class="hm-sub">${new Date().toLocaleDateString('pt-BR',{weekday:'long',day:'2-digit',month:'long',year:'numeric'})}</div>
-      </div>
-      <div class="pf-filters" style="margin-bottom:18px">
-        <div class="pf-fgrp"><label>Categoria</label><select onchange="inicioSetCat(this.value)">${catOpts}</select></div>
-        ${_inicioCat || _inicioUser ? '<button class="btn-tbl" onclick="inicioResetF()" style="margin-left:auto">Limpar filtros</button>' : ''}
-      </div>
-      ${corpo}
-    </div>`;
-
-  updateInboxBadge();
-}
-
-// ════════════════════════════════════════════════════════════════════════
-// FASE 8 — CENTRO DE CONTROLE COMERCIAL (Home do Administrador)
-// Reaproveita dados já carregados (DATA, followUps, _usersCache) — não
-// dispara nenhuma consulta nova e não altera regra de negócio existente:
-// é só uma nova camada de leitura/apresentação sobre os mesmos campos que
-// o resto do CRM já usa (status, etapa, datas, responsavel/interno/
-// representante, tipo_proximo_passo).
-// ════════════════════════════════════════════════════════════════════════
-let _ahF = { periodo:'semana', ini:'', fim:'', user:'', dept:'', cat:'', status:'', cliente:'' };
-function ahSetF(field, val) { _ahF[field] = val; renderAdminHomeDashboard(document.getElementById('section-atividades')); }
-function ahResetF() { _ahF = { periodo:'semana', ini:'', fim:'', user:'', dept:'', cat:'', status:'', cliente:'' }; renderAdminHomeDashboard(document.getElementById('section-atividades')); }
-function _ahHasFilters() {
-  return !!(_ahF.user || _ahF.dept || _ahF.cat || _ahF.status || _ahF.cliente || _ahF.periodo !== 'semana');
-}
-function _ahFmtTs(t) { return t ? new Date(t).toLocaleDateString('pt-BR') : '—'; }
-
-// Departamento do dono da proposta, a partir do cadastro de usuários do CRM.
-function _ahOwnerDept(p) {
-  const nome = _respDe(p);
-  if (nome === '— sem responsável') return '';
-  const u = (_usersCache||[]).find(x => _matchNome(x.nome||x.email, nome));
-  return u ? userTypeOf(u) : '';
-}
-// Escopo base: aplica os filtros fixos do topo (Usuário/Depto/Categoria/Status/Cliente), sem período.
-function _ahScope() {
-  let list = DATA.slice();
-  if (_ahF.user)    list = list.filter(p => _ownerMatches(p, _ahF.user));
-  if (_ahF.dept)    list = list.filter(p => _ahOwnerDept(p) === _ahF.dept);
-  if (_ahF.cat)     list = list.filter(p => _propCategoriaKey(p) === _ahF.cat);
-  if (_ahF.status)  list = list.filter(p => (p.status||'ABERTO').toUpperCase() === _ahF.status);
-  if (_ahF.cliente) { const q = _accUp(_ahF.cliente); list = list.filter(p => _accUp(p.cliente||'').includes(q)); }
-  return list;
-}
-
-// Janela do período selecionado + janela imediatamente anterior (mesmo tamanho, p/ comparação).
-function _ahPeriodRange() {
-  const hoje = _todayMid();
-  if (_ahF.periodo === 'hoje') return [hoje, hoje + 86400000];
-  if (_ahF.periodo === 'mes') {
-    const d = new Date();
-    return [new Date(d.getFullYear(), d.getMonth(), 1).getTime(), new Date(d.getFullYear(), d.getMonth()+1, 1).getTime()];
-  }
-  if (_ahF.periodo === 'custom' && _ahF.ini && _ahF.fim) {
-    const s = cpParseDate(_ahF.ini), e = cpParseDate(_ahF.fim);
-    if (s && e) return [s, e + 86400000];
-  }
-  const s = _mondayOf(new Date());
-  return [s, s + 7*86400000];
-}
-function _ahPrevRange() {
-  const [s,e] = _ahPeriodRange();
-  const len = e - s;
-  return [s - len, s];
-}
-function _ahInRange(dateStr, s, e) {
-  const t = cpParseDate(dateStr);
-  return !!t && t >= s && t < e;
-}
-// Selo de comparação com o período anterior — verde/vermelho conforme o sentido bom daquela métrica.
-function _ahDelta(curr, prev, goodDir) {
-  const diff = curr - prev;
-  if (diff === 0) return `<span class="ah-delta flat">sem variação vs. período anterior</span>`;
-  const up = diff > 0;
-  const good = goodDir > 0 ? up : !up;
-  return `<span class="ah-delta ${good?'good':'bad'}">${up?'▲':'▼'} ${Math.abs(diff)} vs. período anterior</span>`;
-}
-// _ultimaMovTs cai para data_abertura quando não há outra movimentação (útil p/
-// "última atividade"). Para o gráfico/ranking de ATUALIZAÇÕES isso contaria toda
-// proposta recém-criada também como "atualizada" no mesmo dia — por isso aqui não
-// há fallback: só conta se houve alguma movimentação além da criação.
-function _ahUpdatedTs(p) {
-  if (_movMap[p.uid]) return _movMap[p.uid];
-  let t = 0;
-  const bump = v => { const x = cpParseDate(v); if (x > t) t = x; };
-  bump(p.etapa_changed_at); bump(p.etapa_entrada_em); bump(p.updated_at);
-  (followUps[p.uid] || []).forEach(fu => { bump(fu.criado_em); bump(fu.editado_em); bump(fu.data_contato); });
-  return t;
-}
-
-const AH_ICO = {
-  neg:    `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 3a2.85 2.85 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5z"/></svg>`,
-  clock:  `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15 14"/></svg>`,
-  cal:    `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>`,
-  warn:   `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>`,
-  userx:  `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/><line x1="17" y1="8" x2="22" y2="13"/><line x1="22" y1="8" x2="17" y2="13"/></svg>`,
-  plus:   `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>`,
-  trophy: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 21h8M12 17v4M7 4h10v4a5 5 0 0 1-10 0V4z"/><path d="M17 5h3a2 2 0 0 1-2 4M7 5H4a2 2 0 0 0 2 4"/></svg>`,
-  x:      `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><line x1="9" y1="9" x2="15" y2="15"/><line x1="15" y1="9" x2="9" y2="15"/></svg>`,
-  check:  `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>`,
-  doc:    `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>`,
-};
-
-// ── Linha 1 — cards de KPI ─────────────────────────────────────────────────
-function _ahKpis(scoped) {
-  const ind     = commercialIndicators(scoped);
-  const M       = homeMetrics(scoped);   // M.paradas = sem movimentação há 15d+
-  const semResp = ind.abertas.filter(p => _respDe(p) === '— sem responsável');
-
-  const [rS, rE] = _ahPeriodRange();
-  const [pS, pE] = _ahPrevRange();
-  const criadas     = scoped.filter(p => _ahInRange(p.data_abertura, rS, rE));
-  const criadasPrev = scoped.filter(p => _ahInRange(p.data_abertura, pS, pE));
-  const ganhas       = scoped.filter(p => (p.status||'').toUpperCase()==='VENDIDO' && _ahInRange(p.data_fechamento, rS, rE));
-  const ganhasPrev   = scoped.filter(p => (p.status||'').toUpperCase()==='VENDIDO' && _ahInRange(p.data_fechamento, pS, pE));
-  const isPerdida = p => { const s=(p.status||'').toUpperCase(); return s==='PERDIDO'||s.includes('DESIST'); };
-  const perdidas     = scoped.filter(p => isPerdida(p) && _ahInRange(p.data_fechamento, rS, rE));
-  const perdidasPrev = scoped.filter(p => isPerdida(p) && _ahInRange(p.data_fechamento, pS, pE));
-
-  return [
-    { ico:AH_ICO.neg,    n:ind.abertas.length,     l:'Propostas em negociação',       c:'' },
-    { ico:AH_ICO.clock,  n:M.paradas.length,       l:'Aguardando atualização (+15d)', c:M.paradas.length?'warn':'good' },
-    { ico:AH_ICO.cal,    n:ind.fuHoje.length,      l:'Follow-ups agendados hoje',     c:'good' },
-    { ico:AH_ICO.warn,   n:ind.fuAtrasados.length, l:'Follow-ups atrasados',          c:ind.fuAtrasados.length?'bad':'good' },
-    { ico:AH_ICO.userx,  n:semResp.length,         l:'Propostas sem responsável',     c:semResp.length?'warn':'good' },
-    { ico:AH_ICO.plus,   n:criadas.length,         l:'Propostas criadas no período',  c:'',     delta:_ahDelta(criadas.length, criadasPrev.length, 1) },
-    { ico:AH_ICO.trophy, n:ganhas.length,          l:'Propostas ganhas no período',   c:'good', delta:_ahDelta(ganhas.length, ganhasPrev.length, 1) },
-    { ico:AH_ICO.x,      n:perdidas.length,        l:'Propostas perdidas no período', c:'bad',  delta:_ahDelta(perdidas.length, perdidasPrev.length, -1) },
-  ];
-}
-function _ahKpisHtml(cards) {
-  return '<div class="ah-kpi-grid">' + cards.map(k => `
-    <div class="ah-kpi ${k.c}">
-      <div class="ah-kpi-ico">${k.ico}</div>
-      <div class="ah-kpi-n">${k.n}</div>
-      <div class="ah-kpi-l">${k.l}</div>
-      ${k.delta ? `<div class="ah-kpi-d">${k.delta}</div>` : ''}
-    </div>`).join('') + '</div>';
-}
-
-// ── Linha 2 — Atividade da equipe (só usuários cadastrados no CRM) ─────────
-function _ahTeamRows(scoped, scopedUids) {
-  const hoje = _todayMid();
-  let users = (_usersCache||[]).filter(userIsActive);
-  if (_ahF.user) users = users.filter(u => _matchNome(u.nome||u.email, _ahF.user));
-  if (_ahF.dept) users = users.filter(u => userTypeOf(u) === _ahF.dept);
-
-  return users.map(u => {
-    const nome  = (u.nome || u.email || '').trim();
-    const meus  = scoped.filter(p => _ownerMatches(p, nome));
-    const abertas = meus.filter(_isAbertaHome);
-    const paradas = abertas.filter(p => { const t=_ultimaMovTs(p); return t && (hoje-t) > 15*86400000; });
-    const flat   = _latestPerUid(_flatFollowupsByOwner(nome).filter(ff => scopedUids.has(ff._uid))).filter(ff => !ff.concluido);
-    const [wS,wE] = _ahPeriodRange();
-    const semana = flat.filter(ff => { const t=cpParseDate(ff.proximo_contato); return t && t>=wS && t<wE; });
-    const atraso = flat.filter(ff => { const t=cpParseDate(ff.proximo_contato); return t && t<hoje; });
-    const futuros = flat.map(ff=>cpParseDate(ff.proximo_contato)).filter(t=>t && t>=hoje);
-    const ultima  = Math.max(0, ...meus.map(_ultimaMovTs), 0);
-    const proxima = futuros.length ? Math.min(...futuros) : 0;
-
-    let status = 'ok';
-    if (atraso.length > 0) status = 'crit';
-    else if (paradas.length > 0 || (abertas.length && !proxima)) status = 'warn';
-
-    return { nome, cargo:USER_TYPE_LABEL[userTypeOf(u)]||'—', neg:abertas.length, aguard:paradas.length,
-             fuSemana:semana.length, fuAtraso:atraso.length, ultima, proxima, status };
-  }).sort((a,b) => {
-    const rank = { crit:0, warn:1, ok:2 };
-    return rank[a.status]-rank[b.status] || b.aguard-a.aguard || b.neg-a.neg;
-  });
-}
-function _ahInitials(nome) { return (nome||'').trim().split(/\s+/).map(w=>w[0]).slice(0,2).join('').toUpperCase() || '?'; }
-function _ahStatusPill(s) {
-  if (s==='crit') return `<span class="ah-status crit">🔴 Crítico</span>`;
-  if (s==='warn') return `<span class="ah-status warn">🟡 Atenção</span>`;
-  return `<span class="ah-status ok">🟢 Em dia</span>`;
-}
-function _ahTeamTableHtml(rows) {
-  if (!rows.length) return `<div class="hm-list"><div class="hm-empty">Nenhum usuário cadastrado no CRM encontrado.</div></div>`;
-  const tr = rows.map(r => `
-    <tr>
-      <td><div class="ah-user"><span class="ah-avatar">${_ahInitials(r.nome)}</span>
-        <div><div class="ah-user-n">${_htmlEsc(r.nome)}</div><div class="ah-user-c">${r.cargo}</div></div></div></td>
-      <td class="num">${r.neg}</td>
-      <td class="num">${r.aguard || '—'}</td>
-      <td class="num">${r.fuSemana || '—'}</td>
-      <td class="num">${r.fuAtraso ? `<span style="color:var(--error);font-weight:700">${r.fuAtraso}</span>` : '—'}</td>
-      <td>${_ahFmtTs(r.ultima)}</td>
-      <td>${_ahFmtTs(r.proxima)}</td>
-      <td>${_ahStatusPill(r.status)}</td>
-    </tr>`).join('');
-  return `<table class="hm-tbl ah-team-tbl">
-    <thead><tr>
-      <th>Usuário</th><th class="num">Em negociação</th><th class="num">Aguardando atualização</th>
-      <th class="num">Follow-ups na semana</th><th class="num">Atrasados</th>
-      <th>Última atividade</th><th>Próxima atividade</th><th>Status geral</th>
-    </tr></thead><tbody>${tr}</tbody></table>`;
-}
-
-// ── Linha 3 — Quadro de prioridades ─────────────────────────────────────────
-function _ahPriorityBuckets(scoped) {
-  const M = homeMetrics(scoped);
-  const ind = commercialIndicators(scoped);
-  const abertas = scoped.filter(_isAbertaHome);
-
-  const semMov = M.paradas.slice().sort((a,b)=>_diasParada(b)-_diasParada(a));
-
-  const fuVencidosProps = ind.fuAtrasados
-    .map(ff => scoped.find(p => p.uid === ff._uid))
-    .filter(Boolean)
-    .sort((a,b)=>_diasParada(b)-_diasParada(a));
-
-  const latestByUid = {};
-  _latestPerUid(_flatFollowups(scoped)).filter(ff=>!ff.concluido).forEach(ff => { latestByUid[ff._uid] = ff; });
-
-  const aguardRetorno = abertas.filter(p => {
-    const ff = latestByUid[p.uid];
-    return ff && ff.tipo_proximo_passo === 'Aguardar retorno';
-  }).sort((a,b)=>_diasParada(b)-_diasParada(a));
-
-  const norm = s => _accUp(s||'');
-  const aguardOrcamento = abertas.filter(p => norm(p.etapa).includes('ORCAMENTO')).sort((a,b)=>_diasParada(b)-_diasParada(a));
-  const aguardAprovacao = abertas.filter(p => norm(p.etapa).includes('APROV')).sort((a,b)=>_diasParada(b)-_diasParada(a));
-
-  return [
-    { titulo:'Sem movimentação há mais de 15 dias', ico:AH_ICO.clock, itens:semMov },
-    { titulo:'Follow-ups vencidos',                 ico:AH_ICO.warn,  itens:fuVencidosProps },
-    { titulo:'Aguardando retorno do cliente',       ico:AH_ICO.cal,   itens:aguardRetorno },
-    { titulo:'Aguardando orçamento',                ico:AH_ICO.doc,   itens:aguardOrcamento },
-    { titulo:'Aguardando aprovação',                ico:AH_ICO.check, itens:aguardAprovacao },
-  ];
-}
-function _ahPriorityItemHtml(p) {
-  const d = _diasParada(p);
-  return `<div class="ah-pri-it">
-    <div class="ah-pri-main">
-      <div class="ah-pri-cli">${_htmlEsc(p.cliente||'—')}</div>
-      <div class="ah-pri-meta">Nº ${String(p.nr).padStart(4,'0')} · ${_htmlEsc(_respDe(p))}</div>
-    </div>
-    <div class="ah-pri-dias">${d===null?'—':d+'d parada'}</div>
-    <button class="btn-mini" onclick="openFollowupModal('${p.uid}')">Abrir proposta</button>
-  </div>`;
-}
-function _ahPriorityBoardHtml(buckets) {
-  return buckets.map(b => `
-    <div class="ah-pri-col">
-      <div class="ah-pri-h">${b.ico}<span>${b.titulo}</span><span class="ah-pri-count">${b.itens.length}</span></div>
-      ${b.itens.length
-        ? `<div class="ah-pri-list">${b.itens.slice(0,6).map(_ahPriorityItemHtml).join('')}</div>`
-        : `<div class="hm-empty" style="padding:16px 8px">Nada aqui.</div>`}
-    </div>`).join('');
-}
-
-// ── Linha 4 — Agenda comercial da semana ────────────────────────────────────
-const AH_TIPO_MAP = {
-  'Ligar':'Ligações', 'Visita':'Visitas', 'Videoconferencia':'Reuniões',
-  'Enviar proposta':'Entregas de proposta',
-  'E-mail':'Follow-ups', 'WhatsApp':'Follow-ups', 'Aguardar retorno':'Follow-ups', '':'Follow-ups'
-};
-function _ahAgendaBuckets(scoped) {
-  const hoje = _todayMid();
-  const wE = _mondayOf(new Date()) + 7*86400000;
-  const flat = _latestPerUid(_flatFollowups(scoped)).filter(ff => !ff.concluido);
-
-  const dias = [
-    { key:'hoje',   titulo:'Hoje',          ini:hoje,                  fim:hoje+86400000 },
-    { key:'amanha', titulo:'Amanhã',        ini:hoje+86400000,         fim:hoje+2*86400000 },
-    { key:'prox',   titulo:'Próximos dias', ini:hoje+2*86400000,       fim:Math.max(wE, hoje+3*86400000) },
-  ];
-  return dias.map(d => {
-    const itens = flat.filter(ff => { const t=cpParseDate(ff.proximo_contato); return t && t>=d.ini && t<d.fim; });
-    const porTipo = {};
-    itens.forEach(ff => { const k = AH_TIPO_MAP[ff.tipo_proximo_passo] || 'Follow-ups'; porTipo[k] = (porTipo[k]||0)+1; });
-    const porUser = {};
-    itens.forEach(ff => { const who = ff._fuResp || ff._resp || '—'; porUser[who] = (porUser[who]||0)+1; });
-    const userChips = Object.entries(porUser).sort((a,b)=>b[1]-a[1]).slice(0,6);
-    return Object.assign({}, d, { itens, porTipo, userChips, restante: Object.keys(porUser).length - userChips.length });
-  });
-}
-function _ahAgendaHtml(buckets) {
-  return buckets.map(b => `
-    <div class="ah-ag-col">
-      <div class="ah-ag-h"><span>${b.titulo}</span><span class="ah-pri-count">${b.itens.length}</span></div>
-      ${b.itens.length ? `
-        <div class="ah-ag-tipos">${Object.entries(b.porTipo).map(([k,n])=>`<span class="ah-ag-tipo">${k} · ${n}</span>`).join('')}</div>
-        <div class="ah-ag-users">${b.userChips.map(([n,c])=>`<span class="ah-ag-user">${_htmlEsc(n)} <b>${c}</b></span>`).join('')}${b.restante>0?`<span class="ah-ag-user muted">+${b.restante} outros</span>`:''}</div>`
-        : `<div class="hm-empty" style="padding:14px 6px">Nada agendado.</div>`}
-    </div>`).join('');
-}
-
-// ── Linha 5 — Ranking de atividade (mede atividade, não faturamento) ───────
-function _ahRankingRows(scoped, scopedUids) {
-  const [rS, rE] = _ahPeriodRange();
-  let users = (_usersCache||[]).filter(userIsActive);
-  if (_ahF.user) users = users.filter(u => _matchNome(u.nome||u.email, _ahF.user));
-  if (_ahF.dept) users = users.filter(u => userTypeOf(u) === _ahF.dept);
-
-  return users.map(u => {
-    const nome = (u.nome || u.email || '').trim();
-    const meus = scoped.filter(p => _ownerMatches(p, nome));
-    const atualizadas = meus.filter(p => { const t = _ahUpdatedTs(p); return t && t >= rS && t < rE; }).length;
-    const flatAll = _flatFollowupsByOwner(nome).filter(ff => scopedUids.has(ff._uid));
-    const concluidos = flatAll.filter(ff => ff.concluido && (() => { const t=cpParseDate(ff.editado_em||ff.criado_em); return t && t>=rS && t<rE; })()).length;
-    const ultima = Math.max(0, ...meus.map(_ultimaMovTs), 0);
-    return { nome, acoes: atualizadas + concluidos, atualizadas, concluidos, ultima };
-  }).sort((a,b) => b.acoes - a.acoes);
-}
-function _ahRankingHtml(rows) {
-  if (!rows.length) return `<div class="hm-list"><div class="hm-empty">Sem usuários cadastrados.</div></div>`;
-  const tr = rows.map((r,i) => `<tr>
-      <td>${i+1}</td>
-      <td>${_htmlEsc(r.nome)}</td>
-      <td class="num">${r.acoes}</td>
-      <td class="num">${r.atualizadas}</td>
-      <td class="num">${r.concluidos}</td>
-      <td title="Estimado pela última atividade registrada — não há rastreio de login no sistema">${_ahFmtTs(r.ultima)}</td>
-    </tr>`).join('');
-  return `<table class="hm-tbl">
-    <thead><tr><th>#</th><th>Usuário</th><th class="num">Ações realizadas</th><th class="num">Propostas atualizadas</th><th class="num">Follow-ups concluídos</th><th>Último acesso*</th></tr></thead>
-    <tbody>${tr}</tbody></table>
-    <div class="t-caption" style="margin-top:6px">* estimado pela última atividade registrada (o sistema não rastreia login).</div>`;
-}
-
-// ── Linha 6 — Movimentação semanal (Seg–Sex): criadas · atualizadas · fechadas ──
-function _ahWeekSeries(scoped) {
-  const s = _mondayOf(new Date());
-  const labels = ['Segunda','Terça','Quarta','Quinta','Sexta'];
-  const criadas = [0,0,0,0,0], atualizadas = [0,0,0,0,0], fechadas = [0,0,0,0,0];
-  const dayIdx = t => { const di = Math.floor((t - s)/86400000); return (di>=0 && di<5) ? di : -1; };
-  scoped.forEach(p => {
-    let t = cpParseDate(p.data_abertura), i = t?dayIdx(t):-1; if (i>=0) criadas[i]++;
-    t = _ahUpdatedTs(p); i = t?dayIdx(t):-1; if (i>=0) atualizadas[i]++;
-    const st = (p.status||'').toUpperCase();
-    if (st==='VENDIDO'||st==='PERDIDO'||st.includes('DESIST')) {
-      t = cpParseDate(p.data_fechamento); i = t?dayIdx(t):-1; if (i>=0) fechadas[i]++;
-    }
-  });
-  return { labels, criadas, atualizadas, fechadas };
-}
-// Gráfico de colunas agrupadas com N séries — mesma linguagem visual do ccColsSVG.
-function _ahGroupedColsSVG(labels, series) {
-  const W = 720, H = 220, pl=12, pr=12, pt=30, pb=30;
-  const iW = W-pl-pr, iH = H-pt-pb, n = labels.length;
-  if (!n) return '<div class="pf-empty-chart">Sem dados.</div>';
-  const max = Math.max(1, ...series.flatMap(s=>s.values));
-  const slot = iW/n, gw = Math.min(slot*0.75, 60), bw = gw/series.length;
-  let g = '';
-  for (let k=0;k<=2;k++){ const yy=pt+iH*k/2; g += `<line x1="${pl}" y1="${yy.toFixed(1)}" x2="${W-pr}" y2="${yy.toFixed(1)}" stroke="var(--border)" stroke-width="1"/>`; }
-  labels.forEach((l,i) => {
-    const cx = pl + slot*i + slot/2, gx0 = cx - gw/2;
-    series.forEach((s,si) => {
-      const v = +s.values[i]||0, h = v/max*iH, x = gx0+si*bw, y = pt+iH-h;
-      g += `<rect x="${x.toFixed(1)}" y="${y.toFixed(1)}" width="${(bw-2).toFixed(1)}" height="${Math.max(0,h).toFixed(1)}" rx="3" fill="${s.color}"/>`;
-      if (v>0) g += `<text x="${(x+bw/2-1).toFixed(1)}" y="${(y-4).toFixed(1)}" font-size="8.5" fill="${s.color}" text-anchor="middle" font-weight="700" font-family="Inter,system-ui,sans-serif">${v}</text>`;
-    });
-    g += `<text x="${cx.toFixed(1)}" y="${H-10}" font-size="10" fill="var(--navy)" text-anchor="middle" font-family="Inter,system-ui,sans-serif">${l}</text>`;
-  });
-  let lx = pl;
-  series.forEach(s => {
-    g += `<rect x="${lx}" y="6" width="10" height="10" rx="2" fill="${s.color}"/><text x="${lx+15}" y="14.5" font-size="10" fill="var(--text)" font-family="Inter,system-ui,sans-serif">${s.name}</text>`;
-    lx += 26 + s.name.length*6.2;
-  });
-  return `<svg viewBox="0 0 ${W} ${H}" style="width:100%;height:auto;display:block">${g}</svg>`;
-}
-
-// ── Painel lateral "Atenção do Administrador" — insights dinâmicos ─────────
-function _ahInsights(rows, buckets, semRespCount) {
-  const hoje = _todayMid();
-  const out = [];
-  rows.forEach(r => { if (r.aguard >= 5) out.push(`${r.nome} possui ${r.aguard} propostas sem atualização há mais de 15 dias.`); });
-  rows.forEach(r => { if (r.neg > 0 && (!r.ultima || (hoje - r.ultima) >= 86400000)) out.push(`${r.nome} não registrou atividade hoje.`); });
-  rows.forEach(r => { if (r.fuSemana >= 10) out.push(`${r.nome} possui ${r.fuSemana} follow-ups nesta semana.`); });
-  if (semRespCount) out.push(`Existe${semRespCount===1?'':'m'} ${semRespCount} proposta${semRespCount===1?'':'s'} sem responsável.`);
-  const retornoBucket = buckets.find(b => b.titulo === 'Aguardando retorno do cliente');
-  if (retornoBucket) {
-    const n30 = retornoBucket.itens.filter(p => { const d=_diasParada(p); return d!==null && d>=30; }).length;
-    if (n30) out.push(`${n30} ${n30===1?'proposta aguarda':'propostas aguardam'} retorno há mais de 30 dias.`);
-  }
-  return out.slice(0, 8);
-}
-function _ahInsightsHtml(list) {
-  if (!list.length) return `<div class="hm-empty" style="padding:20px 8px">Tudo em ordem — nenhum alerta no momento.</div>`;
-  return '<div class="ah-attn-list">' + list.map(t => `<div class="ah-attn-it">${AH_ICO.warn}<span>${t}</span></div>`).join('') + '</div>';
-}
-
-// ── Filtros fixos do topo ───────────────────────────────────────────────────
-function _ahFiltersHtml() {
-  const users = _responsavelOptions();
-  const userOpts = '<option value="">Todos</option>' + users.map(n=>`<option value="${_htmlEsc(n)}"${_ahF.user===n?' selected':''}>${_htmlEsc(n)}</option>`).join('');
-  const deptOpts = `<option value="">Todos</option>
-    <option value="representante"${_ahF.dept==='representante'?' selected':''}>Representante</option>
-    <option value="vendedor_interno"${_ahF.dept==='vendedor_interno'?' selected':''}>Vendedor Interno</option>`;
-  const catOpts = '<option value="">Todas</option>' + CATEGORIA_GROUPS.map(c=>`<option value="${c.key}"${_ahF.cat===c.key?' selected':''}>${c.label}</option>`).join('');
-  const statusOpts = '<option value="">Todos</option>' + DEFAULT_STATUS_LIST.map(s=>`<option value="${s.value}"${_ahF.status===s.value?' selected':''}>${s.label}</option>`).join('');
-  const custom = _ahF.periodo === 'custom' ? `
-    <div class="pf-fgrp"><label>De</label><input type="date" value="${_ahF.ini}" onchange="ahSetF('ini', this.value)"></div>
-    <div class="pf-fgrp"><label>Até</label><input type="date" value="${_ahF.fim}" onchange="ahSetF('fim', this.value)"></div>` : '';
-  return `<div class="pf-filters">
-    <div class="pf-fgrp"><label>Período</label>
-      <select onchange="ahSetF('periodo', this.value)">
-        <option value="hoje"${_ahF.periodo==='hoje'?' selected':''}>Hoje</option>
-        <option value="semana"${_ahF.periodo==='semana'?' selected':''}>Semana</option>
-        <option value="mes"${_ahF.periodo==='mes'?' selected':''}>Mês</option>
-        <option value="custom"${_ahF.periodo==='custom'?' selected':''}>Personalizado</option>
-      </select></div>
-    ${custom}
-    <div class="pf-fgrp"><label>Usuário</label><select onchange="ahSetF('user', this.value)">${userOpts}</select></div>
-    <div class="pf-fgrp"><label>Departamento</label><select onchange="ahSetF('dept', this.value)">${deptOpts}</select></div>
-    <div class="pf-fgrp"><label>Categoria</label><select onchange="ahSetF('cat', this.value)">${catOpts}</select></div>
-    <div class="pf-fgrp"><label>Status</label><select onchange="ahSetF('status', this.value)">${statusOpts}</select></div>
-    <div class="pf-fgrp"><label>Cliente</label><input type="text" placeholder="Buscar cliente…" value="${_htmlEsc(_ahF.cliente)}" onchange="ahSetF('cliente', this.value)"></div>
-    ${_ahHasFilters() ? '<button class="btn-tbl" onclick="ahResetF()" style="margin-left:auto">Limpar filtros</button>' : ''}
-  </div>`;
-}
-
-// ── Orquestrador ─────────────────────────────────────────────────────────────
-function renderAdminHomeDashboard(box) {
-  if (!box) return;
-  if (!_usersCache.length) {
-    ensureUsersCache().then(() => { if (currentView === 'inicio') renderAdminHomeDashboard(document.getElementById('section-atividades')); });
-  }
-
-  const scoped = _ahScope();
-  const scopedUids = new Set(scoped.map(p => p.uid));
-
-  const kpis    = _ahKpis(scoped);
-  const rows    = _ahTeamRows(scoped, scopedUids);
-  const buckets = _ahPriorityBuckets(scoped);
-  const agenda  = _ahAgendaBuckets(scoped);
-  const ranking = _ahRankingRows(scoped, scopedUids);
-  const chartS  = _ahWeekSeries(scoped);
-  const semResp = scoped.filter(p => _isAbertaHome(p) && _respDe(p)==='— sem responsável').length;
-  const insights = _ahInsights(rows, buckets, semResp);
-
-  const saud = (() => { const h = new Date().getHours(); return h < 12 ? 'Bom dia' : h < 18 ? 'Boa tarde' : 'Boa noite'; })();
-  const chartHtml = _ahGroupedColsSVG(chartS.labels, [
-    { name:'Criadas',     color:'var(--navy)',    values:chartS.criadas },
-    { name:'Atualizadas', color:'var(--warn)',    values:chartS.atualizadas },
-    { name:'Fechadas',    color:'var(--success)', values:chartS.fechadas },
-  ]);
-
-  box.innerHTML = `
-    <div class="hm ah-home">
-      <div class="hm-head">
-        <div class="hm-hi">${saud}, ${_htmlEsc((SESSION && SESSION.nome) || '')}</div>
-        <div class="hm-sub">Centro de Controle Comercial — ${new Date().toLocaleDateString('pt-BR',{weekday:'long',day:'2-digit',month:'long',year:'numeric'})}</div>
-      </div>
-      ${_ahFiltersHtml()}
-      <div class="ah-layout">
-        <div class="ah-main">
-          ${_ahKpisHtml(kpis)}
-
-          <div class="hm-sec">
-            <div class="hm-sec-h"><div class="hm-sec-t">Atividade da equipe</div><div class="hm-sec-n">${rows.length} usuários cadastrados</div></div>
-            <div class="ah-tbl-wrap">${_ahTeamTableHtml(rows)}</div>
-          </div>
-
-          <div class="hm-sec">
-            <div class="hm-sec-h"><div class="hm-sec-t">Quadro de prioridades</div></div>
-            <div class="ah-pri-grid">${_ahPriorityBoardHtml(buckets)}</div>
-          </div>
-
-          <div class="hm-sec">
-            <div class="hm-sec-h">
-              <div class="hm-sec-t">Agenda comercial da semana</div>
-              <a class="ah-link" onclick="setView('agenda')">Ver agenda completa</a>
-            </div>
-            <div class="ah-ag-grid">${_ahAgendaHtml(agenda)}</div>
-          </div>
-
-          <div class="hm-sec">
-            <div class="hm-sec-h"><div class="hm-sec-t">Ranking de atividade</div></div>
-            ${_ahRankingHtml(ranking)}
-          </div>
-
-          <div class="hm-sec">
-            <div class="hm-sec-h"><div class="hm-sec-t">Movimentação das propostas na semana</div></div>
-            <div class="pf-chart wide">${chartHtml}</div>
-          </div>
-        </div>
-        <div class="ah-side">
-          <div class="pf-chart">
-            <div class="pf-chart-title">Atenção do Administrador</div>
-            ${_ahInsightsHtml(insights)}
-          </div>
-        </div>
-      </div>
-    </div>`;
-}
-
-// ── Tile detail drawer ────────────────────────────────────────────────────
-function closeActDrawer() {
-  document.getElementById('act-drawer-overlay').classList.remove('open');
-}
-function _openActDrawer(title, html) {
-  document.getElementById('act-drawer-title').textContent = title;
-  document.getElementById('act-drawer-body').innerHTML = html;
-  document.getElementById('act-drawer-overlay').classList.add('open');
-}
-function _actMetaKeyForSession() {
-  if (!SESSION) return null;
-  // 1) chave de meta do próprio nome (MICHEL, ALMIR, FINARDI, …)
-  const own = eqMetaKeyFor(SESSION.valor_acesso || SESSION.nome || '');
-  if (own) return own;
-  // 2) especialista sem chave própria (ex.: Leandro) → meta interna de Peças
-  if ((SESSION.tipo_acesso || '') === 'especialista') {
-    return Object.keys(METAS_REP_MAP).find(k =>
-      isInternoKey(k) && !k.toUpperCase().includes('MÁQ') && !k.toUpperCase().includes('MAQ')
-    ) || null;
-  }
-  return null;
-}
-function openActTileDrawer(type) {
-  const props = scopeForInicio();   // mesmo escopo (ano + categoria + usuário) dos tiles
-  const fuOwner = (SESSION && SESSION.role !== 'admin')
-    ? (SESSION.nome || SESSION.valor_acesso || '')
-    : null;
-  const ind   = commercialIndicators(props, fuOwner);
-  const now   = new Date();
-  const isAnoAtual = String(_inicioAno) === String(now.getFullYear());
-  switch (type) {
-    case 'fuAtrasados': return _openActDrawer('Follow-ups atrasados',          _actFuHtml(ind.fuAtrasados));
-    case 'fuHoje':      return _openActDrawer('Follow-ups para hoje',           _actFuHtml(ind.fuHoje));
-    case 'visitas':     return _openActDrawer('Visitas / contatos agendados',   _actFuHtml(ind.visitasAgendadas));
-    case 'semMov':      return _openActDrawer('Leads em espera',                _actPropsHtml(ind.semMov));
-    case 'abertas':     return _openActDrawer('Propostas abertas',              _actPropsHtml(ind.abertas));
-    case 'pedidosMes': {
-      const ped = props.filter(p => {
-        if ((p.status||'').toUpperCase() !== 'VENDIDO') return false;
-        const t = cpParseDate(p.data_fechamento);
-        if (!t) return false;
-        const d = new Date(t);
-        // ano corrente → mês atual; ano fechado → ano inteiro (props já filtrado)
-        return isAnoAtual ? (d.getMonth() === now.getMonth() && d.getFullYear() === now.getFullYear()) : true;
-      });
-      const titulo = isAnoAtual ? ('Pedidos do mês — ' + now.toLocaleString('pt-BR',{month:'long'})) : ('Pedidos ' + _inicioAno);
-      return _openActDrawer(titulo, _actPropsHtml(ped));
-    }
-    case 'vencidas': return _openActDrawer('Propostas vencidas', _actPropsHtml(ind.vencidas));
-    case 'meta':     return _openActDrawer('Meta ' + (_inicioAno==='todos'?now.getFullYear():_inicioAno), _actMetaHtml());
-  }
-}
-function _actFuHtml(items) {
-  if (!items.length) return '<div class="act-drawer-empty">Nenhum item.</div>';
-  return '<div class="act-agenda">' + items.map(ff => `
-    <div class="act-ag-row">
-      <span class="act-ag-time">${ff.tipo_proximo_passo||ff.canal||'Contato'}</span>
-      <span class="act-ag-cli">${ff._cliente||'—'}</span>
-      <span style="color:var(--muted);font-size:11px">${fmtDateDisplay(ff.proximo_contato||ff.data_contato)}</span>
-    </div>`).join('') + '</div>';
-}
-function _actPropsHtml(items) {
-  if (!items.length) return '<div class="act-drawer-empty">Nenhuma proposta.</div>';
-  return '<div class="act-agenda">' + items.slice(0,100).map(p => `
-    <div class="act-ag-row" style="cursor:pointer" onclick="closeActDrawer();setView('todas');setTimeout(()=>{const el=document.querySelector(\'.proposal-row[onclick*=\\\\'${p.uid}\\\\']\');if(el){el.scrollIntoView({block:'center'});el.click();}},350)">
-      <span class="act-ag-time">Nº ${String(p.nr||'').padStart(4,'0')}</span>
-      <span class="act-ag-cli">${p.cliente||'—'}</span>
-      ${statusChip(p.status)}
-      <span style="color:var(--muted);font-size:11px">${fmtDateDisplay(p.data_abertura)}</span>
-    </div>`).join('') + '</div>';
-}
-function _actMetaHtml() {
-  const anoAtual = new Date().getFullYear();
-  const ano  = (_inicioAno === 'todos') ? anoAtual : +_inicioAno;
-  const isAnoAtual = ano === anoAtual;
-  // Ano corrente: progresso parcial (mês atual). Ano fechado: ano cheio.
-  const mesN = isAnoAtual ? (new Date().getMonth() + 1) : 12;
-  const mRest = isAnoAtual ? Math.max(1, 12 - new Date().getMonth()) : 0;
-  const f   = { ano: String(ano), mes:'todos', semana:'todos', ini:'', fim:'' };
-  const key = _actMetaKeyForSession();
-  let m = {};
-  try {
-    const nome = (SESSION && (SESSION.valor_acesso || SESSION.nome)) || '';
-    m = key ? PerformanceComputeKey(key, f) : PerformanceCompute(nome, f);
-  } catch(e) {}
-  const meta  = m.meta  || null;
-  const real  = m.realizado || 0;
-  if (!meta) return '<div class="act-drawer-empty">Meta não definida para este usuário.</div>';
-  const pct   = Math.min(100, Math.round(real / meta * 100));
-  const falta = Math.max(0, meta - real);
-  const mediaNec = (falta > 0 && mRest > 0) ? falta / mRest : 0;
-  const projecao = mesN > 0 ? real / mesN * 12 : 0;
-  const projPct  = Math.round(projecao / meta * 100);
-  const pctCls   = pct >= 75 ? 'good' : pct >= 40 ? 'warn' : 'bad';
-  const barClr   = pct >= 75 ? 'var(--success)' : pct >= 40 ? 'var(--warn)' : 'var(--error)';
-  const projCls  = projPct >= 100 ? 'good' : projPct >= 70 ? 'warn' : 'bad';
-  // Cards de projeção/necessário só fazem sentido no ano corrente (em andamento)
-  const projecaoCards = !isAnoAtual ? '' : `
-    <div class="act-meta-card">
-      <div class="act-meta-label">Necessário por mês</div>
-      <div class="act-meta-val warn">${mediaNec > 0 ? fmtBRLShort(mediaNec) : '—'}</div>
-      <div class="act-meta-sub">para bater a meta em dez/${ano}</div>
-    </div>
-    <div class="act-meta-card full">
-      <div class="act-meta-label">Projeção até dez/${ano} — ritmo atual</div>
-      <div class="act-meta-val ${projCls}">${fmtBRLShort(projecao)}</div>
-      <div class="act-meta-sub">${projPct}% da meta — base: ${mesN} ${mesN === 1 ? 'mês' : 'meses'} decorrido${mesN===1?'':'s'}</div>
-    </div>`;
-  return `<div class="act-meta-grid">
-    <div class="act-meta-card full">
-      <div class="act-meta-label">Progresso ${ano}</div>
-      <div class="act-meta-val ${pctCls}">${pct}%</div>
-      <div class="act-pgbar"><div class="act-pgbar-fill" style="width:${pct}%;background:${barClr}"></div></div>
-      <div class="act-meta-sub">${fmtBRL(real)} realizado de ${fmtBRL(meta)} de meta</div>
-    </div>
-    <div class="act-meta-card">
-      <div class="act-meta-label">Meta anual</div>
-      <div class="act-meta-val">${fmtBRLShort(meta)}</div>
-    </div>
-    <div class="act-meta-card">
-      <div class="act-meta-label">Realizado</div>
-      <div class="act-meta-val ${pctCls}">${fmtBRLShort(real)}</div>
-    </div>
-    <div class="act-meta-card${isAnoAtual ? '' : ' full'}">
-      <div class="act-meta-label">${isAnoAtual ? 'Falta para bater a meta' : 'Diferença para a meta'}</div>
-      <div class="act-meta-val ${falta > 0 ? 'bad' : 'good'}">${falta > 0 ? fmtBRLShort(falta) : 'Meta batida!'}</div>
-      <div class="act-meta-sub">${isAnoAtual && falta > 0 ? mRest + ' meses restantes' : ''}</div>
-    </div>
-    ${projecaoCards}
-  </div>`;
 }
 
 // Dashboard CONSOLIDADO da unidade (oficial) + ranking de representantes
@@ -10499,29 +9594,60 @@ function agendaNextWeek()  { _agendaWeekStart += 7*86400000; renderAgendaEquipe(
 function agendaHoje()      { _agendaWeekStart = _mondayOf(new Date()); renderAgendaEquipe(); }
 function agendaSetPessoa(v){ _agendaPessoa = v; renderAgendaEquipe(); }
 
-// Roster da equipe = representantes + vendedores internos (cadastro do admin),
-// com fallback para os nomes que aparecem nas próprias propostas — assim um rep
-// sem login também aparece. Deduplica por nome normalizado.
+// Roster da equipe = usuários efetivamente cadastrados no CRM (mesma fonte do
+// dropdown "Responsável" — _usersCache), nunca texto livre vindo das propostas.
+// Fase 4: antes caía pra CRM_PEOPLE/DATA (nomes soltos), o que deixava
+// aparecer gente sem cadastro (ou escondia gente cadastrada sem propostas).
 function _agendaRoster() {
-  loadPeople();
-  let list = [
-    ...(CRM_PEOPLE.representantes || []).map(n => ({ nome:n, papel:'Representante' })),
-    ...(CRM_PEOPLE.internos       || []).map(n => ({ nome:n, papel:'Vendedor Interno' })),
-  ];
-  if (!list.length) {
-    list = [
-      ...[...new Set(DATA.map(p=>p.representante).filter(Boolean))].map(n=>({nome:n,papel:'Representante'})),
-      ...[...new Set(DATA.map(p=>p.interno).filter(Boolean))].map(n=>({nome:n,papel:'Vendedor Interno'})),
-    ];
-  }
+  const list = (_usersCache || []).filter(userIsActive).map(u => ({
+    nome: (u.nome || u.email || '').trim(),
+    papel: USER_TYPE_LABEL[userTypeOf(u)] || '—'
+  })).filter(x => x.nome);
   const seen = new Set(), out = [];
   list.forEach(x => { const k = _accUp(x.nome).trim(); if (k && !seen.has(k)) { seen.add(k); out.push(x); } });
   return out.sort((a,b) => a.nome.localeCompare(b.nome,'pt-BR'));
 }
 
+// Visitas/contatos agendados do Roteiro (Fase 3) — carregados à parte (fonte é
+// Supabase, não DATA local) e mesclados nos mesmos "chips" dos follow-ups.
+let _agendaRoteiroCache = null;   // null = ainda não carregado nesta sessão
+async function _loadAgendaRoteiro() {
+  try {
+    const rows = await supaFetchAll(SUPA_URL + '/rest/v1/roteiro_cards?etapa=eq.agendado&data_agendada=not.is.null&select=id,cliente_id,tipo,data_agendada,responsavel');
+    const ids = [...new Set(rows.map(r => r.cliente_id))];
+    let nomes = {};
+    if (ids.length) {
+      const cli = await supaFetchAll(SUPA_URL + '/rest/v1/carteira_clientes?select=id,nome&id=in.(' + ids.join(',') + ')');
+      cli.forEach(c => { nomes[c.id] = c.nome; });
+    }
+    _agendaRoteiroCache = rows.map(r => ({
+      _kind:'roteiro', _cardId:r.id, _cliente: nomes[r.cliente_id] || '—',
+      _fuResp: r.responsavel, _resp: r.responsavel,
+      proximo_contato: r.data_agendada, tipo_proximo_passo: r.tipo === 'visita' ? 'Visita' : 'Contato',
+      concluido: false
+    }));
+  } catch(e) { console.warn('[_loadAgendaRoteiro]', e.message); _agendaRoteiroCache = []; }
+  if (currentView === 'agenda') renderAgendaEquipe();
+}
+// Abre o card do Roteiro a partir de um chip da Agenda — navega pra tela e
+// espera o board carregar (a Agenda não mantém _rtCards em cache próprio).
+function agendaAbrirRoteiro(cardId) {
+  setView('roteiro');
+  let tentativas = 0;
+  const tryOpen = () => {
+    if (typeof _rtCards !== 'undefined' && _rtCards.some(c => c.id === cardId)) { openRoteiroCardModal(cardId); return; }
+    if (++tentativas > 25) return; // ~5s — desiste silenciosamente
+    setTimeout(tryOpen, 200);
+  };
+  setTimeout(tryOpen, 300);
+}
+
 function renderAgendaEquipe() {
   const host = document.getElementById('section-agenda');
   if (!host) return;
+
+  if (!_usersCache.length) { ensureUsersCache().then(() => { if (currentView === 'agenda') renderAgendaEquipe(); }); }
+  if (_agendaRoteiroCache === null) { _loadAgendaRoteiro(); }
 
   // ── Permissão: admin/gestor/acesso-total veem todos; rep comum vê só a sua linha ──
   const canSeeAll = !SESSION || SESSION.role === 'admin' ||
@@ -10534,7 +9660,10 @@ function renderAgendaEquipe() {
     const s = (p.status||'').toUpperCase();
     return s==='VENDIDO'||s==='PERDIDO'||s==='DESISTÊNCIA'||s==='DESISTENCIA';
   }).map(p => p.uid));
-  const flat = _latestPerUid(_flatFollowups(scope)).filter(ff => !terminal.has(ff._uid));
+  // Fase 4: mescla visitas/contatos agendados do Roteiro junto com os follow-ups —
+  // mesma grade, mesmos sinais de urgência (atrasado = data passada e não concluído).
+  const flat = _latestPerUid(_flatFollowups(scope)).filter(ff => !terminal.has(ff._uid))
+    .concat(_agendaRoteiroCache || []);
   const personOf = ff => ff._fuResp || ff._resp || '';   // quem registrou (fallback: dono)
 
   // ── Roster (linhas) + filtro por pessoa ──
@@ -10621,8 +9750,11 @@ function renderAgendaEquipe() {
                     : (cpParseDate(ff.proximo_contato) < todayMid ? 'red' : 'blue');
           const tipo = ff.tipo_proximo_passo || ff.canal || 'Contato';
           const cli  = ff._cliente || '—';
-          return `<button class="ag-chip ${cls}" onclick="openFollowupModal('${ff._uid}')" title="Abrir proposta de ${cli.replace(/"/g,'')}">
-              <span class="ag-chip-tipo">${tipo}</span>
+          const isRoteiro = ff._kind === 'roteiro';
+          const click = isRoteiro ? `agendaAbrirRoteiro(${ff._cardId})` : `openFollowupModal('${ff._uid}')`;
+          const alvo  = isRoteiro ? 'card do roteiro' : 'proposta';
+          return `<button class="ag-chip ${cls}" onclick="${click}" title="Abrir ${alvo} de ${cli.replace(/"/g,'')}">
+              <span class="ag-chip-tipo">${isRoteiro?'🚗 ':''}${tipo}</span>
               <span class="ag-chip-cli">${cli}</span>
             </button>`;
         }).join('');
@@ -11526,6 +10658,7 @@ function openUserModal(u) {
   renderCategoriasCheckboxes(u.categorias || '');
   onRoleChange();
   onTipoChange();
+  onUserTypeChange();
   document.getElementById('user-modal-overlay').classList.add('open');
 }
 
@@ -11545,6 +10678,108 @@ function onTipoChange() {
   document.getElementById('um-valor-group').style.display = semValor ? 'none' : 'block';
   const catGrp = document.getElementById('um-categorias-group');
   if (catGrp) catGrp.style.display = semValor ? 'none' : 'block';
+}
+
+// Fase 2.3 — mostra o bloco de vínculo de carteira só para Representante Comercial
+function onUserTypeChange() {
+  const role = document.getElementById('um-role').value;
+  const tipo = document.getElementById('um-user-type').value;
+  const show = role !== 'admin' && tipo === 'representante';
+  const grp  = document.getElementById('um-vinculo-group');
+  if (grp) grp.style.display = show ? 'block' : 'none';
+  if (show) {
+    document.getElementById('um-vinc-resultados').innerHTML = '';
+    document.getElementById('um-vinc-busca').value = '';
+    document.getElementById('um-vinc-msg').textContent = '';
+    _umVincSelecionados = {};
+    _umAtualizaVincCount();
+  }
+}
+let _umVincSelecionados = {};   // id -> {id,nome,representante}
+let _umVincDebounceT = null;
+function _umVincDebounce() {
+  clearTimeout(_umVincDebounceT);
+  _umVincDebounceT = setTimeout(_umVincBuscar, 300);
+}
+async function _umVincBuscar() {
+  const q = document.getElementById('um-vinc-busca').value.trim();
+  const box = document.getElementById('um-vinc-resultados');
+  if (q.length < 2) { box.innerHTML = '<div style="padding:10px;font-size:11.5px;color:var(--muted)">Digite ao menos 2 caracteres.</div>'; return; }
+  box.innerHTML = '<div style="padding:10px;font-size:11.5px;color:var(--muted)">Buscando…</div>';
+  try {
+    const url = SUPA_URL + '/rest/v1/carteira_clientes?select=id,nome,cidade,uf,representante'
+      + '&or=(nome.ilike.*' + encodeURIComponent(q) + '*,cidade.ilike.*' + encodeURIComponent(q) + '*)'
+      + '&order=nome.asc&limit=30';
+    const rows = await (await fetch(url, { headers: supaHdr() })).json();
+    if (!rows.length) { box.innerHTML = '<div style="padding:10px;font-size:11.5px;color:var(--muted)">Nenhum cliente encontrado.</div>'; return; }
+    box.innerHTML = rows.map(c => {
+      const checked = _umVincSelecionados[c.id] ? 'checked' : '';
+      return `<label style="display:flex;align-items:center;gap:8px;padding:7px 10px;border-bottom:1px solid var(--border);font-size:12px;cursor:pointer">
+        <input type="checkbox" ${checked} onchange="_umVincToggle(${c.id},'${_htmlEsc(c.nome).replace(/'/g,"\\'")}','${_htmlEsc(c.representante||'').replace(/'/g,"\\'")}',this.checked)">
+        <span style="flex:1">${_htmlEsc(c.nome)} <span style="color:var(--muted)">${c.cidade?('· '+_htmlEsc(c.cidade)):''}</span></span>
+        <span style="font-size:10px;color:var(--muted);white-space:nowrap">${_htmlEsc(c.representante||'—')}</span>
+      </label>`;
+    }).join('');
+  } catch(e) {
+    box.innerHTML = '<div style="padding:10px;font-size:11.5px;color:var(--error)">Erro na busca.</div>';
+  }
+}
+function _umVincToggle(id, nome, representante, checked) {
+  if (checked) _umVincSelecionados[id] = { id, nome, representante };
+  else delete _umVincSelecionados[id];
+  _umAtualizaVincCount();
+}
+function _umAtualizaVincCount() {
+  const n = Object.keys(_umVincSelecionados).length;
+  document.getElementById('um-vinc-count').textContent = n + ' selecionado(s)';
+}
+async function aplicarVinculoCarteira() {
+  const nomeAlvo = document.getElementById('um-nome').value.trim();
+  const emailAlvo = document.getElementById('um-email').value.trim().toLowerCase();
+  const msgEl = document.getElementById('um-vinc-msg');
+  const selecionados = Object.values(_umVincSelecionados);
+  if (!nomeAlvo) { msgEl.style.color = 'var(--error)'; msgEl.textContent = 'Preencha o nome do usuário antes de vincular.'; return; }
+  if (!selecionados.length) { msgEl.style.color = 'var(--error)'; msgEl.textContent = 'Selecione ao menos um cliente.'; return; }
+
+  const deOutro = selecionados.filter(c => c.representante && c.representante.trim() && c.representante.trim().toUpperCase() !== nomeAlvo.toUpperCase());
+  if (deOutro.length) {
+    const lista = deOutro.map(c => `"${c.nome}" (hoje em: ${c.representante})`).join('\n');
+    if (!confirm(`${deOutro.length} cliente(s) já pertencem a outro representante e serão transferidos:\n\n${lista}\n\nConfirmar transferência para "${nomeAlvo}"?`)) return;
+  }
+
+  msgEl.style.color = 'var(--muted)';
+  msgEl.textContent = 'Vinculando…';
+  try {
+    await Promise.all(selecionados.map(c =>
+      fetch(SUPA_URL + '/rest/v1/carteira_clientes?id=eq.' + c.id, {
+        method:'PATCH', headers: supaHdr(), body: JSON.stringify({ representante: nomeAlvo, atualizado_em: new Date().toISOString() })
+      })
+    ));
+    // Garante que o representante (regiao=nome) tenha responsável mapeado —
+    // sem isso os clientes recém-vinculados ficariam com dono mas sem
+    // ninguém conseguindo abrir essa "regiao" na Carteira de Clientes.
+    // (não usa atribuirResponsavel() direto pois ela depende de _carteiraUsuarios,
+    // que só é carregado quando a tela Carteira já foi aberta como admin)
+    if (emailAlvo) {
+      await fetch(SUPA_URL + '/rest/v1/carteira_responsaveis?regiao=eq.' + encodeURIComponent(nomeAlvo), { method:'DELETE', headers: supaHdr() });
+      await fetch(SUPA_URL + '/rest/v1/carteira_responsaveis', {
+        method:'POST', headers: supaHdr(true),
+        body: JSON.stringify({ regiao: nomeAlvo, email: emailAlvo, nome: nomeAlvo })
+      });
+      _carteiraResponsaveis = (_carteiraResponsaveis||[]).filter(x => x.regiao !== nomeAlvo);
+      _carteiraResponsaveis.push({ regiao: nomeAlvo, email: emailAlvo, nome: nomeAlvo });
+    }
+
+    msgEl.style.color = 'var(--success)';
+    msgEl.textContent = `${selecionados.length} cliente(s) vinculado(s) a ${nomeAlvo}.`;
+    _umVincSelecionados = {};
+    _umAtualizaVincCount();
+    document.getElementById('um-vinc-resultados').innerHTML = '';
+    document.getElementById('um-vinc-busca').value = '';
+  } catch(e) {
+    msgEl.style.color = 'var(--error)';
+    msgEl.textContent = 'Erro ao vincular. Tente novamente.';
+  }
 }
 
 // Renderiza os checkboxes de categoria a partir de uma lista CSV de chaves.
@@ -12468,6 +11703,15 @@ async function renderCarteiraSeletor(regioesPermitidas) {
     let reps = [...new Set(data.map(x => x.representante).filter(Boolean))].sort();
     if (regioesPermitidas) reps = reps.filter(r => regioesPermitidas.includes(r));
 
+    // Usuário tinha 2+ regiões atribuídas, mas só 1 delas existe de fato em
+    // carteira_clientes (as outras são nomes de região sem cliente algum
+    // cadastrado ainda) — pula a tela de seleção e entra direto, em vez de
+    // mostrar um seletor com um único card.
+    if (!isAdmin && regioesPermitidas && reps.length === 1) {
+      abrirCarteiraRep(reps[0]);
+      return;
+    }
+
     const contagem = {};
     data.forEach(x => { if(x.representante) contagem[x.representante] = (contagem[x.representante]||0)+1; });
 
@@ -12692,7 +11936,8 @@ function setCmTab(tab) {
   const pane = document.getElementById('cmpane-' + tab);
   if (btn)  btn.classList.add('active');
   if (pane) pane.classList.add('active');
-  if (tab === 'compras') loadComprasCliente();
+  if (tab === 'compras')  loadComprasCliente();
+  if (tab === 'contatos') buildCmContatos();
 }
 
 // ── Abre modal do cliente ─────────────────────────────────────────────────
@@ -12732,6 +11977,8 @@ async function openClienteCarteira(id) {
   document.getElementById('cm-visitas-tl').innerHTML = '<div class="cm-empty-state">Carregando visitas...</div>';
   document.getElementById('nova-visita-form').classList.remove('open');
   document.getElementById('nv-data').value = new Date().toISOString().split('T')[0];
+  clienteContatosCache[id] = undefined;
+  updateClienteContatosBadge(id);
 
   // Volta para aba padrão
   setCmTab('geral');
@@ -13047,17 +12294,701 @@ async function patchCarteira(campos) {
   });
 }
 
-// ── Add Prospect (só admin) ───────────────────────────────────────────────
+// ── Cadastrar cliente novo — CNPJ opcional, mas se preenchido é validado
+//    contra duplicidade antes de gravar (Fase 2.1: CNPJ único na carteira).
+//    Reaproveitado pelo Roteiro de Visitas (Fase 3, via novoClienteCallback).
+let novoClienteCallback = null;   // (clienteRow) => void — setado por quem abriu o modal
+function openNovoCliente(repDestino, cb) {
+  novoClienteCallback = cb || null;
+  document.getElementById('nc-nome').value     = '';
+  document.getElementById('nc-cnpj').value     = '';
+  document.getElementById('nc-cidade').value   = '';
+  document.getElementById('nc-uf').value       = '';
+  document.getElementById('nc-segmento').value = '';
+  document.getElementById('nc-rep').value      = repDestino || (SESSION ? (SESSION.valor_acesso || SESSION.nome) : '') || '';
+  document.getElementById('nc-erro').textContent = '';
+  document.getElementById('novo-cliente-overlay').classList.add('open');
+  document.getElementById('novo-cliente-modal').classList.add('open');
+  setTimeout(() => document.getElementById('nc-nome').focus(), 50);
+}
+function closeNovoCliente() {
+  document.getElementById('novo-cliente-overlay').classList.remove('open');
+  document.getElementById('novo-cliente-modal').classList.remove('open');
+  novoClienteCallback = null;
+}
+function _cnpjDigits(s) { return String(s || '').replace(/\D/g, ''); }
+async function salvarNovoCliente() {
+  const nome  = document.getElementById('nc-nome').value.trim();
+  const erroEl = document.getElementById('nc-erro');
+  erroEl.textContent = '';
+  if (!nome) { erroEl.textContent = 'Informe o nome do cliente.'; return; }
+
+  const cnpjRaw = document.getElementById('nc-cnpj').value.trim();
+  const cnpj    = cnpjRaw ? cnpjRaw : null;
+  const rep     = document.getElementById('nc-rep').value.trim() || (SESSION ? SESSION.nome : '');
+
+  if (cnpj) {
+    // Valida duplicidade ANTES de gravar — compara só os dígitos, pra não
+    // deixar passar o mesmo CNPJ com pontuação diferente.
+    try {
+      const existentes = await supaFetchAll(SUPA_URL + '/rest/v1/carteira_clientes?select=id,nome,representante,cnpj');
+      const alvo = _cnpjDigits(cnpj);
+      const bate = existentes.find(c => c.cnpj && _cnpjDigits(c.cnpj) === alvo);
+      if (bate) {
+        erroEl.textContent = `Cliente já existe na carteira de "${bate.representante}" (cadastrado como "${bate.nome}").`;
+        return;
+      }
+    } catch(e) {
+      erroEl.textContent = 'Não foi possível validar o CNPJ agora (sem conexão). Tente novamente.';
+      return;
+    }
+  }
+
+  const payload = {
+    nome, cnpj,
+    cidade: document.getElementById('nc-cidade').value.trim() || null,
+    uf: document.getElementById('nc-uf').value.trim().toUpperCase() || null,
+    segmento: document.getElementById('nc-segmento').value.trim() || null,
+    representante: rep,
+    tipo: 'prospeccao'
+  };
+  try {
+    const r = await fetch(SUPA_URL + '/rest/v1/carteira_clientes', {
+      method:'POST', headers: Object.assign(supaHdr(true), { 'Prefer':'return=representation' }),
+      body: JSON.stringify(payload)
+    });
+    if (!r.ok) { erroEl.textContent = 'Erro ao salvar cliente. Tente novamente.'; return; }
+    const rows = await r.json();
+    const novo = Array.isArray(rows) ? rows[0] : rows;
+    closeNovoCliente();
+    if (novoClienteCallback) { novoClienteCallback(novo); }
+    else if (typeof loadCarteiraSection === 'function' && document.getElementById('section-carteira')) { loadCarteiraSection(); }
+  } catch(e) {
+    erroEl.textContent = 'Erro de conexão ao salvar. Tente novamente.';
+  }
+}
+
+// ── Contatos do cliente (1:N) — mesmo padrão da aba "Dados do Contato" das
+//    propostas (proposta_contatos), aqui ligado ao cliente da carteira.
+let clienteContatosCache = {};   // cache por cliente_id
+function updateClienteContatosBadge(id) {
+  const b = document.getElementById('cm-tabbadge-contatos');
+  if (b) b.textContent = (clienteContatosCache[id] || []).length;
+}
+async function loadClienteContatos(id) {
+  try {
+    const r = await fetch(`${SUPA_URL}/rest/v1/cliente_contatos?cliente_id=eq.${id}&order=principal.desc,created_at.desc`, { headers: supaHdr() });
+    clienteContatosCache[id] = r.ok ? await r.json() : [];
+  } catch(e) {
+    console.warn('[loadClienteContatos]', e.message);
+    if (!clienteContatosCache[id]) clienteContatosCache[id] = [];
+  }
+  return clienteContatosCache[id];
+}
+function _ccCardHtml(id, c) {
+  const EDIT  = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>`;
+  const TRASH = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6M14 11v6"/></svg>`;
+  const linhas = [];
+  if (c.cargo)    linhas.push(`<span class="cp-ct-meta">${_htmlEsc(c.cargo)}</span>`);
+  if (c.telefone) linhas.push(`<a class="cp-ct-link" href="tel:${_htmlEsc(c.telefone)}">${_htmlEsc(c.telefone)}</a>`);
+  if (c.email)    linhas.push(`<a class="cp-ct-link" href="mailto:${_htmlEsc(c.email)}">${_htmlEsc(c.email)}</a>`);
+  return `<div class="cp-ct-card" id="cc-card-${c.id}">
+      <div class="cp-ct-head">
+        <span class="nota-ava">${_notaIniciais(c.nome)}</span>
+        <span class="cp-ct-nome">${_htmlEsc(c.nome || '—')}</span>
+        ${c.principal ? '<span class="cp-ct-origem" style="color:var(--navy);background:var(--blue-lt)">Principal</span>' : ''}
+        <span class="nota-acts">
+          ${!c.principal ? `<button class="btn-nota-act" onclick="tornarPrincipalContato('${id}','${c.id}')" title="Tornar principal">★</button>` : ''}
+          <button class="btn-nota-act" onclick="editClienteContatoCm('${id}','${c.id}')" title="Editar">${EDIT}</button>
+          <button class="btn-nota-act del" onclick="deleteClienteContatoCm('${id}','${c.id}')" title="Excluir">${TRASH}</button>
+        </span>
+      </div>
+      ${linhas.length ? `<div class="cp-ct-lines">${linhas.join('')}</div>` : ''}
+    </div>`;
+}
+function buildCmContatos() {
+  const el = document.getElementById('cm-contatos-content');
+  if (!el || !_currentCarteira) return;
+  const id = _currentCarteira.id;
+  const lista = clienteContatosCache[id];
+  const formHtml = `<div class="cp-ct-form">
+      <div class="cp-ct-form-title">Adicionar contato</div>
+      <div class="cp-ct-grid">
+        <div class="form-group" style="margin-bottom:0"><label class="form-label">Nome<span class="form-req">*</span></label>
+          <input type="text" id="cc-nome" class="form-input" placeholder="Nome da pessoa"></div>
+        <div class="form-group" style="margin-bottom:0"><label class="form-label">Cargo</label>
+          <input type="text" id="cc-cargo" class="form-input" placeholder="Ex: Gerente de Compras"></div>
+        <div class="form-group" style="margin-bottom:0"><label class="form-label">Telefone</label>
+          <input type="text" id="cc-tel" class="form-input" placeholder="(00) 00000-0000"></div>
+        <div class="form-group" style="margin-bottom:0"><label class="form-label">E-mail</label>
+          <input type="email" id="cc-email" class="form-input" placeholder="nome@empresa.com.br"></div>
+      </div>
+      <div class="cp-ct-form-actions">
+        <span class="cp-ct-form-err" id="cc-err"></span>
+        <button class="btn-nota-add" onclick="addClienteContato('${id}')">${PLUS_ICON}Adicionar contato</button>
+      </div>
+    </div>`;
+
+  if (lista === undefined) {
+    el.innerHTML = formHtml + '<div class="cp-empty" style="padding:24px">Carregando contatos…</div>';
+    loadClienteContatos(id).then(() => { if (_currentCarteira && _currentCarteira.id === id) buildCmContatos(); updateClienteContatosBadge(id); });
+    return;
+  }
+  el.innerHTML = formHtml + `<div class="cp-ct-list" style="margin-top:16px">
+    ${lista.length ? lista.map(c => _ccCardHtml(id, c)).join('') : '<div class="cp-empty" style="padding:20px">Nenhum contato cadastrado ainda.</div>'}
+  </div>`;
+}
+async function addClienteContato(id) {
+  const nome = (document.getElementById('cc-nome')?.value || '').trim();
+  const err  = document.getElementById('cc-err');
+  if (!nome) { if (err) err.textContent = 'Informe ao menos o nome do contato.'; return; }
+  if (err) err.textContent = '';
+  const semPrincipal = !(clienteContatosCache[id] || []).some(c => c.principal);
+  const contato = {
+    cliente_id: id, nome,
+    cargo:    (document.getElementById('cc-cargo')?.value || '').trim() || null,
+    telefone: (document.getElementById('cc-tel')?.value   || '').trim() || null,
+    email:    (document.getElementById('cc-email')?.value || '').trim() || null,
+    principal: semPrincipal   // primeiro contato do cliente já nasce principal
+  };
+  try {
+    const r = await fetch(`${SUPA_URL}/rest/v1/cliente_contatos`, {
+      method:'POST', headers: Object.assign(supaHdr(true), { 'Prefer':'return=representation' }),
+      body: JSON.stringify(contato)
+    });
+    const saved = r.ok ? (await r.json())[0] : Object.assign({ id: 'tmp'+Date.now() }, contato);
+    if (!clienteContatosCache[id]) clienteContatosCache[id] = [];
+    clienteContatosCache[id].unshift(saved);
+    if (saved.principal) _syncContatoPrincipalHeader(id, saved);
+  } catch(e) { console.warn('[addClienteContato]', e.message); }
+  buildCmContatos();
+  updateClienteContatosBadge(id);
+}
+function editClienteContatoCm(id, cid) {
+  const c = (clienteContatosCache[id] || []).find(x => String(x.id) === String(cid));
+  if (!c) return;
+  const card = document.getElementById('cc-card-' + cid);
+  if (!card) return;
+  card.innerHTML = `
+    <div class="cp-ct-grid">
+      <div class="form-group" style="margin-bottom:0"><label class="form-label">Nome<span class="form-req">*</span></label>
+        <input type="text" id="cce-nome-${cid}" class="form-input" value="${_htmlEsc(c.nome||'')}"></div>
+      <div class="form-group" style="margin-bottom:0"><label class="form-label">Cargo</label>
+        <input type="text" id="cce-cargo-${cid}" class="form-input" value="${_htmlEsc(c.cargo||'')}"></div>
+      <div class="form-group" style="margin-bottom:0"><label class="form-label">Telefone</label>
+        <input type="text" id="cce-tel-${cid}" class="form-input" value="${_htmlEsc(c.telefone||'')}"></div>
+      <div class="form-group" style="margin-bottom:0"><label class="form-label">E-mail</label>
+        <input type="email" id="cce-email-${cid}" class="form-input" value="${_htmlEsc(c.email||'')}"></div>
+    </div>
+    <div class="nota-edit-actions" style="margin-top:10px">
+      <button onclick="buildCmContatos()">Cancelar</button>
+      <button class="save" onclick="saveClienteContatoCm('${id}','${cid}')">Salvar</button>
+    </div>`;
+}
+async function saveClienteContatoCm(id, cid) {
+  const c = (clienteContatosCache[id] || []).find(x => String(x.id) === String(cid));
+  if (!c) return;
+  const nome = (document.getElementById(`cce-nome-${cid}`)?.value || '').trim();
+  if (!nome) return;
+  c.nome     = nome;
+  c.cargo    = (document.getElementById(`cce-cargo-${cid}`)?.value  || '').trim() || null;
+  c.telefone = (document.getElementById(`cce-tel-${cid}`)?.value    || '').trim() || null;
+  c.email    = (document.getElementById(`cce-email-${cid}`)?.value  || '').trim() || null;
+  buildCmContatos();
+  if (c.principal) _syncContatoPrincipalHeader(id, c);
+  try {
+    await fetch(`${SUPA_URL}/rest/v1/cliente_contatos?id=eq.${cid}`, {
+      method:'PATCH', headers: Object.assign(supaHdr(true), { 'Prefer':'return=minimal' }),
+      body: JSON.stringify({ nome:c.nome, cargo:c.cargo, telefone:c.telefone, email:c.email })
+    });
+  } catch(e) { console.warn('[saveClienteContatoCm]', e.message); }
+}
+async function tornarPrincipalContato(id, cid) {
+  const lista = clienteContatosCache[id] || [];
+  const alvo = lista.find(x => String(x.id) === String(cid));
+  if (!alvo) return;
+  lista.forEach(c => { c.principal = (String(c.id) === String(cid)); });
+  buildCmContatos();
+  _syncContatoPrincipalHeader(id, alvo);
+  try {
+    // Índice único parcial garante só 1 principal — desmarca os outros antes de marcar o novo.
+    await fetch(`${SUPA_URL}/rest/v1/cliente_contatos?cliente_id=eq.${id}&principal=eq.true`, {
+      method:'PATCH', headers: supaHdr(true), body: JSON.stringify({ principal:false })
+    });
+    await fetch(`${SUPA_URL}/rest/v1/cliente_contatos?id=eq.${cid}`, {
+      method:'PATCH', headers: supaHdr(true), body: JSON.stringify({ principal:true })
+    });
+  } catch(e) { console.warn('[tornarPrincipalContato]', e.message); }
+}
+// Mantém os campos legados (carteira_clientes.contato_nome/fone/email — usados
+// na listagem rápida da carteira) sincronizados com quem é o contato principal.
+function _syncContatoPrincipalHeader(id, c) {
+  fetch(`${SUPA_URL}/rest/v1/carteira_clientes?id=eq.${id}`, {
+    method:'PATCH', headers: supaHdr(),
+    body: JSON.stringify({ contato_nome: c.nome||null, contato_fone: c.telefone||null, contato_email: c.email||null })
+  }).catch(()=>{});
+  if (_currentCarteira && String(_currentCarteira.id) === String(id)) {
+    document.getElementById('cm-contato-nome').value  = c.nome     || '';
+    document.getElementById('cm-contato-fone').value  = c.telefone || '';
+    document.getElementById('cm-contato-email').value = c.email    || '';
+  }
+  if (_carteiraData) {
+    const idx = _carteiraData.findIndex(x => String(x.id) === String(id));
+    if (idx >= 0) { _carteiraData[idx].contato_nome = c.nome; _carteiraData[idx].contato_fone = c.telefone; _carteiraData[idx].contato_email = c.email; }
+  }
+}
+async function deleteClienteContatoCm(id, cid) {
+  const arr = clienteContatosCache[id] || [];
+  const idx = arr.findIndex(x => String(x.id) === String(cid));
+  if (idx === -1) return;
+  if (!confirm('Excluir este contato? Esta ação não pode ser desfeita.')) return;
+  arr.splice(idx, 1);
+  buildCmContatos();
+  updateClienteContatosBadge(id);
+  try {
+    await fetch(`${SUPA_URL}/rest/v1/cliente_contatos?id=eq.${cid}`, { method:'DELETE', headers: supaHdr() });
+  } catch(e) { console.warn('[deleteClienteContatoCm]', e.message); }
+}
+
+// ── Add Prospect (só admin) — agora abre o modal com validação de CNPJ ────
 function openAddProspect() {
-  const nome = prompt('Nome do cliente (prospecção):');
-  if (!nome || !nome.trim()) return;
-  const cidade = prompt('Cidade:') || '';
-  const segmento = prompt('Segmento (opcional):') || '';
-  const rep = SESSION ? SESSION.nome : 'ALMIR';
-  fetch(SUPA_URL + '/rest/v1/carteira_clientes', {
-    method:'POST', headers: supaHdr(true),
-    body: JSON.stringify({ nome: nome.trim(), cidade: cidade.trim(), uf:'SP', segmento: segmento.trim()||null, representante: rep, tipo:'prospeccao' })
-  }).then(r => r.ok ? (loadCarteiraSection()) : alert('Erro ao adicionar.'));
+  openNovoCliente(SESSION ? (SESSION.valor_acesso || SESSION.nome) : '', null);
+}
+
+// ════════════════════════════════════════════════════════════════════════
+// FASE 3 — ROTEIRO DE VISITAS (Kanban de ciclos de contato)
+// Card = ciclo de contato com um cliente da carteira, não o cliente em si.
+// Reaproveita: padrão de drag/drop do Kanban de Propostas (.kanban-col/
+// .kanban-card), busca de cliente (mesmo padrão do vínculo de carteira),
+// cadastro de cliente novo (openNovoCliente) e contatos (cliente_contatos).
+// ════════════════════════════════════════════════════════════════════════
+const RT_COLS = [
+  { key:'a_contatar', label:'A Contatar', color:'#94a3b8' },
+  { key:'agendado',   label:'Agendado',   color:'#2563eb' },
+  { key:'realizado',  label:'Realizado',  color:'#f59e0b' },
+  { key:'encerrado',  label:'Encerrado',  color:'#16a34a' },
+];
+const RT_MOTIVOS_PERDA = ['Concorrência','Comprou/trocou por usado','Preço/Custo','Comprou outra solução','Outro'];
+
+let _rtCards = [];              // cards ativos (etapa != encerrado) já carregados
+let _rtClientesCache = {};      // cliente_id -> row de carteira_clientes
+let _rtFiltro = { busca:'', tipo:'', responsavel:'' };
+let _rtCurrentCard = null;
+let _rtNovoClienteSel = null;
+let _rtDragId = null;
+let _rtRevivalRan = false;
+
+function _rtIsAdmin() {
+  return !!(SESSION && (SESSION.role === 'admin' || ['gestor','todos'].includes((SESSION.tipo_acesso||'').toLowerCase())));
+}
+function _rtMeuNome() { return SESSION ? (SESSION.valor_acesso || SESSION.nome || '') : ''; }
+
+async function renderRoteiroPage() {
+  const sec = document.getElementById('section-roteiro');
+  if (!sec) return;
+  sec.innerHTML = '<div class="carteira-wrap"><div style="text-align:center;padding:60px;color:var(--muted)">Carregando roteiro...</div></div>';
+  try {
+    const rows = await supaFetchAll(SUPA_URL + '/rest/v1/roteiro_cards?etapa=neq.encerrado&order=created_at.desc&limit=2000');
+    const isAdmin = _rtIsAdmin();
+    _rtCards = isAdmin ? rows : rows.filter(r => _matchNome(r.responsavel, _rtMeuNome()));
+
+    const ids = [...new Set(_rtCards.map(r => r.cliente_id))];
+    if (ids.length) {
+      const cli = await supaFetchAll(SUPA_URL + '/rest/v1/carteira_clientes?select=id,nome,cidade,uf,segmento,representante&id=in.(' + ids.join(',') + ')');
+      cli.forEach(c => _rtClientesCache[c.id] = c);
+    }
+    await reviveCardsVencidos();
+    renderRoteiroBoard();
+  } catch(e) {
+    sec.innerHTML = `<div class="carteira-wrap"><div class="carteira-empty">Erro ao carregar: ${e.message}</div></div>`;
+  }
+}
+
+// ── Renascimento automático — idempotente: uma vez revivido, o card antigo
+// nunca mais é pego pelo filtro revivido=eq.false, então rodar isso 10x no
+// mesmo dia não duplica nada (a 2ª chamada em diante não encontra candidatos).
+async function reviveCardsVencidos() {
+  if (_rtRevivalRan) return;
+  _rtRevivalRan = true;
+  const hoje = new Date().toISOString().slice(0,10);
+  try {
+    const vencidos = await supaFetchAll(
+      SUPA_URL + '/rest/v1/roteiro_cards?etapa=eq.encerrado&desfecho=eq.sem_oportunidade&revivido=eq.false&recontatar_em=lte.' + hoje
+    );
+    const isAdmin = _rtIsAdmin(), meuNome = _rtMeuNome();
+    for (const card of vencidos) {
+      const novo = { cliente_id: card.cliente_id, tipo: card.tipo, etapa:'a_contatar', responsavel: card.responsavel, contato_id: card.contato_id, origem_card_id: card.id };
+      try {
+        const r = await fetch(SUPA_URL + '/rest/v1/roteiro_cards', {
+          method:'POST', headers: Object.assign(supaHdr(true), { 'Prefer':'return=representation' }), body: JSON.stringify(novo)
+        });
+        if (!r.ok) continue;
+        const created = (await r.json())[0];
+        // só marca o antigo como revivido DEPOIS do novo existir — se o insert
+        // falhasse e a gente marcasse antes, o card sumiria sem renascer.
+        await fetch(SUPA_URL + '/rest/v1/roteiro_cards?id=eq.' + card.id, {
+          method:'PATCH', headers: supaHdr(), body: JSON.stringify({ revivido:true })
+        });
+        if (isAdmin || _matchNome(created.responsavel, meuNome)) _rtCards.unshift(created);
+      } catch(e2) { console.warn('[reviveCardsVencidos] card', card.id, e2.message); }
+    }
+  } catch(e) { console.warn('[reviveCardsVencidos]', e.message); }
+}
+
+function _rtFiltered() {
+  let list = _rtCards;
+  if (_rtFiltro.tipo)        list = list.filter(c => c.tipo === _rtFiltro.tipo);
+  if (_rtFiltro.responsavel) list = list.filter(c => _matchNome(c.responsavel, _rtFiltro.responsavel));
+  if (_rtFiltro.busca) {
+    const q = _accUp(_rtFiltro.busca);
+    list = list.filter(c => { const cli = _rtClientesCache[c.cliente_id]; return cli && _accUp(cli.nome).includes(q); });
+  }
+  return list;
+}
+function rtSetFiltro(k, v) { _rtFiltro[k] = v; renderRoteiroBoard(); }
+function rtResetFiltro() { _rtFiltro = { busca:'', tipo:'', responsavel:'' }; renderRoteiroBoard(); }
+
+function renderRoteiroBoard() {
+  const sec = document.getElementById('section-roteiro');
+  if (!sec) return;
+  const isAdmin = _rtIsAdmin();
+  const list = _rtFiltered();
+  const responsaveisOpts = isAdmin ? [...new Set(_rtCards.map(c => c.responsavel).filter(Boolean))].sort() : [];
+
+  const cols = RT_COLS.map(col => {
+    const cards = col.key === 'encerrado' ? [] : list.filter(c => c.etapa === col.key);
+    return `<div class="kanban-col" id="rtcol-${col.key}" style="min-width:270px"
+        ondragover="rtDragOver(event)" ondrop="rtDrop(event,'${col.key}')" ondragleave="rtDragLeave(event)">
+      <div class="kanban-col-header">
+        <span class="kanban-col-dot" style="background:${col.color}"></span>
+        <span class="kanban-col-title">${col.label}</span>
+        <div class="kanban-col-meta"><span class="kanban-col-count">${cards.length}</span></div>
+      </div>
+      <div class="kanban-cards">
+        ${cards.length ? cards.map(_rtBuildCard).join('') : '<div class="kanban-empty">Sem cards</div>'}
+      </div>
+    </div>`;
+  }).join('');
+
+  sec.innerHTML = `
+    <div class="carteira-wrap">
+      <div class="carteira-header">
+        <div class="carteira-header-left">
+          <h2 class="carteira-page-title">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><path d="M9 20l-5.447-2.724A1 1 0 0 1 3 16.382V5.618a1 1 0 0 1 1.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0 0 21 18.382V7.618a1 1 0 0 0-.553-.894L15 4m0 13V4m0 0L9 7"/></svg>
+            Roteiro de Visitas
+          </h2>
+          <p class="carteira-page-sub">${list.length} card(s) ativo(s)</p>
+        </div>
+        <button class="carteira-add-btn" onclick="openNovoRoteiroCard()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          Novo card
+        </button>
+      </div>
+      <div class="pf-filters" style="margin-bottom:16px">
+        <div class="pf-fgrp"><label>Buscar cliente</label><input type="text" value="${_htmlEsc(_rtFiltro.busca)}" onchange="rtSetFiltro('busca', this.value)"></div>
+        <div class="pf-fgrp"><label>Tipo</label><select onchange="rtSetFiltro('tipo', this.value)">
+          <option value="">Todos</option>
+          <option value="visita"${_rtFiltro.tipo==='visita'?' selected':''}>Visita</option>
+          <option value="contato"${_rtFiltro.tipo==='contato'?' selected':''}>Contato</option>
+        </select></div>
+        ${isAdmin ? `<div class="pf-fgrp"><label>Representante</label><select onchange="rtSetFiltro('responsavel', this.value)">
+          <option value="">Todos</option>
+          ${responsaveisOpts.map(r => `<option value="${_htmlEsc(r)}"${_rtFiltro.responsavel===r?' selected':''}>${_htmlEsc(r)}</option>`).join('')}
+        </select></div>` : ''}
+        ${(_rtFiltro.busca||_rtFiltro.tipo||_rtFiltro.responsavel) ? '<button class="btn-tbl" onclick="rtResetFiltro()" style="margin-left:auto">Limpar filtros</button>' : ''}
+      </div>
+      <div class="kanban-wrap" style="display:flex;gap:14px;overflow-x:auto;padding-bottom:8px">${cols}</div>
+    </div>`;
+}
+
+function _rtBuildCard(c) {
+  const cli = _rtClientesCache[c.cliente_id] || {};
+  const tipoLabel = c.tipo === 'visita' ? 'Visita' : 'Contato';
+  const dataHtml = c.data_agendada ? `<span class="kc-dias watch">${fmtDateDisplay(c.data_agendada)}</span>` : '';
+  return `<div class="kanban-card" draggable="true" data-id="${c.id}"
+      ondragstart="rtDragStart(event,${c.id})" ondragend="rtDragEnd(event)"
+      onclick="openRoteiroCardModal(${c.id})" title="Abrir card">
+    <div class="kc-drop-indicator"></div>
+    <div class="kc-top"><span class="kc-nr">${tipoLabel}</span></div>
+    <div class="kc-cliente">${_htmlEsc(cli.nome || '—')}</div>
+    <div class="kc-row" style="font-size:11px;color:var(--muted)">${_htmlEsc([cli.cidade, cli.uf].filter(Boolean).join(' / '))}</div>
+    <div class="kc-footer">
+      <div class="kc-pessoa">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        ${_htmlEsc(c.responsavel || '—')}
+      </div>
+      ${dataHtml}
+    </div>
+  </div>`;
+}
+
+// ── Drag & Drop (mesma mecânica do Kanban de Propostas, estado próprio) ────
+function rtDragStart(e, id) {
+  _rtDragId = id;
+  e.dataTransfer.effectAllowed = 'move';
+  e.dataTransfer.setData('text/plain', String(id));
+  setTimeout(() => { const el = document.querySelector(`.kanban-card[data-id="${id}"]`); if (el) el.classList.add('dragging'); }, 0);
+}
+function rtDragEnd() {
+  document.querySelectorAll('.kanban-card').forEach(el => el.classList.remove('dragging'));
+  document.querySelectorAll('.kanban-col').forEach(el => el.classList.remove('drag-over'));
+}
+function rtDragOver(e) {
+  e.preventDefault(); e.dataTransfer.dropEffect = 'move';
+  document.querySelectorAll('.kanban-col').forEach(el => el.classList.remove('drag-over'));
+  e.currentTarget.classList.add('drag-over');
+}
+function rtDragLeave(e) {
+  if (!e.currentTarget.contains(e.relatedTarget)) e.currentTarget.classList.remove('drag-over');
+}
+async function rtDrop(e, novaEtapa) {
+  e.preventDefault();
+  document.querySelectorAll('.kanban-col').forEach(el => el.classList.remove('drag-over'));
+  document.querySelectorAll('.kanban-card').forEach(el => el.classList.remove('dragging'));
+  if (!_rtDragId) return;
+  const id = _rtDragId; _rtDragId = null;
+  const card = _rtCards.find(c => c.id === id);
+  if (!card || card.etapa === novaEtapa) return;
+
+  // Encerrado exige desfecho — o card não sai de Realizado sem isso.
+  if (novaEtapa === 'encerrado') { openEncerrarCard(id); return; }
+  // Agendado exige data — se ainda não tem, abre o card pra preencher em vez de mover cego.
+  if (novaEtapa === 'agendado' && !card.data_agendada) { openRoteiroCardModal(id); return; }
+
+  await _rtPatchCard(id, { etapa: novaEtapa });
+  card.etapa = novaEtapa;
+  renderRoteiroBoard();
+}
+async function _rtPatchCard(id, campos) {
+  try {
+    await fetch(SUPA_URL + '/rest/v1/roteiro_cards?id=eq.' + id, {
+      method:'PATCH', headers: supaHdr(), body: JSON.stringify(Object.assign({}, campos, { updated_at: new Date().toISOString() }))
+    });
+  } catch(e) { console.warn('[_rtPatchCard]', e.message); }
+}
+
+// ── Criação de card: buscar cliente existente OU cadastrar novo ───────────
+function openNovoRoteiroCard() {
+  document.getElementById('rt-nc-busca').value = '';
+  document.getElementById('rt-nc-resultados').innerHTML = '';
+  document.getElementById('rt-nc-selecionado').innerHTML = '<span style="color:var(--muted);font-size:12px">Nenhum cliente selecionado ainda.</span>';
+  document.getElementById('rt-nc-tipo').value = 'visita';
+  document.getElementById('rt-nc-err').textContent = '';
+  _rtNovoClienteSel = null;
+  document.getElementById('rt-novo-card-overlay').classList.add('open');
+}
+function closeRoteiroNovoCard() { document.getElementById('rt-novo-card-overlay').classList.remove('open'); }
+let _rtNcDebounceT = null;
+function rtNcDebounce() { clearTimeout(_rtNcDebounceT); _rtNcDebounceT = setTimeout(rtBuscarClienteExistente, 300); }
+async function rtBuscarClienteExistente() {
+  const q = document.getElementById('rt-nc-busca').value.trim();
+  const box = document.getElementById('rt-nc-resultados');
+  if (q.length < 2) { box.innerHTML = ''; return; }
+  box.innerHTML = '<div style="padding:8px;color:var(--muted);font-size:12px">Buscando…</div>';
+  try {
+    const url = SUPA_URL + '/rest/v1/carteira_clientes?select=id,nome,cidade,uf,representante'
+      + '&or=(nome.ilike.*' + encodeURIComponent(q) + '*,cidade.ilike.*' + encodeURIComponent(q) + '*)&order=nome.asc&limit=20';
+    const rows = await (await fetch(url, { headers: supaHdr() })).json();
+    box.innerHTML = rows.length ? rows.map(c => `<div class="tr-row" style="cursor:pointer;padding:8px 10px;border:1px solid var(--border);border-radius:6px;margin-bottom:6px"
+        onclick="rtSelecionarClienteJSON('${_htmlEsc(JSON.stringify(c)).replace(/"/g,'&quot;')}')">
+        <strong>${_htmlEsc(c.nome)}</strong>
+        <div style="font-size:10.5px;color:var(--muted)">${_htmlEsc(c.cidade||'')} ${_htmlEsc(c.uf||'')} · ${_htmlEsc(c.representante||'sem representante')}</div>
+      </div>`).join('') : '<div style="padding:8px;color:var(--muted);font-size:12px">Nada encontrado.</div>';
+  } catch(e) { box.innerHTML = '<div style="padding:8px;color:var(--error);font-size:12px">Erro na busca.</div>'; }
+}
+function rtSelecionarClienteJSON(s) { rtSelecionarCliente(JSON.parse(s.replace(/&quot;/g,'"'))); }
+function rtSelecionarCliente(c) {
+  _rtNovoClienteSel = c;
+  document.getElementById('rt-nc-selecionado').innerHTML =
+    `<div style="border:1px solid var(--navy);background:var(--blue-lt);border-radius:8px;padding:8px 10px">
+      <b>${_htmlEsc(c.nome)}</b><br><span style="font-size:11px;color:var(--muted)">${_htmlEsc([c.cidade,c.uf].filter(Boolean).join(' / '))}</span>
+    </div>`;
+}
+function rtAbrirCadastroNovoCliente() {
+  openNovoCliente(_rtMeuNome(), (novoCliente) => { rtSelecionarCliente(novoCliente); });
+}
+async function rtCriarCard() {
+  const errEl = document.getElementById('rt-nc-err');
+  if (!_rtNovoClienteSel) { errEl.textContent = 'Busque e selecione um cliente, ou cadastre um novo.'; return; }
+  errEl.textContent = '';
+  const tipo = document.getElementById('rt-nc-tipo').value;
+  const payload = { cliente_id: _rtNovoClienteSel.id, tipo, etapa:'a_contatar', responsavel: _rtMeuNome() };
+  try {
+    const r = await fetch(SUPA_URL + '/rest/v1/roteiro_cards', {
+      method:'POST', headers: Object.assign(supaHdr(true), { 'Prefer':'return=representation' }), body: JSON.stringify(payload)
+    });
+    if (!r.ok) { errEl.textContent = 'Erro ao criar card.'; return; }
+    const created = (await r.json())[0];
+    _rtClientesCache[_rtNovoClienteSel.id] = _rtNovoClienteSel;
+    _rtCards.unshift(created);
+    closeRoteiroNovoCard();
+    renderRoteiroBoard();
+  } catch(e) { errEl.textContent = 'Erro de conexão ao criar card.'; }
+}
+
+// ── Detalhe do card ─────────────────────────────────────────────────────
+async function openRoteiroCardModal(id) {
+  const card = _rtCards.find(c => c.id === id);
+  if (!card) return;
+  _rtCurrentCard = card;
+  const cli = _rtClientesCache[card.cliente_id] || {};
+
+  document.getElementById('rt-cm-titulo').textContent = cli.nome || '—';
+  document.getElementById('rt-cm-sub').textContent = [cli.cidade, cli.uf, cli.segmento].filter(Boolean).join(' · ');
+  document.getElementById('rt-cm-tipo').value = card.tipo || 'visita';
+  document.getElementById('rt-cm-data').value = card.data_agendada || '';
+  document.getElementById('rt-cm-resp').textContent = card.responsavel || '—';
+  document.getElementById('rt-cm-etapa').textContent = (RT_COLS.find(x=>x.key===card.etapa)||{}).label || card.etapa;
+  document.getElementById('rt-cm-obs').value = card.observacao || '';
+
+  document.getElementById('rt-cm-contatos').innerHTML = '<div class="cp-empty" style="padding:14px">Carregando contatos…</div>';
+  document.getElementById('rt-cm-propostas').innerHTML = '<div class="cp-empty" style="padding:14px">Carregando propostas…</div>';
+  document.getElementById('rt-cm-historico').innerHTML = '<div class="cp-empty" style="padding:14px">Carregando histórico…</div>';
+
+  document.getElementById('rt-card-overlay').classList.add('open');
+
+  const [contatos, propostas, historico] = await Promise.all([
+    loadClienteContatos(card.cliente_id),
+    _rtPropostasDoCliente(cli.nome),
+    supaFetchAll(SUPA_URL + '/rest/v1/roteiro_cards?cliente_id=eq.' + card.cliente_id + '&order=created_at.desc')
+  ]);
+  if (!_rtCurrentCard || _rtCurrentCard.id !== id) return; // fechou/trocou enquanto carregava
+
+  document.getElementById('rt-cm-contatos').innerHTML = contatos.length
+    ? contatos.map(c => _ccCardHtml(card.cliente_id, c)).join('')
+    : '<div class="cp-empty" style="padding:14px">Nenhum contato cadastrado. Adicione pela Carteira de Clientes.</div>';
+
+  document.getElementById('rt-cm-propostas').innerHTML = _rtPropostasHtml(propostas);
+  document.getElementById('rt-cm-historico').innerHTML = _rtHistoricoHtml(historico, id);
+}
+function closeRoteiroCardModal() {
+  document.getElementById('rt-card-overlay').classList.remove('open');
+  _rtCurrentCard = null;
+}
+async function _rtPropostasDoCliente(nomeCliente) {
+  if (!nomeCliente) return [];
+  try {
+    const primeiraPalavra = nomeCliente.split(' ')[0];
+    const url = SUPA_URL + '/rest/v1/propostas?select=uid,nr,cliente,status,receita_estimada,data_abertura'
+      + '&cliente=ilike.*' + encodeURIComponent(primeiraPalavra) + '*&order=data_abertura.desc&limit=50';
+    return await (await fetch(url, { headers: supaHdr() })).json();
+  } catch(e) { return []; }
+}
+function _rtPropostasHtml(propostas) {
+  const abertas   = propostas.filter(p => { const s=(p.status||'').toUpperCase(); return s===''||s==='ABERTO'; });
+  const perdidas  = propostas.filter(p => { const s=(p.status||'').toUpperCase(); return s==='PERDIDO'||s.includes('DESIST'); });
+  const congeladas = propostas.filter(p => (p.status||'').toUpperCase().includes('STAND'));
+  const grupo = (titulo, itens) => !itens.length ? '' : `
+    <div style="margin-bottom:10px">
+      <div style="font-size:10.5px;font-weight:700;color:var(--muted);text-transform:uppercase;margin-bottom:5px">${titulo} (${itens.length})</div>
+      ${itens.map(p => `<div class="tr-row" style="cursor:pointer;padding:6px 9px;border:1px solid var(--border);border-radius:6px;margin-bottom:4px;font-size:12px" onclick="_rtAbrirProposta('${p.uid}')">
+        Nº ${String(p.nr).padStart(4,'0')} · ${fmtBRL(p.receita_estimada)} <span style="color:var(--muted);float:right">${fmtDateDisplay(p.data_abertura)}</span>
+      </div>`).join('')}
+    </div>`;
+  const html = grupo('Em aberto', abertas) + grupo('Perdidas', perdidas) + grupo('Congeladas', congeladas);
+  return html || '<div class="cp-empty" style="padding:14px">Nenhuma proposta encontrada para este cliente.</div>';
+}
+function _rtAbrirProposta(uid) {
+  const p = DATA.find(x => x.uid === uid);
+  closeRoteiroCardModal();
+  if (p) { openFollowupModal(uid); return; }
+  // Proposta ainda não está no DATA local (Roteiro é tela independente) — vai pra lista e busca.
+  setView('todas');
+  const si = document.getElementById('search-input');
+  if (si) { si.value = uid.split('-')[0]; applyFilters(); }
+}
+function _rtHistoricoHtml(historico, idAtual) {
+  const outros = historico.filter(h => h.id !== idAtual);
+  if (!outros.length) return '<div class="cp-empty" style="padding:14px">Nenhum ciclo anterior com este cliente.</div>';
+  return outros.map(h => {
+    const etapaLabel = (RT_COLS.find(x=>x.key===h.etapa)||{}).label || h.etapa;
+    const desfechoLabel = { proposta:'Gerou proposta', sem_oportunidade:'Sem oportunidade', perdido:'Perdido' }[h.desfecho] || '';
+    return `<div class="cp-act-item">
+      <span class="cp-act-dot"></span>
+      <span class="cp-act-when">${cpFmtWhen(h.created_at)}</span>
+      <span class="cp-act-txt">${_htmlEsc(h.tipo==='visita'?'Visita':'Contato')} · ${etapaLabel}${desfechoLabel?(' · '+desfechoLabel):''}${h.revivido?' · <i>renasceu depois</i>':''}</span>
+    </div>`;
+  }).join('');
+}
+
+async function rtSalvarAgendamento() {
+  if (!_rtCurrentCard) return;
+  const tipo = document.getElementById('rt-cm-tipo').value;
+  const data = document.getElementById('rt-cm-data').value;
+  const campos = { tipo, data_agendada: data || null };
+  if (data && _rtCurrentCard.etapa === 'a_contatar') campos.etapa = 'agendado';
+  await _rtPatchCard(_rtCurrentCard.id, campos);
+  Object.assign(_rtCurrentCard, campos);
+  document.getElementById('rt-cm-etapa').textContent = (RT_COLS.find(x=>x.key===_rtCurrentCard.etapa)||{}).label || _rtCurrentCard.etapa;
+  renderRoteiroBoard();
+  showFeedback && showFeedback('Agendamento salvo!', 'ok');
+}
+async function rtMarcarRealizado() {
+  if (!_rtCurrentCard) return;
+  await _rtPatchCard(_rtCurrentCard.id, { etapa:'realizado' });
+  _rtCurrentCard.etapa = 'realizado';
+  document.getElementById('rt-cm-etapa').textContent = 'Realizado';
+  renderRoteiroBoard();
+}
+async function rtSalvarObs() {
+  if (!_rtCurrentCard) return;
+  const obs = document.getElementById('rt-cm-obs').value.trim();
+  await _rtPatchCard(_rtCurrentCard.id, { observacao: obs || null });
+  _rtCurrentCard.observacao = obs;
+  showFeedback && showFeedback('Observação salva!', 'ok');
+}
+
+// ── Encerramento — exige desfecho em lista fechada, sem isso o card não sai
+//    de Realizado (a interface só permite fechar preenchendo o campo certo).
+function openEncerrarCard(id) {
+  const card = _rtCards.find(c => c.id === id);
+  if (!card) return;
+  _rtCurrentCard = card;
+  document.getElementById('rt-enc-desfecho').value = '';
+  document.getElementById('rt-enc-proposta').value = '';
+  document.getElementById('rt-enc-recontatar').value = '';
+  document.getElementById('rt-enc-err').textContent = '';
+  rtEncOnDesfechoChange();
+  document.getElementById('rt-motivo-select').innerHTML = '<option value="">Selecione…</option>'
+    + RT_MOTIVOS_PERDA.map(m => `<option value="${_htmlEsc(m)}">${_htmlEsc(m)}</option>`).join('');
+  document.getElementById('rt-encerrar-overlay').classList.add('open');
+}
+function closeEncerrarCard() { document.getElementById('rt-encerrar-overlay').classList.remove('open'); }
+function rtEncOnDesfechoChange() {
+  const v = document.getElementById('rt-enc-desfecho').value;
+  document.getElementById('rt-enc-campo-proposta').style.display     = v === 'proposta'          ? 'block' : 'none';
+  document.getElementById('rt-enc-campo-recontatar').style.display   = v === 'sem_oportunidade'   ? 'block' : 'none';
+  document.getElementById('rt-enc-campo-motivo').style.display       = v === 'perdido'            ? 'block' : 'none';
+}
+async function confirmarEncerramento() {
+  if (!_rtCurrentCard) return;
+  const desfecho = document.getElementById('rt-enc-desfecho').value;
+  const errEl = document.getElementById('rt-enc-err');
+  if (!desfecho) { errEl.textContent = 'Selecione o desfecho.'; return; }
+
+  const campos = { etapa:'encerrado', desfecho, encerrado_em: new Date().toISOString() };
+  if (desfecho === 'proposta') {
+    const uid = document.getElementById('rt-enc-proposta').value.trim();
+    if (!uid) { errEl.textContent = 'Informe o número/UID da proposta gerada.'; return; }
+    campos.proposta_id = uid;
+  } else if (desfecho === 'sem_oportunidade') {
+    const data = document.getElementById('rt-enc-recontatar').value;
+    if (!data) { errEl.textContent = 'Defina a data para recontatar.'; return; }
+    campos.recontatar_em = data;
+  } else if (desfecho === 'perdido') {
+    const motivo = document.getElementById('rt-motivo-select').value;
+    if (!motivo) { errEl.textContent = 'Selecione o motivo da perda.'; return; }
+    campos.motivo_perda = motivo;
+  }
+  errEl.textContent = '';
+
+  await _rtPatchCard(_rtCurrentCard.id, campos);
+  // Encerrado sai do quadro ativo — vira histórico do cliente.
+  _rtCards = _rtCards.filter(c => c.id !== _rtCurrentCard.id);
+  closeEncerrarCard();
+  closeRoteiroCardModal();
+  renderRoteiroBoard();
 }
 
 // ── Ver propostas no CRM ──────────────────────────────────────────────────
@@ -14719,7 +14650,7 @@ function checkNovasImportadas() {
   const list = document.getElementById('notif-list');
   if (!list || !M.caixa.length) return;
   const n = M.caixa.length;
-  const aviso = `<div class="notif-item" onclick="setView('inicio');toggleNotifPanel()">
+  const aviso = `<div class="notif-item" onclick="setView('todas');toggleNotifPanel()">
       <div class="ni-top">
         <span class="ni-cliente">${n} ${n === 1 ? 'proposta nova' : 'propostas novas'} para classificar</span>
         <span class="ni-tag atrasado">Caixa de entrada</span>
