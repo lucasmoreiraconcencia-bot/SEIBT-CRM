@@ -2325,31 +2325,31 @@ body { font-family: var(--font-sans); -webkit-font-smoothing: antialiased; text-
   </div>
   <nav class="nav">
     <div class="nav-section">Visão Geral</div>
+    <div class="nav-item active" data-view="todas" data-label="Todas as propostas">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+      <span class="nav-label">Todas as propostas</span>
+    </div>
     <!-- FASE 2: nova tela Agenda da Equipe -->
     <div class="nav-item" data-view="agenda" data-label="Agenda da Equipe" onclick="setView('agenda')">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/><line x1="8" y1="14" x2="10" y2="14"/><line x1="14" y1="14" x2="16" y2="14"/><line x1="8" y1="18" x2="10" y2="18"/></svg>
       <span class="nav-label">Agenda da Equipe</span>
     </div>
-    <div class="nav-item active" data-view="todas" data-label="Todas as propostas">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
-      <span class="nav-label">Todas as propostas</span>
-    </div>
-    <div class="nav-item" data-view="exportacao" data-label="Exportação" onclick="setView('exportacao')">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.8 19.2 16 11l3.5-3.5C21 6 21 4 19 4c-2 0-4 1-4 1l-7.2 7.8L4 14l1 2 5-1 3.6 3.6C14 20 15.5 20 16 20c.5 0 1.8-.2 1.8-.8z"/></svg>
-      <span class="nav-label">Exportação</span>
-      <span class="nav-badge" id="nb-exportacao">0</span>
-    </div>
-    <div class="nav-item" data-view="clientes" data-label="Clientes — Hábito de Compra" onclick="setView('clientes')">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-      <span class="nav-label">Clientes — Hábito de Compra</span>
+    <div class="nav-item" data-view="roteiro" data-label="Roteiro de Visitas" onclick="setView('roteiro')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 20l-5.447-2.724A1 1 0 0 1 3 16.382V5.618a1 1 0 0 1 1.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0 0 21 18.382V7.618a1 1 0 0 0-.553-.894L15 4m0 13V4m0 0L9 7"/></svg>
+      <span class="nav-label">Roteiro de Visitas</span>
     </div>
     <div class="nav-item" data-view="carteira" data-label="Carteira de Clientes" onclick="setView('carteira')">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 7H4a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2z"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
       <span class="nav-label">Carteira de Clientes</span>
     </div>
-    <div class="nav-item" data-view="roteiro" data-label="Roteiro de Visitas" onclick="setView('roteiro')">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 20l-5.447-2.724A1 1 0 0 1 3 16.382V5.618a1 1 0 0 1 1.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0 0 21 18.382V7.618a1 1 0 0 0-.553-.894L15 4m0 13V4m0 0L9 7"/></svg>
-      <span class="nav-label">Roteiro de Visitas</span>
+    <div class="nav-item" data-view="clientes" data-label="Clientes — Hábito de Compra" onclick="setView('clientes')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+      <span class="nav-label">Clientes — Hábito de Compra</span>
+    </div>
+    <div class="nav-item" data-view="exportacao" data-label="Exportação" onclick="setView('exportacao')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.8 19.2 16 11l3.5-3.5C21 6 21 4 19 4c-2 0-4 1-4 1l-7.2 7.8L4 14l1 2 5-1 3.6 3.6C14 20 15.5 20 16 20c.5 0 1.8-.2 1.8-.8z"/></svg>
+      <span class="nav-label">Exportação</span>
+      <span class="nav-badge" id="nb-exportacao">0</span>
     </div>
     <div class="nav-section">Por Status</div>
     <div id="nav-status-items"></div>
@@ -3110,6 +3110,11 @@ body { font-family: var(--font-sans); -webkit-font-smoothing: antialiased; text-
 
       <div class="cp-section">
         <div class="cp-section-title">Propostas do cliente</div>
+        <div style="font-size:11px;color:var(--muted);margin-bottom:8px">Busque e confirme manualmente — o sistema não tenta adivinhar qual proposta é deste cliente.</div>
+        <div class="form-row" style="margin-bottom:10px">
+          <input type="text" id="rt-cm-propostas-busca" class="form-input" placeholder="Nome do cliente ou nº da proposta…" onkeydown="if(event.key==='Enter')rtBuscarPropostasCliente()">
+          <button class="btn-tbl" onclick="rtBuscarPropostasCliente()">Buscar</button>
+        </div>
         <div id="rt-cm-propostas"></div>
       </div>
 
@@ -12843,14 +12848,17 @@ async function openRoteiroCardModal(id) {
   document.getElementById('rt-cm-obs').value = card.observacao || '';
 
   document.getElementById('rt-cm-contatos').innerHTML = '<div class="cp-empty" style="padding:14px">Carregando contatos…</div>';
-  document.getElementById('rt-cm-propostas').innerHTML = '<div class="cp-empty" style="padding:14px">Carregando propostas…</div>';
   document.getElementById('rt-cm-historico').innerHTML = '<div class="cp-empty" style="padding:14px">Carregando histórico…</div>';
+  // Propostas: sem match automático por nome (nomes parecidos de empresas
+  // diferentes geravam vínculo errado). Busca vira manual — o usuário
+  // procura e confirma, em vez do sistema adivinhar.
+  document.getElementById('rt-cm-propostas-busca').value = '';
+  document.getElementById('rt-cm-propostas').innerHTML = '';
 
   document.getElementById('rt-card-overlay').classList.add('open');
 
-  const [contatos, propostas, historico] = await Promise.all([
+  const [contatos, historico] = await Promise.all([
     loadClienteContatos(card.cliente_id),
-    _rtPropostasDoCliente(cli.nome),
     supaFetchAll(SUPA_URL + '/rest/v1/roteiro_cards?cliente_id=eq.' + card.cliente_id + '&order=created_at.desc')
   ]);
   if (!_rtCurrentCard || _rtCurrentCard.id !== id) return; // fechou/trocou enquanto carregava
@@ -12859,35 +12867,33 @@ async function openRoteiroCardModal(id) {
     ? contatos.map(c => _ccCardHtml(card.cliente_id, c)).join('')
     : '<div class="cp-empty" style="padding:14px">Nenhum contato cadastrado. Adicione pela Carteira de Clientes.</div>';
 
-  document.getElementById('rt-cm-propostas').innerHTML = _rtPropostasHtml(propostas);
   document.getElementById('rt-cm-historico').innerHTML = _rtHistoricoHtml(historico, id);
 }
 function closeRoteiroCardModal() {
   document.getElementById('rt-card-overlay').classList.remove('open');
   _rtCurrentCard = null;
 }
-async function _rtPropostasDoCliente(nomeCliente) {
-  if (!nomeCliente) return [];
+// Busca manual de propostas (o usuário procura e confirma — sem tentativa
+// automática de casar proposta com cliente por nome parecido).
+async function rtBuscarPropostasCliente() {
+  const q = document.getElementById('rt-cm-propostas-busca').value.trim();
+  const box = document.getElementById('rt-cm-propostas');
+  if (q.length < 2) { box.innerHTML = '<div class="cp-empty" style="padding:14px">Digite ao menos 2 caracteres para buscar.</div>'; return; }
+  box.innerHTML = '<div class="cp-empty" style="padding:14px">Buscando…</div>';
   try {
-    const primeiraPalavra = nomeCliente.split(' ')[0];
     const url = SUPA_URL + '/rest/v1/propostas?select=uid,nr,cliente,status,receita_estimada,data_abertura'
-      + '&cliente=ilike.*' + encodeURIComponent(primeiraPalavra) + '*&order=data_abertura.desc&limit=50';
-    return await (await fetch(url, { headers: supaHdr() })).json();
-  } catch(e) { return []; }
+      + '&or=(cliente.ilike.*' + encodeURIComponent(q) + '*,nr.ilike.*' + encodeURIComponent(q) + '*)'
+      + '&order=data_abertura.desc&limit=30';
+    const propostas = await (await fetch(url, { headers: supaHdr() })).json();
+    box.innerHTML = _rtPropostasHtml(propostas);
+  } catch(e) { box.innerHTML = '<div class="cp-empty" style="padding:14px">Erro na busca.</div>'; }
 }
 function _rtPropostasHtml(propostas) {
-  const abertas   = propostas.filter(p => { const s=(p.status||'').toUpperCase(); return s===''||s==='ABERTO'; });
-  const perdidas  = propostas.filter(p => { const s=(p.status||'').toUpperCase(); return s==='PERDIDO'||s.includes('DESIST'); });
-  const congeladas = propostas.filter(p => (p.status||'').toUpperCase().includes('STAND'));
-  const grupo = (titulo, itens) => !itens.length ? '' : `
-    <div style="margin-bottom:10px">
-      <div style="font-size:10.5px;font-weight:700;color:var(--muted);text-transform:uppercase;margin-bottom:5px">${titulo} (${itens.length})</div>
-      ${itens.map(p => `<div class="tr-row" style="cursor:pointer;padding:6px 9px;border:1px solid var(--border);border-radius:6px;margin-bottom:4px;font-size:12px" onclick="_rtAbrirProposta('${p.uid}')">
-        Nº ${String(p.nr).padStart(4,'0')} · ${fmtBRL(p.receita_estimada)} <span style="color:var(--muted);float:right">${fmtDateDisplay(p.data_abertura)}</span>
-      </div>`).join('')}
-    </div>`;
-  const html = grupo('Em aberto', abertas) + grupo('Perdidas', perdidas) + grupo('Congeladas', congeladas);
-  return html || '<div class="cp-empty" style="padding:14px">Nenhuma proposta encontrada para este cliente.</div>';
+  if (!propostas.length) return '<div class="cp-empty" style="padding:14px">Nenhuma proposta encontrada.</div>';
+  return propostas.map(p => `<div class="tr-row" style="cursor:pointer;padding:7px 9px;border:1px solid var(--border);border-radius:6px;margin-bottom:4px;font-size:12px" onclick="_rtAbrirProposta('${p.uid}')">
+      Nº ${String(p.nr).padStart(4,'0')} · ${_htmlEsc(p.cliente||'—')} · ${fmtBRL(p.receita_estimada)}
+      <span style="color:var(--muted);float:right">${statusChip(p.status)} ${fmtDateDisplay(p.data_abertura)}</span>
+    </div>`).join('');
 }
 function _rtAbrirProposta(uid) {
   const p = DATA.find(x => x.uid === uid);
