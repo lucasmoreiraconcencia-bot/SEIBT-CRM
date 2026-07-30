@@ -2158,6 +2158,86 @@ body { font-family: var(--font-sans); -webkit-font-smoothing: antialiased; text-
   .agenda-grid{grid-template-columns:130px repeat(5,minmax(64px,1fr));overflow-x:auto}
   .agenda-summary{grid-template-columns:repeat(2,1fr)}
 }
+
+/* ── FASE 8 — Centro de Controle Comercial (Home do Administrador) ────── */
+.ah-layout{display:grid;grid-template-columns:1fr 300px;gap:20px;align-items:start}
+.ah-side{position:sticky;top:16px}
+@media (max-width:980px){ .ah-layout{grid-template-columns:1fr} .ah-side{position:static} }
+
+.ah-kpi-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:28px}
+@media (max-width:1180px){ .ah-kpi-grid{grid-template-columns:repeat(2,1fr)} }
+.ah-kpi{background:var(--white);border:1px solid var(--border);border-radius:var(--radius-lg);
+  padding:16px;box-shadow:var(--shadow-sm);position:relative;overflow:hidden}
+.ah-kpi::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:var(--border-md)}
+.ah-kpi.good::before{background:var(--success)} .ah-kpi.warn::before{background:var(--warn)} .ah-kpi.bad::before{background:var(--error)}
+.ah-kpi-ico{width:22px;height:22px;color:var(--navy);margin-bottom:8px}
+.ah-kpi-ico svg{width:100%;height:100%}
+.ah-kpi.good .ah-kpi-ico{color:var(--success)} .ah-kpi.warn .ah-kpi-ico{color:var(--warn)} .ah-kpi.bad .ah-kpi-ico{color:var(--error)}
+.ah-kpi-n{font-size:26px;font-weight:800;color:var(--text);line-height:1.1}
+.ah-kpi-l{font-size:11.5px;color:var(--muted);margin-top:4px}
+.ah-kpi-d{margin-top:8px}
+.ah-delta{font-size:10.5px;font-weight:600}
+.ah-delta.good{color:var(--success)} .ah-delta.bad{color:var(--error)} .ah-delta.flat{color:var(--muted)}
+
+.ah-tbl-wrap{overflow-x:auto}
+.ah-user{display:flex;align-items:center;gap:10px}
+.ah-avatar{width:28px;height:28px;border-radius:50%;background:var(--brand-100);color:var(--navy);
+  display:inline-flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0}
+.ah-user-n{font-weight:600;color:var(--navy);font-size:12.5px}
+.ah-user-c{font-size:10.5px;color:var(--muted)}
+.ah-status{display:inline-flex;padding:3px 9px;border-radius:var(--radius-full);font-size:11px;font-weight:600;white-space:nowrap}
+.ah-status.crit{background:var(--error-bg);color:var(--error)}
+.ah-status.warn{background:var(--warn-bg);color:var(--warn)}
+.ah-status.ok{background:var(--success-bg);color:var(--success)}
+
+.ah-pri-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:12px}
+@media (max-width:1180px){ .ah-pri-grid{grid-template-columns:repeat(2,1fr)} }
+.ah-pri-col{background:var(--white);border:1px solid var(--border);border-radius:var(--radius-lg);padding:12px;min-height:80px}
+.ah-pri-h{display:flex;align-items:center;gap:6px;font-size:11.5px;font-weight:700;color:var(--text-2);margin-bottom:10px}
+.ah-pri-h svg{width:14px;height:14px;color:var(--muted);flex-shrink:0}
+.ah-pri-count{margin-left:auto;background:var(--gray-100);color:var(--muted);border-radius:var(--radius-full);padding:1px 8px;font-size:10.5px}
+.ah-pri-list{display:flex;flex-direction:column;gap:8px}
+.ah-pri-it{border:1px solid var(--border);border-radius:8px;padding:8px 10px}
+.ah-pri-cli{font-size:12px;font-weight:600;color:var(--text)}
+.ah-pri-meta{font-size:10.5px;color:var(--muted);margin-top:2px}
+.ah-pri-dias{font-size:10.5px;color:var(--error);margin-top:6px;font-weight:600}
+.ah-pri-it .btn-mini{margin-top:6px;width:100%}
+
+.ah-ag-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+@media (max-width:820px){ .ah-ag-grid{grid-template-columns:1fr} }
+.ah-ag-col{background:var(--white);border:1px solid var(--border);border-radius:var(--radius-lg);padding:14px}
+.ah-ag-h{display:flex;align-items:center;font-size:12.5px;font-weight:700;color:var(--navy);margin-bottom:10px}
+.ah-ag-tipos{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px}
+.ah-ag-tipo{font-size:10.5px;background:var(--blue-lt);color:var(--navy);border-radius:var(--radius-full);padding:3px 9px}
+.ah-ag-users{display:flex;flex-wrap:wrap;gap:6px}
+.ah-ag-user{font-size:10.5px;color:var(--text-2);background:var(--gray-100);border-radius:6px;padding:3px 8px}
+.ah-ag-user b{color:var(--navy)}
+.ah-ag-user.muted{color:var(--muted);background:transparent;border:1px dashed var(--border)}
+
+.ah-link{margin-left:auto;font-size:11.5px;color:var(--navy);cursor:pointer;text-decoration:underline}
+
+.ah-attn-list{display:flex;flex-direction:column;gap:10px}
+.ah-attn-it{display:flex;gap:8px;align-items:flex-start;font-size:12px;color:var(--text-2);line-height:1.4}
+.ah-attn-it svg{width:14px;height:14px;color:var(--warn);flex-shrink:0;margin-top:2px}
+
+/* ── Aba "Dados do Contato" (pessoas da empresa) ───────────────────────── */
+.cp-ct-form{background:var(--surface-subtle);border:1px solid var(--border);border-radius:var(--radius-lg);padding:14px 16px}
+.cp-ct-form-title{font-size:12.5px;font-weight:700;color:var(--navy);margin-bottom:12px}
+.cp-ct-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media (max-width:700px){ .cp-ct-grid{grid-template-columns:1fr} }
+.cp-ct-form-actions{display:flex;align-items:center;gap:12px;margin-top:12px}
+.cp-ct-form-err{font-size:11.5px;color:var(--error);margin-right:auto}
+.cp-ct-list{display:flex;flex-direction:column;gap:10px}
+.cp-ct-card{border:1px solid var(--border);border-radius:var(--radius);padding:11px 13px;background:var(--white)}
+.cp-ct-head{display:flex;align-items:center;gap:9px;margin-bottom:7px}
+.cp-ct-nome{font-size:13px;font-weight:700;color:var(--text)}
+.cp-ct-origem{font-size:10.5px;color:var(--muted);background:var(--gray-100);border-radius:var(--radius-full);padding:2px 9px}
+.cp-ct-head .nota-acts{margin-left:auto}
+.cp-ct-lines{display:flex;flex-wrap:wrap;gap:8px 16px;padding-left:33px}
+.cp-ct-meta{font-size:12px;color:var(--muted)}
+.cp-ct-link{font-size:12px;color:var(--blue);text-decoration:none}
+.cp-ct-link:hover{text-decoration:underline}
+.cp-ct-foot{font-size:10.5px;color:var(--muted);margin-top:8px;padding-left:33px}
 </style>
 </head>
 <body>
@@ -3031,7 +3111,9 @@ body { font-family: var(--font-sans); -webkit-font-smoothing: antialiased; text-
 
   <!-- Navegação por abas -->
   <div class="cp-tabs">
+    <button class="cp-tab" data-tab="contato" onclick="switchPropTab('contato')">Dados do Contato <span class="cp-tab-badge" id="cp-tabbadge-contato">0</span></button>
     <button class="cp-tab active" data-tab="resumo" onclick="switchPropTab('resumo')">Resumo</button>
+    <button class="cp-tab" data-tab="aplicacao" onclick="switchPropTab('aplicacao')">Aplicação</button>
     <button class="cp-tab" data-tab="notas" onclick="switchPropTab('notas')">Notas <span class="cp-tab-badge" id="cp-tabbadge-notas">0</span></button>
     <button class="cp-tab" data-tab="pdfs" onclick="switchPropTab('pdfs')">Arquivos <span class="cp-tab-badge" id="cp-tabbadge-pdfs">0</span></button>
     <button class="cp-tab" data-tab="historico" onclick="switchPropTab('historico')">Histórico</button>
@@ -3040,9 +3122,19 @@ body { font-family: var(--font-sans); -webkit-font-smoothing: antialiased; text-
 
   <div class="cp-body">
 
+    <!-- Aba: Dados do Contato (pessoas da empresa — nome/telefone/e-mail/cargo) -->
+    <div class="cp-panel" id="cp-panel-contato">
+      <div class="cp-scroll" id="cp-contato-content"></div>
+    </div>
+
     <!-- Aba: Resumo (padrão) -->
     <div class="cp-panel active" id="cp-panel-resumo">
       <div class="cp-scroll" id="cp-resumo-content"></div>
+    </div>
+
+    <!-- Aba: Aplicação (finalidade/processo do equipamento) -->
+    <div class="cp-panel" id="cp-panel-aplicacao">
+      <div class="cp-scroll" id="cp-aplicacao-content"></div>
     </div>
 
     <!-- Aba: Notas (mural colaborativo por proposta) -->
@@ -3070,6 +3162,18 @@ body { font-family: var(--font-sans); -webkit-font-smoothing: antialiased; text-
         <span class="modal-col-title">Novo Contato</span>
       </div>
       <div class="modal-left-scroll">
+
+        <!-- Bloco 0: Próxima ação (movida do Resumo — fica junto do Follow-up) -->
+        <div class="form-block" id="cp-prox-block">
+          <div class="form-block-title">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+            Próxima ação
+            <button class="btn-icon" style="width:22px;height:22px;margin-left:auto" onclick="editProximaAcao()" title="Alterar próxima ação">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+            </button>
+          </div>
+          <div id="cp-prox-container"></div>
+        </div>
 
         <!-- Bloco 1: Contato realizado -->
         <div class="form-block">
@@ -4963,6 +5067,8 @@ function _refreshFollowupUI(uid) {
     const indEl = document.getElementById('cp-indicators');
     if (indEl) indEl.innerHTML = _buildCpIndicatorsHtml(p, sorted, daysSinceLast);
     buildCpResumo(p, { isExpModal, fmtVal, sorted, daysSinceLast });
+    buildCpAplicacao(p);
+    buildCpProximaAcao(p, sorted);
     buildCpHistorico(p, sorted);
   }
 }
@@ -5007,6 +5113,8 @@ function openFollowupModal(uid) {
 
   // Conteúdo das abas de leitura
   buildCpResumo(p, { isExpModal, fmtVal, sorted, daysSinceLast });
+  buildCpAplicacao(p);
+  buildCpProximaAcao(p, sorted);
   buildCpHistorico(p, sorted);
   buildCpPdfs(uid);
 
@@ -5015,6 +5123,11 @@ function openFollowupModal(uid) {
   // e atualiza o badge ao terminar.
   propNotas[uid] = undefined;
   buildCpNotas(uid);
+
+  // Contatos: mesmo padrão das notas — recarrega a cada abertura para refletir
+  // o que outros usuários cadastraram nas demais propostas da mesma empresa.
+  propContatos[uid] = undefined;
+  buildCpContatos(uid);
 
   document.getElementById('followup-overlay').classList.add('open');
   document.getElementById('followup-modal').classList.add('open');
@@ -5108,7 +5221,6 @@ function buildCpResumo(p, ctx) {
   const f = (lbl, val) => `<div class="exp-field"><div class="exp-label">${lbl}</div><div class="exp-value">${val}</div></div>`;
 
   const lastFuAll  = sorted[0] || null;
-  const lastNotas  = (lastFuAll && lastFuAll.notas_proximo && lastFuAll.notas_proximo.trim()) ? lastFuAll.notas_proximo : '';
   // "Resumo da reunião" é opcional e nem sempre é preenchido — cai para a
   // "Descrição do contato" (acao), que é obrigatória em todo follow-up, pra
   // sempre mostrar algo do que o vendedor escreveu no último contato.
@@ -5143,18 +5255,10 @@ function buildCpResumo(p, ctx) {
             ${f('Cidade / UF', (p.cidade||'—')+(p.uf?' / '+p.uf:''))}
             ${p.modelo ? f('Modelo', p.modelo+(p.versao?' · '+p.versao:'')) : ''}
           </div>
-          ${_aplicacaoBlockHtml(p)}
           ${p.descricao?`<div class="exp-field" style="margin-top:13px"><div class="exp-label">Descrição</div><div class="exp-value">${p.descricao}</div></div>`:''}
         </div>
       </div>
       <div>
-        <div class="cp-section">
-          <div class="cp-section-title-row">
-            <div class="cp-section-title" style="margin-bottom:0;border-bottom:none;padding-bottom:0">Próxima ação</div>
-            <button class="btn-icon" style="width:22px;height:22px" onclick="editProximaAcao()" title="Alterar próxima ação">${EDIT_ICON_SM}</button>
-          </div>
-          ${_proximaAcaoBlockHtml(p, lastNotas)}
-        </div>
         ${lastResumo ? `<div class="cp-section">
           <div class="cp-section-title">Resumo do último contato</div>
           <div class="cp-resumo-box">${lastResumo}</div>
@@ -5341,6 +5445,20 @@ async function saveAplicacao() {
     });
     if (!res.ok) console.warn('[saveAplicacao] HTTP', res.status);
   } catch(e) { console.warn('[saveAplicacao]', e.message); }
+}
+
+// Aba APLICAÇÃO (saiu do Resumo — agora tem aba própria, logo depois dele)
+function buildCpAplicacao(p) {
+  const el = document.getElementById('cp-aplicacao-content');
+  if (!el) return;
+  el.innerHTML = `
+    <div class="cp-section">
+      <div class="cp-section-title">Aplicação do equipamento</div>
+      <div style="font-size:12px;color:var(--muted);margin-bottom:10px">
+        Finalidade e processo em que o equipamento será usado pelo cliente.
+      </div>
+      ${_aplicacaoBlockHtml(p)}
+    </div>`;
 }
 
 // ── Temperatura (editável direto no Resumo, sem precisar registrar follow-up) ──
@@ -5550,6 +5668,16 @@ async function saveProximaAcao() {
     });
     if (!res.ok) console.warn('[saveProximaAcao] HTTP', res.status);
   } catch(e) { console.warn('[saveProximaAcao]', e.message); }
+}
+
+// Próxima ação saiu do Resumo e passou a viver na aba Follow-ups, ao lado do
+// formulário de registro — é lá que ela é consultada e decidida.
+function buildCpProximaAcao(p, sorted) {
+  const el = document.getElementById('cp-prox-container');
+  if (!el) return;
+  const lastFu    = (sorted && sorted[0]) || null;
+  const lastNotas = (lastFu && lastFu.notas_proximo && lastFu.notas_proximo.trim()) ? lastFu.notas_proximo : '';
+  el.innerHTML = _proximaAcaoBlockHtml(p, lastNotas);
 }
 
 // ── Status (editável direto no Resumo — somente Administrador) ─────────────
@@ -5786,6 +5914,256 @@ async function deleteNota(uid, id) {
     try {
       await fetch(`${SUPABASE_URL}/rest/v1/proposta_notas?id=eq.${n.id}`, { method: 'DELETE', headers: supaHdr() });
     } catch(e) { console.warn('[deleteNota]', e.message); }
+  }
+}
+
+// ── Dados do Contato — pessoas da empresa (nome/telefone/e-mail/cargo) ─────
+// Cada contato fica ligado à proposta (uid) E à empresa (cliente). Com isso a
+// aba mostra duas listas: os contatos DESTA proposta e o histórico de contatos
+// DA EMPRESA, somando o que foi cadastrado nas outras propostas do mesmo cliente.
+let propContatos = {};   // cache por uid da proposta
+let cliContatos  = {};   // cache por empresa (chave = cliente, ou uid se sem cliente)
+
+function _ctCliKey(p) { return String((p && p.cliente) || '').trim(); }
+
+function updateContatosBadge(uid) {
+  const b = document.getElementById('cp-tabbadge-contato');
+  if (b) b.textContent = (propContatos[uid] || []).length;
+}
+
+async function loadContatos(uid, cliente) {
+  const cacheKey = cliente || uid;
+  try {
+    // Uma consulta só: busca por empresa e recorta os desta proposta em memória.
+    const q = cliente
+      ? `cliente=eq.${encodeURIComponent(cliente)}`
+      : `uid=eq.${encodeURIComponent(uid)}`;
+    const r = await fetch(`${SUPABASE_URL}/rest/v1/proposta_contatos?${q}&order=criado_em.desc`, { headers: supaHdr() });
+    const rows = r.ok ? await r.json() : [];
+    cliContatos[cacheKey] = rows;
+    propContatos[uid]     = rows.filter(c => c.uid === uid);
+  } catch(e) {
+    console.warn('[loadContatos]', e.message);
+    if (!propContatos[uid])     propContatos[uid] = [];
+    if (!cliContatos[cacheKey]) cliContatos[cacheKey] = [];
+  }
+  return propContatos[uid] || [];
+}
+
+function _ctLinhaHtml(c) {
+  const linhas = [];
+  if (c.cargo)    linhas.push(`<span class="cp-ct-meta">${_htmlEsc(c.cargo)}</span>`);
+  if (c.telefone) linhas.push(`<a class="cp-ct-link" href="tel:${_htmlEsc(c.telefone)}">${_htmlEsc(c.telefone)}</a>`);
+  if (c.email)    linhas.push(`<a class="cp-ct-link" href="mailto:${_htmlEsc(c.email)}">${_htmlEsc(c.email)}</a>`);
+  return linhas.length ? `<div class="cp-ct-lines">${linhas.join('')}</div>`
+                       : `<div class="cp-ct-lines"><span class="cp-ct-meta">Sem telefone/e-mail informado.</span></div>`;
+}
+
+// origem: null quando o contato é desta proposta; senão, rótulo da proposta de origem.
+function _ctCardHtml(uid, c, editavel, origem) {
+  const EDIT  = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>`;
+  const TRASH = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6M14 11v6"/></svg>`;
+  const myEmail = ((SESSION && SESSION.email) || '').toLowerCase();
+  const mine = !!myEmail && (c.autor_email || '').toLowerCase() === myEmail;
+  const acts = (editavel && mine)
+    ? `<span class="nota-acts">
+         <button class="btn-nota-act" onclick="editContatoCp('${uid}','${c.id}')" title="Editar">${EDIT}</button>
+         <button class="btn-nota-act del" onclick="deleteContatoCp('${uid}','${c.id}')" title="Excluir">${TRASH}</button>
+       </span>` : '';
+  return `<div class="cp-ct-card" id="cp-ct-card-${c.id}">
+      <div class="cp-ct-head">
+        <span class="nota-ava">${_notaIniciais(c.nome)}</span>
+        <span class="cp-ct-nome">${_htmlEsc(c.nome || '—')}</span>
+        ${origem ? `<span class="cp-ct-origem">${_htmlEsc(origem)}</span>` : ''}
+        ${acts}
+      </div>
+      ${_ctLinhaHtml(c)}
+      <div class="cp-ct-foot">Cadastrado por ${_htmlEsc(c.autor || '—')} · ${_notaData(c.criado_em)}${c.editado_em ? ' <span class="nota-edit-flag">(editado)</span>' : ''}</div>
+    </div>`;
+}
+
+function _ctFormHtml(uid) {
+  return `<div class="cp-ct-form">
+      <div class="cp-ct-form-title">Adicionar contato</div>
+      <div class="cp-ct-grid">
+        <div class="form-group" style="margin-bottom:0">
+          <label class="form-label">Nome<span class="form-req">*</span></label>
+          <input type="text" id="cp-ct-nome" class="form-input" placeholder="Nome da pessoa">
+        </div>
+        <div class="form-group" style="margin-bottom:0">
+          <label class="form-label">Cargo</label>
+          <input type="text" id="cp-ct-cargo" class="form-input" placeholder="Ex: Gerente de Produção">
+        </div>
+        <div class="form-group" style="margin-bottom:0">
+          <label class="form-label">Telefone</label>
+          <input type="text" id="cp-ct-tel" class="form-input" placeholder="(00) 00000-0000">
+        </div>
+        <div class="form-group" style="margin-bottom:0">
+          <label class="form-label">E-mail</label>
+          <input type="email" id="cp-ct-email" class="form-input" placeholder="nome@empresa.com.br">
+        </div>
+      </div>
+      <div class="cp-ct-form-actions">
+        <span class="cp-ct-form-err" id="cp-ct-err"></span>
+        <button class="btn-nota-add" onclick="addContato('${uid}')">${PLUS_ICON}Adicionar contato</button>
+      </div>
+    </div>`;
+}
+
+function buildCpContatos(uid) {
+  const el = document.getElementById('cp-contato-content');
+  if (!el) return;
+  const p       = DATA.find(x => x.uid === uid);
+  const cliente = _ctCliKey(p);
+
+  const meus = propContatos[uid];
+  if (meus === undefined) {
+    el.innerHTML = _ctFormHtml(uid) + '<div class="cp-empty" style="padding:24px">Carregando contatos…</div>';
+    loadContatos(uid, cliente).then(() => {
+      if (currentFollowupUid === uid) buildCpContatos(uid);
+      updateContatosBadge(uid);
+    });
+    return;
+  }
+
+  // Histórico da empresa = contatos cadastrados nas OUTRAS propostas do mesmo cliente
+  const todos  = cliContatos[cliente || uid] || [];
+  const outros = todos.filter(c => c.uid !== uid);
+  const nrDe = u => { const q = DATA.find(x => x.uid === u); return q ? ('Proposta Nº ' + String(q.nr).padStart(4,'0')) : u; };
+
+  el.innerHTML = _ctFormHtml(uid)
+    + `<div class="cp-section" style="margin-top:20px">
+        <div class="cp-section-title">Contatos desta proposta</div>
+        ${meus.length
+          ? `<div class="cp-ct-list">${meus.map(c => _ctCardHtml(uid, c, true, null)).join('')}</div>`
+          : '<div class="cp-empty" style="padding:20px">Nenhum contato cadastrado nesta proposta ainda.</div>'}
+      </div>`
+    + (cliente ? `<div class="cp-section">
+        <div class="cp-section-title">Histórico de contatos — ${_htmlEsc(cliente)}</div>
+        ${outros.length
+          ? `<div class="cp-ct-list">${outros.map(c => _ctCardHtml(uid, c, false, nrDe(c.uid))).join('')}</div>`
+          : '<div class="cp-empty" style="padding:20px">Nenhum contato registrado em outras propostas desta empresa.</div>'}
+      </div>` : '');
+}
+
+async function addContato(uid) {
+  const p    = DATA.find(x => x.uid === uid);
+  const nome = (document.getElementById('cp-ct-nome')?.value  || '').trim();
+  const err  = document.getElementById('cp-ct-err');
+  if (!nome) { if (err) err.textContent = 'Informe ao menos o nome do contato.'; return; }
+  if (err) err.textContent = '';
+
+  const contato = {
+    uid,
+    cliente:     _ctCliKey(p),
+    nome,
+    cargo:       (document.getElementById('cp-ct-cargo')?.value || '').trim(),
+    telefone:    (document.getElementById('cp-ct-tel')?.value   || '').trim(),
+    email:       (document.getElementById('cp-ct-email')?.value || '').trim(),
+    autor:       (SESSION && SESSION.nome)  || '—',
+    autor_email: (SESSION && SESSION.email) || '',
+    criado_em:   new Date().toISOString()
+  };
+
+  const cacheKey = contato.cliente || uid;
+  if (!propContatos[uid])     propContatos[uid] = [];
+  if (!cliContatos[cacheKey]) cliContatos[cacheKey] = [];
+  try {
+    const r = await fetch(`${SUPABASE_URL}/rest/v1/proposta_contatos`, {
+      method: 'POST', headers: Object.assign(supaHdr(true), { 'Prefer':'return=representation' }),
+      body: JSON.stringify(contato)
+    });
+    const saved = r.ok ? ((await r.json())[0] || contato) : contato;
+    propContatos[uid].unshift(saved);
+    cliContatos[cacheKey].unshift(saved);
+  } catch(e) {
+    console.warn('[addContato]', e.message);
+    propContatos[uid].unshift(contato);
+    cliContatos[cacheKey].unshift(contato);
+  }
+  buildCpContatos(uid);
+  updateContatosBadge(uid);
+}
+
+function editContatoCp(uid, id) {
+  const c = (propContatos[uid] || []).find(x => String(x.id) === String(id));
+  if (!c) return;
+  const myEmail = ((SESSION && SESSION.email) || '').toLowerCase();
+  if (!myEmail || (c.autor_email || '').toLowerCase() !== myEmail) return;
+  const card = document.getElementById('cp-ct-card-' + id);
+  if (!card) return;
+  card.innerHTML = `
+    <div class="cp-ct-grid">
+      <div class="form-group" style="margin-bottom:0">
+        <label class="form-label">Nome<span class="form-req">*</span></label>
+        <input type="text" id="cp-cte-nome-${id}" class="form-input" value="${_htmlEsc(c.nome||'')}">
+      </div>
+      <div class="form-group" style="margin-bottom:0">
+        <label class="form-label">Cargo</label>
+        <input type="text" id="cp-cte-cargo-${id}" class="form-input" value="${_htmlEsc(c.cargo||'')}">
+      </div>
+      <div class="form-group" style="margin-bottom:0">
+        <label class="form-label">Telefone</label>
+        <input type="text" id="cp-cte-tel-${id}" class="form-input" value="${_htmlEsc(c.telefone||'')}">
+      </div>
+      <div class="form-group" style="margin-bottom:0">
+        <label class="form-label">E-mail</label>
+        <input type="email" id="cp-cte-email-${id}" class="form-input" value="${_htmlEsc(c.email||'')}">
+      </div>
+    </div>
+    <div class="nota-edit-actions" style="margin-top:10px">
+      <button onclick="buildCpContatos('${uid}')">Cancelar</button>
+      <button class="save" onclick="saveContatoCp('${uid}','${id}')">Salvar</button>
+    </div>`;
+}
+
+async function saveContatoCp(uid, id) {
+  const c = (propContatos[uid] || []).find(x => String(x.id) === String(id));
+  if (!c) return;
+  const myEmail = ((SESSION && SESSION.email) || '').toLowerCase();
+  if (!myEmail || (c.autor_email || '').toLowerCase() !== myEmail) return;
+  const nome = (document.getElementById(`cp-cte-nome-${id}`)?.value || '').trim();
+  if (!nome) return;
+
+  c.nome       = nome;
+  c.cargo      = (document.getElementById(`cp-cte-cargo-${id}`)?.value || '').trim();
+  c.telefone   = (document.getElementById(`cp-cte-tel-${id}`)?.value   || '').trim();
+  c.email      = (document.getElementById(`cp-cte-email-${id}`)?.value || '').trim();
+  c.editado_em = new Date().toISOString();
+  buildCpContatos(uid);
+
+  if (c.id) {
+    try {
+      await fetch(`${SUPABASE_URL}/rest/v1/proposta_contatos?id=eq.${c.id}`, {
+        method: 'PATCH', headers: Object.assign(supaHdr(true), { 'Prefer':'return=minimal' }),
+        body: JSON.stringify({ nome:c.nome, cargo:c.cargo||null, telefone:c.telefone||null,
+                               email:c.email||null, editado_em:c.editado_em })
+      });
+    } catch(e) { console.warn('[saveContatoCp]', e.message); }
+  }
+}
+
+async function deleteContatoCp(uid, id) {
+  const arr = propContatos[uid] || [];
+  const idx = arr.findIndex(x => String(x.id) === String(id));
+  if (idx === -1) return;
+  const c = arr[idx];
+  const myEmail = ((SESSION && SESSION.email) || '').toLowerCase();
+  if (!myEmail || (c.autor_email || '').toLowerCase() !== myEmail) return;
+  if (!confirm('Excluir este contato? Esta ação não pode ser desfeita.')) return;
+
+  arr.splice(idx, 1);
+  const cacheKey = (c.cliente || uid);
+  const cArr = cliContatos[cacheKey] || [];
+  const cIdx = cArr.findIndex(x => String(x.id) === String(id));
+  if (cIdx !== -1) cArr.splice(cIdx, 1);
+
+  buildCpContatos(uid);
+  updateContatosBadge(uid);
+  if (c.id) {
+    try {
+      await fetch(`${SUPABASE_URL}/rest/v1/proposta_contatos?id=eq.${c.id}`, { method: 'DELETE', headers: supaHdr() });
+    } catch(e) { console.warn('[deleteContatoCp]', e.message); }
   }
 }
 
@@ -8491,17 +8869,6 @@ function _hmEscopo() {
   if (_inicioCat) props = props.filter(p => _propCategoriaKey(p) === _inicioCat);
   return props;
 }
-function homeVerLista(tipo, quem) {
-  const M = homeMetrics(_hmEscopo().filter(p => !quem || _respDe(p) === quem));
-  if (tipo === 'caixa') return _hmDrawerLista('Sem etapa — ' + (quem || 'equipe'), M.caixa);
-  _hmDrawerLista('Propostas abertas — ' + (quem || 'equipe'), M.abertas);
-}
-function homeVerTravadas() {
-  const M = homeMetrics(_hmEscopo());
-  _hmDrawerLista('Travadas há mais de 60 dias',
-    M.abertas.filter(p => { const d = _idadeDias(p); return d !== null && d > 60; })
-             .sort((a,b) => _valorProp(b) - _valorProp(a)));
-}
 function homeVerSuspeitas() {
   const M = homeMetrics(_hmEscopo());
   _hmDrawerLista('Valores acima de R$ 2 milhões — revisar',
@@ -8532,7 +8899,10 @@ function updateInboxBadge() {
 function renderAtividadesPanel() {
   const box = document.getElementById('section-atividades');
   if (!box) return;
-  const isAdmin = !!(SESSION && SESSION.role === 'admin');
+
+  // Home do Administrador = Centro de Controle Comercial (visão de equipe).
+  // Home do usuário comum = painel individual abaixo, inalterado.
+  if (SESSION && SESSION.role === 'admin') { renderAdminHomeDashboard(box); updateInboxBadge(); return; }
 
   // Pipeline aberto não tem ano: uma proposta de 2025 ainda aberta continua
   // valendo hoje. Por isso o escopo da home ignora o filtro de ano.
@@ -8586,7 +8956,6 @@ function renderAtividadesPanel() {
         <div class="hm-it-meta">
           <span>Nº ${String(p.nr).padStart(4,'0')}</span>
           <span>${_htmlEsc(p.classificacao || '—')}</span>
-          ${isAdmin ? `<span>${_htmlEsc(_respDe(p))}</span>` : ''}
           ${dups.has(p.uid) ? '<span class="hm-dup">possível duplicata</span>' : ''}
         </div>
       </div>
@@ -8595,10 +8964,6 @@ function renderAtividadesPanel() {
       ${comFu ? `<button class="btn-mini" onclick="openFollowupModal('${p.uid}')">Follow-up</button>` : ''}
     </div>`;
   };
-
-  const travadas = M.abertas
-    .filter(p => { const d = _idadeDias(p); return d !== null && d > 60; })
-    .sort((a,b) => _valorProp(b) - _valorProp(a));
 
   // ── Caixa de entrada acionável (tela do representante) ───────────────────
   const caixaLista = () => {
@@ -8634,80 +8999,17 @@ function renderAtividadesPanel() {
   const catOpts = '<option value="">Todas as categorias</option>'
     + CATEGORIA_GROUPS.map(c => `<option value="${c.key}"${_inicioCat === c.key ? ' selected' : ''}>${c.label}</option>`).join('');
 
-  let corpo = '';
+  // ── Representante: caixa de entrada primeiro, é o centro da tela ─────────
+  const pctEu = Math.round(M.pctProx * 100);
+  // A RLS entrega ao representante só as propostas dele — comparar contra
+  // DATA daria a própria média rotulada como "equipe". Só mostra o
+  // comparativo quando o escopo realmente tem mais de um responsável.
+  const eqAbertas = DATA.filter(_isAbertaHome);
+  const nomes = new Set(eqAbertas.map(_respDe));
+  const temEquipe = nomes.size > 1;
+  const pctEq = temEquipe ? Math.round(homeMetrics(DATA).pctProx * 100) : null;
 
-  if (isAdmin) {
-    // ── Tabela por responsável, ordenada por caixa de entrada desc ─────────
-    const porResp = {};
-    M.abertas.forEach(p => {
-      const k = _respDe(p);
-      if (!porResp[k]) porResp[k] = { nome:k, pipe:0, abertas:0, caixa:0, paradas:0, prox:0 };
-      porResp[k].abertas++;
-      porResp[k].pipe += _valorProp(p);
-      if (_semEtapa(p)) porResp[k].caixa++;
-    });
-    M.paradas.forEach(p => { const r = porResp[_respDe(p)]; if (r) r.paradas++; });
-    M.comProx.forEach(p => { const r = porResp[_respDe(p)]; if (r) r.prox++; });
-
-    const linhas = Object.values(porResp).sort((a,b) => b.caixa - a.caixa || b.pipe - a.pipe);
-    const tbody = linhas.map(r => {
-      const pct  = r.abertas ? Math.round(r.prox / r.abertas * 100) : 0;
-      const safe = String(r.nome).replace(/"/g, '&quot;');
-      return `<tr onclick="homeVerLista('resp','${safe}')">
-        <td class="nome">${_htmlEsc(r.nome)}</td>
-        <td class="num col-pipe">${fmtBRLShort(r.pipe)}</td>
-        <td class="num" onclick="event.stopPropagation();homeVerLista('caixa','${safe}')">
-          <span class="hm-inbox-n ${r.caixa ? 'hot' : 'zero'}">${r.caixa}</span>
-        </td>
-        <td class="num">${r.paradas || '—'}</td>
-        <td class="num col-prox">${pct}%<div class="hm-bar"><i style="width:${pct}%"></i></div></td>
-      </tr>`;
-    }).join('');
-
-    corpo = `
-      ${blocoIdade}
-      <div class="hm-sec">
-        <div class="hm-sec-h">
-          <div class="hm-sec-t">Por responsável</div>
-          <div class="hm-sec-n">${M.caixa.length} na caixa de entrada da equipe</div>
-        </div>
-        ${linhas.length ? `<table class="hm-tbl">
-          <thead><tr>
-            <th>Responsável</th>
-            <th class="num col-pipe">Pipeline aberto</th>
-            <th class="num">Caixa de entrada</th>
-            <th class="num">Paradas +15d</th>
-            <th class="num col-prox">Com próxima ação</th>
-          </tr></thead>
-          <tbody>${tbody}</tbody>
-        </table>` : '<div class="hm-list"><div class="hm-empty">Nenhuma proposta aberta no escopo atual.</div></div>'}
-      </div>
-      <div class="hm-sec">
-        <div class="hm-sec-h">
-          <div class="hm-sec-t">Travadas há mais de 60 dias</div>
-          <div class="hm-sec-n">${travadas.length} no total · ${fmtBRLShort(travadas.reduce((s,p) => s + _valorProp(p), 0))}</div>
-        </div>
-        ${travadas.length
-          ? `<div class="hm-list">${travadas.slice(0,5).map(p => itemHtml(p, false)).join('')}
-             ${travadas.length > 5 ? `<div class="hm-it" style="justify-content:center">
-               <a style="cursor:pointer;color:var(--navy);font-size:12.5px;text-decoration:underline"
-                  onclick="homeVerTravadas()">Ver todas (${travadas.length - 5} restantes)</a></div>` : ''}</div>`
-          : `<div class="hm-done"><div class="hm-done-i">${HM_ICO.check}</div>
-             <div class="hm-done-t">Nada travado</div>
-             <div class="hm-done-s">Nenhuma proposta aberta passou de 60 dias.</div></div>`}
-      </div>`;
-  } else {
-    // ── Representante: caixa de entrada primeiro, é o centro da tela ───────
-    const pctEu = Math.round(M.pctProx * 100);
-    // A RLS entrega ao representante só as propostas dele — comparar contra
-    // DATA daria a própria média rotulada como "equipe". Só mostra o
-    // comparativo quando o escopo realmente tem mais de um responsável.
-    const eqAbertas = DATA.filter(_isAbertaHome);
-    const nomes = new Set(eqAbertas.map(_respDe));
-    const temEquipe = nomes.size > 1;
-    const pctEq = temEquipe ? Math.round(homeMetrics(DATA).pctProx * 100) : null;
-
-    corpo = `
+  const corpo = `
       <div class="hm-sec">
         <div class="hm-sec-h">
           <div class="hm-sec-t">Sua caixa de entrada</div>
@@ -8730,7 +9032,6 @@ function renderAtividadesPanel() {
       <div class="hm-cmp">
         <span>Com próxima ação agendada — <b>você ${pctEu}%</b>${pctEq !== null ? ` · média da equipe ${pctEq}%` : ''}</span>
       </div>`;
-  }
 
   box.innerHTML = `
     <div class="hm">
@@ -8746,6 +9047,485 @@ function renderAtividadesPanel() {
     </div>`;
 
   updateInboxBadge();
+}
+
+// ════════════════════════════════════════════════════════════════════════
+// FASE 8 — CENTRO DE CONTROLE COMERCIAL (Home do Administrador)
+// Reaproveita dados já carregados (DATA, followUps, _usersCache) — não
+// dispara nenhuma consulta nova e não altera regra de negócio existente:
+// é só uma nova camada de leitura/apresentação sobre os mesmos campos que
+// o resto do CRM já usa (status, etapa, datas, responsavel/interno/
+// representante, tipo_proximo_passo).
+// ════════════════════════════════════════════════════════════════════════
+let _ahF = { periodo:'semana', ini:'', fim:'', user:'', dept:'', cat:'', status:'', cliente:'' };
+function ahSetF(field, val) { _ahF[field] = val; renderAdminHomeDashboard(document.getElementById('section-atividades')); }
+function ahResetF() { _ahF = { periodo:'semana', ini:'', fim:'', user:'', dept:'', cat:'', status:'', cliente:'' }; renderAdminHomeDashboard(document.getElementById('section-atividades')); }
+function _ahHasFilters() {
+  return !!(_ahF.user || _ahF.dept || _ahF.cat || _ahF.status || _ahF.cliente || _ahF.periodo !== 'semana');
+}
+function _ahFmtTs(t) { return t ? new Date(t).toLocaleDateString('pt-BR') : '—'; }
+
+// Departamento do dono da proposta, a partir do cadastro de usuários do CRM.
+function _ahOwnerDept(p) {
+  const nome = _respDe(p);
+  if (nome === '— sem responsável') return '';
+  const u = (_usersCache||[]).find(x => _matchNome(x.nome||x.email, nome));
+  return u ? userTypeOf(u) : '';
+}
+// Escopo base: aplica os filtros fixos do topo (Usuário/Depto/Categoria/Status/Cliente), sem período.
+function _ahScope() {
+  let list = DATA.slice();
+  if (_ahF.user)    list = list.filter(p => _ownerMatches(p, _ahF.user));
+  if (_ahF.dept)    list = list.filter(p => _ahOwnerDept(p) === _ahF.dept);
+  if (_ahF.cat)     list = list.filter(p => _propCategoriaKey(p) === _ahF.cat);
+  if (_ahF.status)  list = list.filter(p => (p.status||'ABERTO').toUpperCase() === _ahF.status);
+  if (_ahF.cliente) { const q = _accUp(_ahF.cliente); list = list.filter(p => _accUp(p.cliente||'').includes(q)); }
+  return list;
+}
+
+// Janela do período selecionado + janela imediatamente anterior (mesmo tamanho, p/ comparação).
+function _ahPeriodRange() {
+  const hoje = _todayMid();
+  if (_ahF.periodo === 'hoje') return [hoje, hoje + 86400000];
+  if (_ahF.periodo === 'mes') {
+    const d = new Date();
+    return [new Date(d.getFullYear(), d.getMonth(), 1).getTime(), new Date(d.getFullYear(), d.getMonth()+1, 1).getTime()];
+  }
+  if (_ahF.periodo === 'custom' && _ahF.ini && _ahF.fim) {
+    const s = cpParseDate(_ahF.ini), e = cpParseDate(_ahF.fim);
+    if (s && e) return [s, e + 86400000];
+  }
+  const s = _mondayOf(new Date());
+  return [s, s + 7*86400000];
+}
+function _ahPrevRange() {
+  const [s,e] = _ahPeriodRange();
+  const len = e - s;
+  return [s - len, s];
+}
+function _ahInRange(dateStr, s, e) {
+  const t = cpParseDate(dateStr);
+  return !!t && t >= s && t < e;
+}
+// Selo de comparação com o período anterior — verde/vermelho conforme o sentido bom daquela métrica.
+function _ahDelta(curr, prev, goodDir) {
+  const diff = curr - prev;
+  if (diff === 0) return `<span class="ah-delta flat">sem variação vs. período anterior</span>`;
+  const up = diff > 0;
+  const good = goodDir > 0 ? up : !up;
+  return `<span class="ah-delta ${good?'good':'bad'}">${up?'▲':'▼'} ${Math.abs(diff)} vs. período anterior</span>`;
+}
+// _ultimaMovTs cai para data_abertura quando não há outra movimentação (útil p/
+// "última atividade"). Para o gráfico/ranking de ATUALIZAÇÕES isso contaria toda
+// proposta recém-criada também como "atualizada" no mesmo dia — por isso aqui não
+// há fallback: só conta se houve alguma movimentação além da criação.
+function _ahUpdatedTs(p) {
+  if (_movMap[p.uid]) return _movMap[p.uid];
+  let t = 0;
+  const bump = v => { const x = cpParseDate(v); if (x > t) t = x; };
+  bump(p.etapa_changed_at); bump(p.etapa_entrada_em); bump(p.updated_at);
+  (followUps[p.uid] || []).forEach(fu => { bump(fu.criado_em); bump(fu.editado_em); bump(fu.data_contato); });
+  return t;
+}
+
+const AH_ICO = {
+  neg:    `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 3a2.85 2.85 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5z"/></svg>`,
+  clock:  `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15 14"/></svg>`,
+  cal:    `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>`,
+  warn:   `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>`,
+  userx:  `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/><line x1="17" y1="8" x2="22" y2="13"/><line x1="22" y1="8" x2="17" y2="13"/></svg>`,
+  plus:   `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>`,
+  trophy: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 21h8M12 17v4M7 4h10v4a5 5 0 0 1-10 0V4z"/><path d="M17 5h3a2 2 0 0 1-2 4M7 5H4a2 2 0 0 0 2 4"/></svg>`,
+  x:      `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><line x1="9" y1="9" x2="15" y2="15"/><line x1="15" y1="9" x2="9" y2="15"/></svg>`,
+  check:  `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>`,
+  doc:    `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>`,
+};
+
+// ── Linha 1 — cards de KPI ─────────────────────────────────────────────────
+function _ahKpis(scoped) {
+  const ind     = commercialIndicators(scoped);
+  const M       = homeMetrics(scoped);   // M.paradas = sem movimentação há 15d+
+  const semResp = ind.abertas.filter(p => _respDe(p) === '— sem responsável');
+
+  const [rS, rE] = _ahPeriodRange();
+  const [pS, pE] = _ahPrevRange();
+  const criadas     = scoped.filter(p => _ahInRange(p.data_abertura, rS, rE));
+  const criadasPrev = scoped.filter(p => _ahInRange(p.data_abertura, pS, pE));
+  const ganhas       = scoped.filter(p => (p.status||'').toUpperCase()==='VENDIDO' && _ahInRange(p.data_fechamento, rS, rE));
+  const ganhasPrev   = scoped.filter(p => (p.status||'').toUpperCase()==='VENDIDO' && _ahInRange(p.data_fechamento, pS, pE));
+  const isPerdida = p => { const s=(p.status||'').toUpperCase(); return s==='PERDIDO'||s.includes('DESIST'); };
+  const perdidas     = scoped.filter(p => isPerdida(p) && _ahInRange(p.data_fechamento, rS, rE));
+  const perdidasPrev = scoped.filter(p => isPerdida(p) && _ahInRange(p.data_fechamento, pS, pE));
+
+  return [
+    { ico:AH_ICO.neg,    n:ind.abertas.length,     l:'Propostas em negociação',       c:'' },
+    { ico:AH_ICO.clock,  n:M.paradas.length,       l:'Aguardando atualização (+15d)', c:M.paradas.length?'warn':'good' },
+    { ico:AH_ICO.cal,    n:ind.fuHoje.length,      l:'Follow-ups agendados hoje',     c:'good' },
+    { ico:AH_ICO.warn,   n:ind.fuAtrasados.length, l:'Follow-ups atrasados',          c:ind.fuAtrasados.length?'bad':'good' },
+    { ico:AH_ICO.userx,  n:semResp.length,         l:'Propostas sem responsável',     c:semResp.length?'warn':'good' },
+    { ico:AH_ICO.plus,   n:criadas.length,         l:'Propostas criadas no período',  c:'',     delta:_ahDelta(criadas.length, criadasPrev.length, 1) },
+    { ico:AH_ICO.trophy, n:ganhas.length,          l:'Propostas ganhas no período',   c:'good', delta:_ahDelta(ganhas.length, ganhasPrev.length, 1) },
+    { ico:AH_ICO.x,      n:perdidas.length,        l:'Propostas perdidas no período', c:'bad',  delta:_ahDelta(perdidas.length, perdidasPrev.length, -1) },
+  ];
+}
+function _ahKpisHtml(cards) {
+  return '<div class="ah-kpi-grid">' + cards.map(k => `
+    <div class="ah-kpi ${k.c}">
+      <div class="ah-kpi-ico">${k.ico}</div>
+      <div class="ah-kpi-n">${k.n}</div>
+      <div class="ah-kpi-l">${k.l}</div>
+      ${k.delta ? `<div class="ah-kpi-d">${k.delta}</div>` : ''}
+    </div>`).join('') + '</div>';
+}
+
+// ── Linha 2 — Atividade da equipe (só usuários cadastrados no CRM) ─────────
+function _ahTeamRows(scoped, scopedUids) {
+  const hoje = _todayMid();
+  let users = (_usersCache||[]).filter(userIsActive);
+  if (_ahF.user) users = users.filter(u => _matchNome(u.nome||u.email, _ahF.user));
+  if (_ahF.dept) users = users.filter(u => userTypeOf(u) === _ahF.dept);
+
+  return users.map(u => {
+    const nome  = (u.nome || u.email || '').trim();
+    const meus  = scoped.filter(p => _ownerMatches(p, nome));
+    const abertas = meus.filter(_isAbertaHome);
+    const paradas = abertas.filter(p => { const t=_ultimaMovTs(p); return t && (hoje-t) > 15*86400000; });
+    const flat   = _latestPerUid(_flatFollowupsByOwner(nome).filter(ff => scopedUids.has(ff._uid))).filter(ff => !ff.concluido);
+    const [wS,wE] = _ahPeriodRange();
+    const semana = flat.filter(ff => { const t=cpParseDate(ff.proximo_contato); return t && t>=wS && t<wE; });
+    const atraso = flat.filter(ff => { const t=cpParseDate(ff.proximo_contato); return t && t<hoje; });
+    const futuros = flat.map(ff=>cpParseDate(ff.proximo_contato)).filter(t=>t && t>=hoje);
+    const ultima  = Math.max(0, ...meus.map(_ultimaMovTs), 0);
+    const proxima = futuros.length ? Math.min(...futuros) : 0;
+
+    let status = 'ok';
+    if (atraso.length > 0) status = 'crit';
+    else if (paradas.length > 0 || (abertas.length && !proxima)) status = 'warn';
+
+    return { nome, cargo:USER_TYPE_LABEL[userTypeOf(u)]||'—', neg:abertas.length, aguard:paradas.length,
+             fuSemana:semana.length, fuAtraso:atraso.length, ultima, proxima, status };
+  }).sort((a,b) => {
+    const rank = { crit:0, warn:1, ok:2 };
+    return rank[a.status]-rank[b.status] || b.aguard-a.aguard || b.neg-a.neg;
+  });
+}
+function _ahInitials(nome) { return (nome||'').trim().split(/\s+/).map(w=>w[0]).slice(0,2).join('').toUpperCase() || '?'; }
+function _ahStatusPill(s) {
+  if (s==='crit') return `<span class="ah-status crit">🔴 Crítico</span>`;
+  if (s==='warn') return `<span class="ah-status warn">🟡 Atenção</span>`;
+  return `<span class="ah-status ok">🟢 Em dia</span>`;
+}
+function _ahTeamTableHtml(rows) {
+  if (!rows.length) return `<div class="hm-list"><div class="hm-empty">Nenhum usuário cadastrado no CRM encontrado.</div></div>`;
+  const tr = rows.map(r => `
+    <tr>
+      <td><div class="ah-user"><span class="ah-avatar">${_ahInitials(r.nome)}</span>
+        <div><div class="ah-user-n">${_htmlEsc(r.nome)}</div><div class="ah-user-c">${r.cargo}</div></div></div></td>
+      <td class="num">${r.neg}</td>
+      <td class="num">${r.aguard || '—'}</td>
+      <td class="num">${r.fuSemana || '—'}</td>
+      <td class="num">${r.fuAtraso ? `<span style="color:var(--error);font-weight:700">${r.fuAtraso}</span>` : '—'}</td>
+      <td>${_ahFmtTs(r.ultima)}</td>
+      <td>${_ahFmtTs(r.proxima)}</td>
+      <td>${_ahStatusPill(r.status)}</td>
+    </tr>`).join('');
+  return `<table class="hm-tbl ah-team-tbl">
+    <thead><tr>
+      <th>Usuário</th><th class="num">Em negociação</th><th class="num">Aguardando atualização</th>
+      <th class="num">Follow-ups na semana</th><th class="num">Atrasados</th>
+      <th>Última atividade</th><th>Próxima atividade</th><th>Status geral</th>
+    </tr></thead><tbody>${tr}</tbody></table>`;
+}
+
+// ── Linha 3 — Quadro de prioridades ─────────────────────────────────────────
+function _ahPriorityBuckets(scoped) {
+  const M = homeMetrics(scoped);
+  const ind = commercialIndicators(scoped);
+  const abertas = scoped.filter(_isAbertaHome);
+
+  const semMov = M.paradas.slice().sort((a,b)=>_diasParada(b)-_diasParada(a));
+
+  const fuVencidosProps = ind.fuAtrasados
+    .map(ff => scoped.find(p => p.uid === ff._uid))
+    .filter(Boolean)
+    .sort((a,b)=>_diasParada(b)-_diasParada(a));
+
+  const latestByUid = {};
+  _latestPerUid(_flatFollowups(scoped)).filter(ff=>!ff.concluido).forEach(ff => { latestByUid[ff._uid] = ff; });
+
+  const aguardRetorno = abertas.filter(p => {
+    const ff = latestByUid[p.uid];
+    return ff && ff.tipo_proximo_passo === 'Aguardar retorno';
+  }).sort((a,b)=>_diasParada(b)-_diasParada(a));
+
+  const norm = s => _accUp(s||'');
+  const aguardOrcamento = abertas.filter(p => norm(p.etapa).includes('ORCAMENTO')).sort((a,b)=>_diasParada(b)-_diasParada(a));
+  const aguardAprovacao = abertas.filter(p => norm(p.etapa).includes('APROV')).sort((a,b)=>_diasParada(b)-_diasParada(a));
+
+  return [
+    { titulo:'Sem movimentação há mais de 15 dias', ico:AH_ICO.clock, itens:semMov },
+    { titulo:'Follow-ups vencidos',                 ico:AH_ICO.warn,  itens:fuVencidosProps },
+    { titulo:'Aguardando retorno do cliente',       ico:AH_ICO.cal,   itens:aguardRetorno },
+    { titulo:'Aguardando orçamento',                ico:AH_ICO.doc,   itens:aguardOrcamento },
+    { titulo:'Aguardando aprovação',                ico:AH_ICO.check, itens:aguardAprovacao },
+  ];
+}
+function _ahPriorityItemHtml(p) {
+  const d = _diasParada(p);
+  return `<div class="ah-pri-it">
+    <div class="ah-pri-main">
+      <div class="ah-pri-cli">${_htmlEsc(p.cliente||'—')}</div>
+      <div class="ah-pri-meta">Nº ${String(p.nr).padStart(4,'0')} · ${_htmlEsc(_respDe(p))}</div>
+    </div>
+    <div class="ah-pri-dias">${d===null?'—':d+'d parada'}</div>
+    <button class="btn-mini" onclick="openFollowupModal('${p.uid}')">Abrir proposta</button>
+  </div>`;
+}
+function _ahPriorityBoardHtml(buckets) {
+  return buckets.map(b => `
+    <div class="ah-pri-col">
+      <div class="ah-pri-h">${b.ico}<span>${b.titulo}</span><span class="ah-pri-count">${b.itens.length}</span></div>
+      ${b.itens.length
+        ? `<div class="ah-pri-list">${b.itens.slice(0,6).map(_ahPriorityItemHtml).join('')}</div>`
+        : `<div class="hm-empty" style="padding:16px 8px">Nada aqui.</div>`}
+    </div>`).join('');
+}
+
+// ── Linha 4 — Agenda comercial da semana ────────────────────────────────────
+const AH_TIPO_MAP = {
+  'Ligar':'Ligações', 'Visita':'Visitas', 'Videoconferencia':'Reuniões',
+  'Enviar proposta':'Entregas de proposta',
+  'E-mail':'Follow-ups', 'WhatsApp':'Follow-ups', 'Aguardar retorno':'Follow-ups', '':'Follow-ups'
+};
+function _ahAgendaBuckets(scoped) {
+  const hoje = _todayMid();
+  const wE = _mondayOf(new Date()) + 7*86400000;
+  const flat = _latestPerUid(_flatFollowups(scoped)).filter(ff => !ff.concluido);
+
+  const dias = [
+    { key:'hoje',   titulo:'Hoje',          ini:hoje,                  fim:hoje+86400000 },
+    { key:'amanha', titulo:'Amanhã',        ini:hoje+86400000,         fim:hoje+2*86400000 },
+    { key:'prox',   titulo:'Próximos dias', ini:hoje+2*86400000,       fim:Math.max(wE, hoje+3*86400000) },
+  ];
+  return dias.map(d => {
+    const itens = flat.filter(ff => { const t=cpParseDate(ff.proximo_contato); return t && t>=d.ini && t<d.fim; });
+    const porTipo = {};
+    itens.forEach(ff => { const k = AH_TIPO_MAP[ff.tipo_proximo_passo] || 'Follow-ups'; porTipo[k] = (porTipo[k]||0)+1; });
+    const porUser = {};
+    itens.forEach(ff => { const who = ff._fuResp || ff._resp || '—'; porUser[who] = (porUser[who]||0)+1; });
+    const userChips = Object.entries(porUser).sort((a,b)=>b[1]-a[1]).slice(0,6);
+    return Object.assign({}, d, { itens, porTipo, userChips, restante: Object.keys(porUser).length - userChips.length });
+  });
+}
+function _ahAgendaHtml(buckets) {
+  return buckets.map(b => `
+    <div class="ah-ag-col">
+      <div class="ah-ag-h"><span>${b.titulo}</span><span class="ah-pri-count">${b.itens.length}</span></div>
+      ${b.itens.length ? `
+        <div class="ah-ag-tipos">${Object.entries(b.porTipo).map(([k,n])=>`<span class="ah-ag-tipo">${k} · ${n}</span>`).join('')}</div>
+        <div class="ah-ag-users">${b.userChips.map(([n,c])=>`<span class="ah-ag-user">${_htmlEsc(n)} <b>${c}</b></span>`).join('')}${b.restante>0?`<span class="ah-ag-user muted">+${b.restante} outros</span>`:''}</div>`
+        : `<div class="hm-empty" style="padding:14px 6px">Nada agendado.</div>`}
+    </div>`).join('');
+}
+
+// ── Linha 5 — Ranking de atividade (mede atividade, não faturamento) ───────
+function _ahRankingRows(scoped, scopedUids) {
+  const [rS, rE] = _ahPeriodRange();
+  let users = (_usersCache||[]).filter(userIsActive);
+  if (_ahF.user) users = users.filter(u => _matchNome(u.nome||u.email, _ahF.user));
+  if (_ahF.dept) users = users.filter(u => userTypeOf(u) === _ahF.dept);
+
+  return users.map(u => {
+    const nome = (u.nome || u.email || '').trim();
+    const meus = scoped.filter(p => _ownerMatches(p, nome));
+    const atualizadas = meus.filter(p => { const t = _ahUpdatedTs(p); return t && t >= rS && t < rE; }).length;
+    const flatAll = _flatFollowupsByOwner(nome).filter(ff => scopedUids.has(ff._uid));
+    const concluidos = flatAll.filter(ff => ff.concluido && (() => { const t=cpParseDate(ff.editado_em||ff.criado_em); return t && t>=rS && t<rE; })()).length;
+    const ultima = Math.max(0, ...meus.map(_ultimaMovTs), 0);
+    return { nome, acoes: atualizadas + concluidos, atualizadas, concluidos, ultima };
+  }).sort((a,b) => b.acoes - a.acoes);
+}
+function _ahRankingHtml(rows) {
+  if (!rows.length) return `<div class="hm-list"><div class="hm-empty">Sem usuários cadastrados.</div></div>`;
+  const tr = rows.map((r,i) => `<tr>
+      <td>${i+1}</td>
+      <td>${_htmlEsc(r.nome)}</td>
+      <td class="num">${r.acoes}</td>
+      <td class="num">${r.atualizadas}</td>
+      <td class="num">${r.concluidos}</td>
+      <td title="Estimado pela última atividade registrada — não há rastreio de login no sistema">${_ahFmtTs(r.ultima)}</td>
+    </tr>`).join('');
+  return `<table class="hm-tbl">
+    <thead><tr><th>#</th><th>Usuário</th><th class="num">Ações realizadas</th><th class="num">Propostas atualizadas</th><th class="num">Follow-ups concluídos</th><th>Último acesso*</th></tr></thead>
+    <tbody>${tr}</tbody></table>
+    <div class="t-caption" style="margin-top:6px">* estimado pela última atividade registrada (o sistema não rastreia login).</div>`;
+}
+
+// ── Linha 6 — Movimentação semanal (Seg–Sex): criadas · atualizadas · fechadas ──
+function _ahWeekSeries(scoped) {
+  const s = _mondayOf(new Date());
+  const labels = ['Segunda','Terça','Quarta','Quinta','Sexta'];
+  const criadas = [0,0,0,0,0], atualizadas = [0,0,0,0,0], fechadas = [0,0,0,0,0];
+  const dayIdx = t => { const di = Math.floor((t - s)/86400000); return (di>=0 && di<5) ? di : -1; };
+  scoped.forEach(p => {
+    let t = cpParseDate(p.data_abertura), i = t?dayIdx(t):-1; if (i>=0) criadas[i]++;
+    t = _ahUpdatedTs(p); i = t?dayIdx(t):-1; if (i>=0) atualizadas[i]++;
+    const st = (p.status||'').toUpperCase();
+    if (st==='VENDIDO'||st==='PERDIDO'||st.includes('DESIST')) {
+      t = cpParseDate(p.data_fechamento); i = t?dayIdx(t):-1; if (i>=0) fechadas[i]++;
+    }
+  });
+  return { labels, criadas, atualizadas, fechadas };
+}
+// Gráfico de colunas agrupadas com N séries — mesma linguagem visual do ccColsSVG.
+function _ahGroupedColsSVG(labels, series) {
+  const W = 720, H = 220, pl=12, pr=12, pt=30, pb=30;
+  const iW = W-pl-pr, iH = H-pt-pb, n = labels.length;
+  if (!n) return '<div class="pf-empty-chart">Sem dados.</div>';
+  const max = Math.max(1, ...series.flatMap(s=>s.values));
+  const slot = iW/n, gw = Math.min(slot*0.75, 60), bw = gw/series.length;
+  let g = '';
+  for (let k=0;k<=2;k++){ const yy=pt+iH*k/2; g += `<line x1="${pl}" y1="${yy.toFixed(1)}" x2="${W-pr}" y2="${yy.toFixed(1)}" stroke="var(--border)" stroke-width="1"/>`; }
+  labels.forEach((l,i) => {
+    const cx = pl + slot*i + slot/2, gx0 = cx - gw/2;
+    series.forEach((s,si) => {
+      const v = +s.values[i]||0, h = v/max*iH, x = gx0+si*bw, y = pt+iH-h;
+      g += `<rect x="${x.toFixed(1)}" y="${y.toFixed(1)}" width="${(bw-2).toFixed(1)}" height="${Math.max(0,h).toFixed(1)}" rx="3" fill="${s.color}"/>`;
+      if (v>0) g += `<text x="${(x+bw/2-1).toFixed(1)}" y="${(y-4).toFixed(1)}" font-size="8.5" fill="${s.color}" text-anchor="middle" font-weight="700" font-family="Inter,system-ui,sans-serif">${v}</text>`;
+    });
+    g += `<text x="${cx.toFixed(1)}" y="${H-10}" font-size="10" fill="var(--navy)" text-anchor="middle" font-family="Inter,system-ui,sans-serif">${l}</text>`;
+  });
+  let lx = pl;
+  series.forEach(s => {
+    g += `<rect x="${lx}" y="6" width="10" height="10" rx="2" fill="${s.color}"/><text x="${lx+15}" y="14.5" font-size="10" fill="var(--text)" font-family="Inter,system-ui,sans-serif">${s.name}</text>`;
+    lx += 26 + s.name.length*6.2;
+  });
+  return `<svg viewBox="0 0 ${W} ${H}" style="width:100%;height:auto;display:block">${g}</svg>`;
+}
+
+// ── Painel lateral "Atenção do Administrador" — insights dinâmicos ─────────
+function _ahInsights(rows, buckets, semRespCount) {
+  const hoje = _todayMid();
+  const out = [];
+  rows.forEach(r => { if (r.aguard >= 5) out.push(`${r.nome} possui ${r.aguard} propostas sem atualização há mais de 15 dias.`); });
+  rows.forEach(r => { if (r.neg > 0 && (!r.ultima || (hoje - r.ultima) >= 86400000)) out.push(`${r.nome} não registrou atividade hoje.`); });
+  rows.forEach(r => { if (r.fuSemana >= 10) out.push(`${r.nome} possui ${r.fuSemana} follow-ups nesta semana.`); });
+  if (semRespCount) out.push(`Existe${semRespCount===1?'':'m'} ${semRespCount} proposta${semRespCount===1?'':'s'} sem responsável.`);
+  const retornoBucket = buckets.find(b => b.titulo === 'Aguardando retorno do cliente');
+  if (retornoBucket) {
+    const n30 = retornoBucket.itens.filter(p => { const d=_diasParada(p); return d!==null && d>=30; }).length;
+    if (n30) out.push(`${n30} ${n30===1?'proposta aguarda':'propostas aguardam'} retorno há mais de 30 dias.`);
+  }
+  return out.slice(0, 8);
+}
+function _ahInsightsHtml(list) {
+  if (!list.length) return `<div class="hm-empty" style="padding:20px 8px">Tudo em ordem — nenhum alerta no momento.</div>`;
+  return '<div class="ah-attn-list">' + list.map(t => `<div class="ah-attn-it">${AH_ICO.warn}<span>${t}</span></div>`).join('') + '</div>';
+}
+
+// ── Filtros fixos do topo ───────────────────────────────────────────────────
+function _ahFiltersHtml() {
+  const users = _responsavelOptions();
+  const userOpts = '<option value="">Todos</option>' + users.map(n=>`<option value="${_htmlEsc(n)}"${_ahF.user===n?' selected':''}>${_htmlEsc(n)}</option>`).join('');
+  const deptOpts = `<option value="">Todos</option>
+    <option value="representante"${_ahF.dept==='representante'?' selected':''}>Representante</option>
+    <option value="vendedor_interno"${_ahF.dept==='vendedor_interno'?' selected':''}>Vendedor Interno</option>`;
+  const catOpts = '<option value="">Todas</option>' + CATEGORIA_GROUPS.map(c=>`<option value="${c.key}"${_ahF.cat===c.key?' selected':''}>${c.label}</option>`).join('');
+  const statusOpts = '<option value="">Todos</option>' + DEFAULT_STATUS_LIST.map(s=>`<option value="${s.value}"${_ahF.status===s.value?' selected':''}>${s.label}</option>`).join('');
+  const custom = _ahF.periodo === 'custom' ? `
+    <div class="pf-fgrp"><label>De</label><input type="date" value="${_ahF.ini}" onchange="ahSetF('ini', this.value)"></div>
+    <div class="pf-fgrp"><label>Até</label><input type="date" value="${_ahF.fim}" onchange="ahSetF('fim', this.value)"></div>` : '';
+  return `<div class="pf-filters">
+    <div class="pf-fgrp"><label>Período</label>
+      <select onchange="ahSetF('periodo', this.value)">
+        <option value="hoje"${_ahF.periodo==='hoje'?' selected':''}>Hoje</option>
+        <option value="semana"${_ahF.periodo==='semana'?' selected':''}>Semana</option>
+        <option value="mes"${_ahF.periodo==='mes'?' selected':''}>Mês</option>
+        <option value="custom"${_ahF.periodo==='custom'?' selected':''}>Personalizado</option>
+      </select></div>
+    ${custom}
+    <div class="pf-fgrp"><label>Usuário</label><select onchange="ahSetF('user', this.value)">${userOpts}</select></div>
+    <div class="pf-fgrp"><label>Departamento</label><select onchange="ahSetF('dept', this.value)">${deptOpts}</select></div>
+    <div class="pf-fgrp"><label>Categoria</label><select onchange="ahSetF('cat', this.value)">${catOpts}</select></div>
+    <div class="pf-fgrp"><label>Status</label><select onchange="ahSetF('status', this.value)">${statusOpts}</select></div>
+    <div class="pf-fgrp"><label>Cliente</label><input type="text" placeholder="Buscar cliente…" value="${_htmlEsc(_ahF.cliente)}" onchange="ahSetF('cliente', this.value)"></div>
+    ${_ahHasFilters() ? '<button class="btn-tbl" onclick="ahResetF()" style="margin-left:auto">Limpar filtros</button>' : ''}
+  </div>`;
+}
+
+// ── Orquestrador ─────────────────────────────────────────────────────────────
+function renderAdminHomeDashboard(box) {
+  if (!box) return;
+  if (!_usersCache.length) {
+    ensureUsersCache().then(() => { if (currentView === 'inicio') renderAdminHomeDashboard(document.getElementById('section-atividades')); });
+  }
+
+  const scoped = _ahScope();
+  const scopedUids = new Set(scoped.map(p => p.uid));
+
+  const kpis    = _ahKpis(scoped);
+  const rows    = _ahTeamRows(scoped, scopedUids);
+  const buckets = _ahPriorityBuckets(scoped);
+  const agenda  = _ahAgendaBuckets(scoped);
+  const ranking = _ahRankingRows(scoped, scopedUids);
+  const chartS  = _ahWeekSeries(scoped);
+  const semResp = scoped.filter(p => _isAbertaHome(p) && _respDe(p)==='— sem responsável').length;
+  const insights = _ahInsights(rows, buckets, semResp);
+
+  const saud = (() => { const h = new Date().getHours(); return h < 12 ? 'Bom dia' : h < 18 ? 'Boa tarde' : 'Boa noite'; })();
+  const chartHtml = _ahGroupedColsSVG(chartS.labels, [
+    { name:'Criadas',     color:'var(--navy)',    values:chartS.criadas },
+    { name:'Atualizadas', color:'var(--warn)',    values:chartS.atualizadas },
+    { name:'Fechadas',    color:'var(--success)', values:chartS.fechadas },
+  ]);
+
+  box.innerHTML = `
+    <div class="hm ah-home">
+      <div class="hm-head">
+        <div class="hm-hi">${saud}, ${_htmlEsc((SESSION && SESSION.nome) || '')}</div>
+        <div class="hm-sub">Centro de Controle Comercial — ${new Date().toLocaleDateString('pt-BR',{weekday:'long',day:'2-digit',month:'long',year:'numeric'})}</div>
+      </div>
+      ${_ahFiltersHtml()}
+      <div class="ah-layout">
+        <div class="ah-main">
+          ${_ahKpisHtml(kpis)}
+
+          <div class="hm-sec">
+            <div class="hm-sec-h"><div class="hm-sec-t">Atividade da equipe</div><div class="hm-sec-n">${rows.length} usuários cadastrados</div></div>
+            <div class="ah-tbl-wrap">${_ahTeamTableHtml(rows)}</div>
+          </div>
+
+          <div class="hm-sec">
+            <div class="hm-sec-h"><div class="hm-sec-t">Quadro de prioridades</div></div>
+            <div class="ah-pri-grid">${_ahPriorityBoardHtml(buckets)}</div>
+          </div>
+
+          <div class="hm-sec">
+            <div class="hm-sec-h">
+              <div class="hm-sec-t">Agenda comercial da semana</div>
+              <a class="ah-link" onclick="setView('agenda')">Ver agenda completa</a>
+            </div>
+            <div class="ah-ag-grid">${_ahAgendaHtml(agenda)}</div>
+          </div>
+
+          <div class="hm-sec">
+            <div class="hm-sec-h"><div class="hm-sec-t">Ranking de atividade</div></div>
+            ${_ahRankingHtml(ranking)}
+          </div>
+
+          <div class="hm-sec">
+            <div class="hm-sec-h"><div class="hm-sec-t">Movimentação das propostas na semana</div></div>
+            <div class="pf-chart wide">${chartHtml}</div>
+          </div>
+        </div>
+        <div class="ah-side">
+          <div class="pf-chart">
+            <div class="pf-chart-title">Atenção do Administrador</div>
+            ${_ahInsightsHtml(insights)}
+          </div>
+        </div>
+      </div>
+    </div>`;
 }
 
 // ── Tile detail drawer ────────────────────────────────────────────────────
