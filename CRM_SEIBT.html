@@ -4639,6 +4639,27 @@ function expandPanel(p) {
         <button class="btn-close-prop" style="width:100%;background:var(--error)" onclick="reabrirProposta('${p.uid}')">Reabrir Proposta</button>
       </div>
     </div>`;
+  } else if (su && su !== 'VENDIDO' && SESSION && SESSION.role === 'admin') {
+    // Perdido / Desistência / Stand-by / Proposta Complementar: sem fluxo próprio
+    // de reversão. Permite ao Administrador voltar a proposta para Aberto.
+    // Visível SÓ para o Administrador (não para gestor/tipo_acesso 'todos').
+    rightCards += `
+    <div class="act-card">
+      <button class="act-card-hdr" onclick="toggleActCard(this)">
+        <span class="act-card-icon green">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-3"/></svg>
+        </span>
+        <span class="act-card-title">Reativar Proposta</span>
+        ${CHV_ICO}
+      </button>
+      <div class="act-card-body">
+        <div style="font-size:11.5px;color:var(--muted);line-height:1.5;margin-bottom:10px">
+          Volta o status desta proposta para <b>Aberto</b>, limpando data de fechamento
+          e motivo da perda. Use quando a negociação for retomada.
+        </div>
+        <button class="btn-close-prop" style="width:100%" onclick="reativarProposta('${p.uid}')">Reativar Proposta</button>
+      </div>
+    </div>`;
   }
 
   rightCards += `
@@ -10993,6 +11014,59 @@ async function reabrirProposta(uid) {
   }
 
   alert('Proposta reaberta. Agora registre o pedido na proposta correta.');
+}
+
+// ── Reativar Proposta (Perdido/Desistência/Stand-by → Aberto de novo) ──────
+// Mesmo padrão de reabrirProposta(), mas para os status que NÃO têm fluxo
+// próprio de "desfazer": Perdido, Desistência, Stand-by, Proposta Complementar.
+// Vendido usa reabrirProposta() (limpa dados de pedido, que não existem aqui).
+async function reativarProposta(uid) {
+  if (!(SESSION && SESSION.role === 'admin')) return; // ação restrita ao Administrador
+  const p = DATA.find(x => x.uid === uid);
+  if (!p) return;
+
+  const statusAtual = statusChip(p.status).replace(/<[^>]+>/g, ''); // rótulo legível, sem HTML
+  const confirmMsg = 'Reativar a proposta Nº ' + String(p.nr).padStart(4,'0') + ' (' + (p.cliente||'—') + ')?\n\n'
+    + 'Status atual: ' + statusAtual + '\n\n'
+    + 'O status volta para Aberto e a proposta passa a contar como negociação em andamento novamente.';
+  if (!confirm(confirmMsg)) return;
+
+  const ov = { status: 'ABERTO', data_fechamento: null, motivo_perda: null };
+
+  // Persiste localmente primeiro (funciona offline)
+  overrides[uid] = Object.assign(overrides[uid] || {}, ov);
+  localStorage.setItem('seibt_overrides_v1', JSON.stringify(overrides));
+  Object.assign(p, ov);
+  expandedRows.delete(uid);
+  applyFilters();
+  updateBadges();
+  updateKPIs();
+
+  // Write-back direto na tabela propostas do Supabase (mesmo padrão de reabrirProposta)
+  try {
+    const res = await fetch(
+      `${SUPABASE_URL}/rest/v1/propostas?uid=eq.${encodeURIComponent(uid)}`, {
+      method: 'PATCH',
+      headers: Object.assign(supaHdr(true), { 'Prefer': 'return=minimal' }),
+      body: JSON.stringify(ov)
+    });
+    if (!res.ok) {
+      console.warn('[reativarProposta] Supabase PATCH falhou:', res.status, await res.text());
+      alert('A proposta foi reativada neste navegador, mas houve um erro ao salvar no servidor. Tente novamente com internet ativa.');
+    }
+  } catch(e) {
+    console.warn('[reativarProposta] Supabase network error:', e.message);
+  }
+
+  // Best-effort: sinaliza o status no GSheets também
+  if (GSHEETS_URL && !GSHEETS_URL.includes('COLE_AQUI') && SESSION && SESSION.token) {
+    try {
+      const params = new URLSearchParams({ action:'atualizar_campos', token:SESSION.token, uid, status:'ABERTO' });
+      const res  = await fetch(GSHEETS_URL + '?' + params);
+      const json = await res.json();
+      if (!json.ok) console.warn('reativarProposta GSheets:', json.error);
+    } catch(e) { console.warn('reativarProposta GSheets network error:', e.message); }
+  }
 }
 
 // ── Configurações: Status & Etapas ───────────────────────────────────────
