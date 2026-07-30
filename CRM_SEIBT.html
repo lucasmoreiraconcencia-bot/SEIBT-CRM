@@ -3197,7 +3197,7 @@ body { font-family: var(--font-sans); -webkit-font-smoothing: antialiased; text-
 
   <!-- Navegação por abas -->
   <div class="cp-tabs">
-    <button class="cp-tab" data-tab="contato" onclick="switchPropTab('contato')">Dados do Contato <span class="cp-tab-badge" id="cp-tabbadge-contato">0</span></button>
+    <button class="cp-tab" data-tab="contato" onclick="switchPropTab('contato')">Dados do Cliente <span class="cp-tab-badge" id="cp-tabbadge-contato">0</span></button>
     <button class="cp-tab active" data-tab="resumo" onclick="switchPropTab('resumo')">Resumo</button>
     <button class="cp-tab" data-tab="aplicacao" onclick="switchPropTab('aplicacao')">Aplicação</button>
     <button class="cp-tab" data-tab="notas" onclick="switchPropTab('notas')">Notas <span class="cp-tab-badge" id="cp-tabbadge-notas">0</span></button>
@@ -5208,10 +5208,9 @@ function openFollowupModal(uid) {
   propNotas[uid] = undefined;
   buildCpNotas(uid);
 
-  // Contatos: mesmo padrão das notas — recarrega a cada abertura para refletir
-  // o que outros usuários cadastraram nas demais propostas da mesma empresa.
-  propContatos[uid] = undefined;
-  buildCpContatos(uid);
+  // Dados do Cliente: recarrega a cada abertura pra refletir vínculo/edições
+  // feitas por outros usuários (na Carteira ou em outra proposta da mesma empresa).
+  buildCpDadosCliente(p);
 
   document.getElementById('followup-overlay').classList.add('open');
   document.getElementById('followup-modal').classList.add('open');
@@ -5304,14 +5303,6 @@ function buildCpResumo(p, ctx) {
   const valor = fmtVal(isExpModal ? (p.valor_usd || p.receita_estimada) : p.receita_estimada);
   const f = (lbl, val) => `<div class="exp-field"><div class="exp-label">${lbl}</div><div class="exp-value">${val}</div></div>`;
 
-  const lastFuAll  = sorted[0] || null;
-  // "Resumo da reunião" é opcional e nem sempre é preenchido — cai para a
-  // "Descrição do contato" (acao), que é obrigatória em todo follow-up, pra
-  // sempre mostrar algo do que o vendedor escreveu no último contato.
-  const lastResumo = lastFuAll
-    ? ((lastFuAll.resumo_reuniao && lastFuAll.resumo_reuniao.trim()) || (lastFuAll.acao && lastFuAll.acao.trim()) || '')
-    : '';
-
   const acts = cpActivities(p, sorted).slice(0, 6);
   const actsHtml = acts.length
     ? acts.map(a => {
@@ -5328,7 +5319,6 @@ function buildCpResumo(p, ctx) {
         <div class="cp-section">
           <div class="cp-section-title">Dados da oportunidade</div>
           <div class="cp-grid">
-            ${f('Cliente', p.cliente||'—')}
             ${f('Valor', '<strong>'+valor+'</strong>')}
             ${_responsavelFieldHtml(p)}
             ${f('Etapa atual', etapaChip(p.etapa))}
@@ -5343,10 +5333,6 @@ function buildCpResumo(p, ctx) {
         </div>
       </div>
       <div>
-        ${lastResumo ? `<div class="cp-section">
-          <div class="cp-section-title">Resumo do último contato</div>
-          <div class="cp-resumo-box">${lastResumo}</div>
-        </div>` : ''}
         <div class="cp-section">
           <div class="cp-section-title">Últimas atividades</div>
           ${actsHtml}
@@ -6001,254 +5987,122 @@ async function deleteNota(uid, id) {
   }
 }
 
-// ── Dados do Contato — pessoas da empresa (nome/telefone/e-mail/cargo) ─────
-// Cada contato fica ligado à proposta (uid) E à empresa (cliente). Com isso a
-// aba mostra duas listas: os contatos DESTA proposta e o histórico de contatos
-// DA EMPRESA, somando o que foi cadastrado nas outras propostas do mesmo cliente.
-let propContatos = {};   // cache por uid da proposta
-let cliContatos  = {};   // cache por empresa (chave = cliente, ou uid se sem cliente)
-
-function _ctCliKey(p) { return String((p && p.cliente) || '').trim(); }
-
-function updateContatosBadge(uid) {
-  const b = document.getElementById('cp-tabbadge-contato');
-  if (b) b.textContent = (propContatos[uid] || []).length;
-}
-
-async function loadContatos(uid, cliente) {
-  const cacheKey = cliente || uid;
+// ── Aba "Dados do Cliente" — vincula a proposta a um cliente cadastrado na
+// carteira (carteira_clientes), em vez de depender do texto livre em
+// propostas.cliente. Isso gera um histórico de verdade por cliente: a mesma
+// empresa aparece igual em todas as propostas dela, e os contatos cadastrados
+// aqui são os MESMOS da Carteira de Clientes (tabela cliente_contatos).
+let _cpClienteCache = {};   // cache local de carteira_clientes por id
+async function _cpCarregarCliente(id) {
+  if (_cpClienteCache[id]) return _cpClienteCache[id];
   try {
-    // Uma consulta só: busca por empresa e recorta os desta proposta em memória.
-    const q = cliente
-      ? `cliente=eq.${encodeURIComponent(cliente)}`
-      : `uid=eq.${encodeURIComponent(uid)}`;
-    const r = await fetch(`${SUPABASE_URL}/rest/v1/proposta_contatos?${q}&order=criado_em.desc`, { headers: supaHdr() });
+    const r = await fetch(`${SUPA_URL}/rest/v1/carteira_clientes?id=eq.${id}&select=id,nome,cnpj,cidade,uf`, { headers: supaHdr() });
     const rows = r.ok ? await r.json() : [];
-    cliContatos[cacheKey] = rows;
-    propContatos[uid]     = rows.filter(c => c.uid === uid);
-  } catch(e) {
-    console.warn('[loadContatos]', e.message);
-    if (!propContatos[uid])     propContatos[uid] = [];
-    if (!cliContatos[cacheKey]) cliContatos[cacheKey] = [];
-  }
-  return propContatos[uid] || [];
+    if (rows[0]) _cpClienteCache[id] = rows[0];
+    return rows[0] || null;
+  } catch(e) { return null; }
 }
-
-function _ctLinhaHtml(c) {
-  const linhas = [];
-  if (c.cargo)    linhas.push(`<span class="cp-ct-meta">${_htmlEsc(c.cargo)}</span>`);
-  if (c.telefone) linhas.push(`<a class="cp-ct-link" href="tel:${_htmlEsc(c.telefone)}">${_htmlEsc(c.telefone)}</a>`);
-  if (c.email)    linhas.push(`<a class="cp-ct-link" href="mailto:${_htmlEsc(c.email)}">${_htmlEsc(c.email)}</a>`);
-  return linhas.length ? `<div class="cp-ct-lines">${linhas.join('')}</div>`
-                       : `<div class="cp-ct-lines"><span class="cp-ct-meta">Sem telefone/e-mail informado.</span></div>`;
-}
-
-// origem: null quando o contato é desta proposta; senão, rótulo da proposta de origem.
-function _ctCardHtml(uid, c, editavel, origem) {
-  const EDIT  = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>`;
-  const TRASH = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6M14 11v6"/></svg>`;
-  const myEmail = ((SESSION && SESSION.email) || '').toLowerCase();
-  const mine = !!myEmail && (c.autor_email || '').toLowerCase() === myEmail;
-  const acts = (editavel && mine)
-    ? `<span class="nota-acts">
-         <button class="btn-nota-act" onclick="editContatoCp('${uid}','${c.id}')" title="Editar">${EDIT}</button>
-         <button class="btn-nota-act del" onclick="deleteContatoCp('${uid}','${c.id}')" title="Excluir">${TRASH}</button>
-       </span>` : '';
-  return `<div class="cp-ct-card" id="cp-ct-card-${c.id}">
-      <div class="cp-ct-head">
-        <span class="nota-ava">${_notaIniciais(c.nome)}</span>
-        <span class="cp-ct-nome">${_htmlEsc(c.nome || '—')}</span>
-        ${origem ? `<span class="cp-ct-origem">${_htmlEsc(origem)}</span>` : ''}
-        ${acts}
-      </div>
-      ${_ctLinhaHtml(c)}
-      <div class="cp-ct-foot">Cadastrado por ${_htmlEsc(c.autor || '—')} · ${_notaData(c.criado_em)}${c.editado_em ? ' <span class="nota-edit-flag">(editado)</span>' : ''}</div>
-    </div>`;
-}
-
-function _ctFormHtml(uid) {
-  return `<div class="cp-ct-form">
-      <div class="cp-ct-form-title">Adicionar contato</div>
-      <div class="cp-ct-grid">
-        <div class="form-group" style="margin-bottom:0">
-          <label class="form-label">Nome<span class="form-req">*</span></label>
-          <input type="text" id="cp-ct-nome" class="form-input" placeholder="Nome da pessoa">
-        </div>
-        <div class="form-group" style="margin-bottom:0">
-          <label class="form-label">Cargo</label>
-          <input type="text" id="cp-ct-cargo" class="form-input" placeholder="Ex: Gerente de Produção">
-        </div>
-        <div class="form-group" style="margin-bottom:0">
-          <label class="form-label">Telefone</label>
-          <input type="text" id="cp-ct-tel" class="form-input" placeholder="(00) 00000-0000">
-        </div>
-        <div class="form-group" style="margin-bottom:0">
-          <label class="form-label">E-mail</label>
-          <input type="email" id="cp-ct-email" class="form-input" placeholder="nome@empresa.com.br">
-        </div>
-      </div>
-      <div class="cp-ct-form-actions">
-        <span class="cp-ct-form-err" id="cp-ct-err"></span>
-        <button class="btn-nota-add" onclick="addContato('${uid}')">${PLUS_ICON}Adicionar contato</button>
-      </div>
-    </div>`;
-}
-
-function buildCpContatos(uid) {
+async function buildCpDadosCliente(p) {
   const el = document.getElementById('cp-contato-content');
   if (!el) return;
-  const p       = DATA.find(x => x.uid === uid);
-  const cliente = _ctCliKey(p);
+  const badge = document.getElementById('cp-tabbadge-contato');
 
-  const meus = propContatos[uid];
-  if (meus === undefined) {
-    el.innerHTML = _ctFormHtml(uid) + '<div class="cp-empty" style="padding:24px">Carregando contatos…</div>';
-    loadContatos(uid, cliente).then(() => {
-      if (currentFollowupUid === uid) buildCpContatos(uid);
-      updateContatosBadge(uid);
-    });
+  if (!p.cliente_id) {
+    if (badge) badge.textContent = '0';
+    el.innerHTML = _cpClienteBuscaHtml();
     return;
   }
+  el.innerHTML = '<div class="cp-empty" style="padding:24px">Carregando dados do cliente…</div>';
+  const cli = await _cpCarregarCliente(p.cliente_id);
+  if (!currentFollowupUid || currentFollowupUid !== p.uid) return; // trocou de proposta enquanto carregava
+  if (!cli) { el.innerHTML = _cpClienteBuscaHtml(); return; } // vínculo quebrado (cliente removido da carteira)
 
-  // Histórico da empresa = contatos cadastrados nas OUTRAS propostas do mesmo cliente
-  const todos  = cliContatos[cliente || uid] || [];
-  const outros = todos.filter(c => c.uid !== uid);
-  const nrDe = u => { const q = DATA.find(x => x.uid === u); return q ? ('Proposta Nº ' + String(q.nr).padStart(4,'0')) : u; };
-
-  el.innerHTML = _ctFormHtml(uid)
-    + `<div class="cp-section" style="margin-top:20px">
-        <div class="cp-section-title">Contatos desta proposta</div>
-        ${meus.length
-          ? `<div class="cp-ct-list">${meus.map(c => _ctCardHtml(uid, c, true, null)).join('')}</div>`
-          : '<div class="cp-empty" style="padding:20px">Nenhum contato cadastrado nesta proposta ainda.</div>'}
-      </div>`
-    + (cliente ? `<div class="cp-section">
-        <div class="cp-section-title">Histórico de contatos — ${_htmlEsc(cliente)}</div>
-        ${outros.length
-          ? `<div class="cp-ct-list">${outros.map(c => _ctCardHtml(uid, c, false, nrDe(c.uid))).join('')}</div>`
-          : '<div class="cp-empty" style="padding:20px">Nenhum contato registrado em outras propostas desta empresa.</div>'}
-      </div>` : '');
-}
-
-async function addContato(uid) {
-  const p    = DATA.find(x => x.uid === uid);
-  const nome = (document.getElementById('cp-ct-nome')?.value  || '').trim();
-  const err  = document.getElementById('cp-ct-err');
-  if (!nome) { if (err) err.textContent = 'Informe ao menos o nome do contato.'; return; }
-  if (err) err.textContent = '';
-
-  const contato = {
-    uid,
-    cliente:     _ctCliKey(p),
-    nome,
-    cargo:       (document.getElementById('cp-ct-cargo')?.value || '').trim(),
-    telefone:    (document.getElementById('cp-ct-tel')?.value   || '').trim(),
-    email:       (document.getElementById('cp-ct-email')?.value || '').trim(),
-    autor:       (SESSION && SESSION.nome)  || '—',
-    autor_email: (SESSION && SESSION.email) || '',
-    criado_em:   new Date().toISOString()
-  };
-
-  const cacheKey = contato.cliente || uid;
-  if (!propContatos[uid])     propContatos[uid] = [];
-  if (!cliContatos[cacheKey]) cliContatos[cacheKey] = [];
-  try {
-    const r = await fetch(`${SUPABASE_URL}/rest/v1/proposta_contatos`, {
-      method: 'POST', headers: Object.assign(supaHdr(true), { 'Prefer':'return=representation' }),
-      body: JSON.stringify(contato)
-    });
-    const saved = r.ok ? ((await r.json())[0] || contato) : contato;
-    propContatos[uid].unshift(saved);
-    cliContatos[cacheKey].unshift(saved);
-  } catch(e) {
-    console.warn('[addContato]', e.message);
-    propContatos[uid].unshift(contato);
-    cliContatos[cacheKey].unshift(contato);
-  }
-  buildCpContatos(uid);
-  updateContatosBadge(uid);
-}
-
-function editContatoCp(uid, id) {
-  const c = (propContatos[uid] || []).find(x => String(x.id) === String(id));
-  if (!c) return;
-  const myEmail = ((SESSION && SESSION.email) || '').toLowerCase();
-  if (!myEmail || (c.autor_email || '').toLowerCase() !== myEmail) return;
-  const card = document.getElementById('cp-ct-card-' + id);
-  if (!card) return;
-  card.innerHTML = `
-    <div class="cp-ct-grid">
-      <div class="form-group" style="margin-bottom:0">
-        <label class="form-label">Nome<span class="form-req">*</span></label>
-        <input type="text" id="cp-cte-nome-${id}" class="form-input" value="${_htmlEsc(c.nome||'')}">
+  el.innerHTML = `
+    <div class="cp-section">
+      <div class="cp-section-title-row">
+        <div class="cp-section-title" style="margin-bottom:0;border-bottom:none;padding-bottom:0">Empresa vinculada</div>
+        <button class="btn-tbl" onclick="cpDesvincularCliente()">Desvincular</button>
       </div>
-      <div class="form-group" style="margin-bottom:0">
-        <label class="form-label">Cargo</label>
-        <input type="text" id="cp-cte-cargo-${id}" class="form-input" value="${_htmlEsc(c.cargo||'')}">
-      </div>
-      <div class="form-group" style="margin-bottom:0">
-        <label class="form-label">Telefone</label>
-        <input type="text" id="cp-cte-tel-${id}" class="form-input" value="${_htmlEsc(c.telefone||'')}">
-      </div>
-      <div class="form-group" style="margin-bottom:0">
-        <label class="form-label">E-mail</label>
-        <input type="email" id="cp-cte-email-${id}" class="form-input" value="${_htmlEsc(c.email||'')}">
+      <div class="cp-grid" style="margin-top:10px">
+        <div class="exp-field"><div class="exp-label">Nome da Empresa</div><div class="exp-value">${_htmlEsc(cli.nome||'—')}</div></div>
+        <div class="exp-field"><div class="exp-label">CNPJ</div><div class="exp-value">${_htmlEsc(cli.cnpj||'—')}</div></div>
+        <div class="exp-field"><div class="exp-label">Cidade</div><div class="exp-value">${_htmlEsc(cli.cidade||'—')}</div></div>
+        <div class="exp-field"><div class="exp-label">Estado</div><div class="exp-value">${_htmlEsc(cli.uf||'—')}</div></div>
       </div>
     </div>
-    <div class="nota-edit-actions" style="margin-top:10px">
-      <button onclick="buildCpContatos('${uid}')">Cancelar</button>
-      <button class="save" onclick="saveContatoCp('${uid}','${id}')">Salvar</button>
+    <div class="cp-section">
+      <div class="cp-section-title">Contatos da empresa</div>
+      <div id="cp-cliente-contatos-content"></div>
+    </div>`;
+  clienteContatosCache[cli.id] = undefined;
+  buildCpDadosClienteContatos(cli.id);
+}
+function _cpClienteBuscaHtml() {
+  return `<div class="cp-section">
+      <div class="cp-section-title">Vincular cliente cadastrado</div>
+      <div style="font-size:11.5px;color:var(--muted);margin-bottom:10px">Esta proposta ainda não está ligada a um cliente da carteira. Busque e vincule, ou cadastre um novo — isso gera o histórico do cliente no CRM.</div>
+      <div class="form-row">
+        <input type="text" id="cp-cli-busca" class="form-input" placeholder="Buscar cliente por nome ou cidade…" onkeydown="if(event.key==='Enter')cpBuscarClienteVincular()">
+        <button class="btn-tbl" onclick="cpBuscarClienteVincular()">Buscar</button>
+      </div>
+      <div id="cp-cli-resultados" style="margin-top:10px"></div>
+      <div style="text-align:center;margin:14px 0;font-size:11px;color:var(--muted)">ou</div>
+      <button class="btn-tbl" style="width:100%" onclick="cpAbrirCadastroNovoCliente()">+ Cadastrar cliente novo</button>
     </div>`;
 }
-
-async function saveContatoCp(uid, id) {
-  const c = (propContatos[uid] || []).find(x => String(x.id) === String(id));
-  if (!c) return;
-  const myEmail = ((SESSION && SESSION.email) || '').toLowerCase();
-  if (!myEmail || (c.autor_email || '').toLowerCase() !== myEmail) return;
-  const nome = (document.getElementById(`cp-cte-nome-${id}`)?.value || '').trim();
-  if (!nome) return;
-
-  c.nome       = nome;
-  c.cargo      = (document.getElementById(`cp-cte-cargo-${id}`)?.value || '').trim();
-  c.telefone   = (document.getElementById(`cp-cte-tel-${id}`)?.value   || '').trim();
-  c.email      = (document.getElementById(`cp-cte-email-${id}`)?.value || '').trim();
-  c.editado_em = new Date().toISOString();
-  buildCpContatos(uid);
-
-  if (c.id) {
-    try {
-      await fetch(`${SUPABASE_URL}/rest/v1/proposta_contatos?id=eq.${c.id}`, {
-        method: 'PATCH', headers: Object.assign(supaHdr(true), { 'Prefer':'return=minimal' }),
-        body: JSON.stringify({ nome:c.nome, cargo:c.cargo||null, telefone:c.telefone||null,
-                               email:c.email||null, editado_em:c.editado_em })
-      });
-    } catch(e) { console.warn('[saveContatoCp]', e.message); }
-  }
+async function cpBuscarClienteVincular() {
+  const q = document.getElementById('cp-cli-busca').value.trim();
+  const box = document.getElementById('cp-cli-resultados');
+  if (q.length < 2) { box.innerHTML = '<div class="cp-empty" style="padding:10px">Digite ao menos 2 caracteres.</div>'; return; }
+  box.innerHTML = '<div class="cp-empty" style="padding:10px">Buscando…</div>';
+  try {
+    const url = `${SUPA_URL}/rest/v1/carteira_clientes?select=id,nome,cidade,uf,cnpj&or=(nome.ilike.*${encodeURIComponent(q)}*,cidade.ilike.*${encodeURIComponent(q)}*)&order=nome.asc&limit=20`;
+    const rows = await (await fetch(url, { headers: supaHdr() })).json();
+    box.innerHTML = rows.length ? rows.map(c => `<div class="tr-row" style="cursor:pointer;padding:8px 10px;border:1px solid var(--border);border-radius:6px;margin-bottom:6px"
+        onclick="cpVincularCliente(${c.id})">
+        <strong>${_htmlEsc(c.nome)}</strong>
+        <div style="font-size:10.5px;color:var(--muted)">${_htmlEsc([c.cidade,c.uf].filter(Boolean).join(' / ')||'sem cidade')}${c.cnpj?(' · '+_htmlEsc(c.cnpj)):''}</div>
+      </div>`).join('') : '<div class="cp-empty" style="padding:10px">Nenhum cliente encontrado.</div>';
+  } catch(e) { box.innerHTML = '<div class="cp-empty" style="padding:10px">Erro na busca.</div>'; }
 }
-
-async function deleteContatoCp(uid, id) {
-  const arr = propContatos[uid] || [];
-  const idx = arr.findIndex(x => String(x.id) === String(id));
-  if (idx === -1) return;
-  const c = arr[idx];
-  const myEmail = ((SESSION && SESSION.email) || '').toLowerCase();
-  if (!myEmail || (c.autor_email || '').toLowerCase() !== myEmail) return;
-  if (!confirm('Excluir este contato? Esta ação não pode ser desfeita.')) return;
-
-  arr.splice(idx, 1);
-  const cacheKey = (c.cliente || uid);
-  const cArr = cliContatos[cacheKey] || [];
-  const cIdx = cArr.findIndex(x => String(x.id) === String(id));
-  if (cIdx !== -1) cArr.splice(cIdx, 1);
-
-  buildCpContatos(uid);
-  updateContatosBadge(uid);
-  if (c.id) {
-    try {
-      await fetch(`${SUPABASE_URL}/rest/v1/proposta_contatos?id=eq.${c.id}`, { method: 'DELETE', headers: supaHdr() });
-    } catch(e) { console.warn('[deleteContatoCp]', e.message); }
-  }
+async function cpVincularCliente(clienteId) {
+  const uid = currentFollowupUid;
+  const p = DATA.find(x => x.uid === uid);
+  if (!p) return;
+  p.cliente_id = clienteId;
+  overrides[uid] = Object.assign(overrides[uid] || {}, { cliente_id: clienteId });
+  localStorage.setItem('seibt_overrides_v1', JSON.stringify(overrides));
+  try {
+    await fetch(`${SUPABASE_URL}/rest/v1/propostas?uid=eq.${encodeURIComponent(uid)}`, {
+      method:'PATCH', headers: Object.assign(supaHdr(true), { 'Prefer':'return=minimal' }),
+      body: JSON.stringify({ cliente_id: clienteId })
+    });
+  } catch(e) { console.warn('[cpVincularCliente]', e.message); }
+  buildCpDadosCliente(p);
+}
+function cpAbrirCadastroNovoCliente() {
+  const p = DATA.find(x => x.uid === currentFollowupUid);
+  const repDestino = p ? (p.responsavel || p.representante || p.interno || '') : '';
+  openNovoCliente(repDestino, (novoCliente) => {
+    _cpClienteCache[novoCliente.id] = novoCliente;
+    cpVincularCliente(novoCliente.id);
+  });
+}
+async function cpDesvincularCliente() {
+  const uid = currentFollowupUid;
+  const p = DATA.find(x => x.uid === uid);
+  if (!p) return;
+  if (!confirm('Desvincular este cliente da proposta? Os contatos cadastrados continuam salvos no cliente, na Carteira.')) return;
+  p.cliente_id = null;
+  overrides[uid] = Object.assign(overrides[uid] || {}, { cliente_id: null });
+  localStorage.setItem('seibt_overrides_v1', JSON.stringify(overrides));
+  try {
+    await fetch(`${SUPABASE_URL}/rest/v1/propostas?uid=eq.${encodeURIComponent(uid)}`, {
+      method:'PATCH', headers: Object.assign(supaHdr(true), { 'Prefer':'return=minimal' }),
+      body: JSON.stringify({ cliente_id: null })
+    });
+  } catch(e) { console.warn('[cpDesvincularCliente]', e.message); }
+  buildCpDadosCliente(p);
 }
 
 function closeFollowupModal() {
@@ -12365,8 +12219,11 @@ async function salvarNovoCliente() {
     if (!r.ok) { erroEl.textContent = 'Erro ao salvar cliente. Tente novamente.'; return; }
     const rows = await r.json();
     const novo = Array.isArray(rows) ? rows[0] : rows;
+    // Guarda o callback ANTES de fechar o modal — closeNovoCliente() zera
+    // novoClienteCallback, e checar depois de fechar sempre dava null.
+    const cb = novoClienteCallback;
     closeNovoCliente();
-    if (novoClienteCallback) { novoClienteCallback(novo); }
+    if (cb) { cb(novo); }
     else if (typeof loadCarteiraSection === 'function' && document.getElementById('section-carteira')) { loadCarteiraSection(); }
   } catch(e) {
     erroEl.textContent = 'Erro de conexão ao salvar. Tente novamente.';
@@ -12376,9 +12233,27 @@ async function salvarNovoCliente() {
 // ── Contatos do cliente (1:N) — mesmo padrão da aba "Dados do Contato" das
 //    propostas (proposta_contatos), aqui ligado ao cliente da carteira.
 let clienteContatosCache = {};   // cache por cliente_id
+// Atualiza o badge de contagem em qualquer tela que esteja mostrando este
+// cliente no momento (Carteira e/ou aba "Dados do Cliente" da proposta).
 function updateClienteContatosBadge(id) {
-  const b = document.getElementById('cm-tabbadge-contatos');
-  if (b) b.textContent = (clienteContatosCache[id] || []).length;
+  const n = (clienteContatosCache[id] || []).length;
+  if (_currentCarteira && String(_currentCarteira.id) === String(id)) {
+    const b1 = document.getElementById('cm-tabbadge-contatos');
+    if (b1) b1.textContent = n;
+  }
+  const pAtual = (typeof currentFollowupUid !== 'undefined' && currentFollowupUid) ? DATA.find(x => x.uid === currentFollowupUid) : null;
+  if (pAtual && String(pAtual.cliente_id) === String(id)) {
+    const b2 = document.getElementById('cp-tabbadge-contato');
+    if (b2) b2.textContent = n;
+  }
+}
+// Redesenha qualquer tela que esteja mostrando os contatos deste cliente —
+// evita hardcodar "atualiza a Carteira" dentro do CRUD, que também é usado
+// pela aba "Dados do Cliente" da proposta.
+function _refreshContatosViews(id) {
+  if (_currentCarteira && String(_currentCarteira.id) === String(id)) buildCmContatos();
+  const pAtual = (typeof currentFollowupUid !== 'undefined' && currentFollowupUid) ? DATA.find(x => x.uid === currentFollowupUid) : null;
+  if (pAtual && String(pAtual.cliente_id) === String(id)) buildCpDadosClienteContatos(id);
 }
 async function loadClienteContatos(id) {
   try {
@@ -12411,49 +12286,65 @@ function _ccCardHtml(id, c) {
       ${linhas.length ? `<div class="cp-ct-lines">${linhas.join('')}</div>` : ''}
     </div>`;
 }
+function _ccFormHtml(id, prefix) {
+  return `<div class="cp-ct-form">
+      <div class="cp-ct-form-title">Adicionar contato</div>
+      <div class="cp-ct-grid">
+        <div class="form-group" style="margin-bottom:0"><label class="form-label">Nome<span class="form-req">*</span></label>
+          <input type="text" id="${prefix}-nome" class="form-input" placeholder="Nome da pessoa"></div>
+        <div class="form-group" style="margin-bottom:0"><label class="form-label">Cargo</label>
+          <input type="text" id="${prefix}-cargo" class="form-input" placeholder="Ex: Gerente de Compras"></div>
+        <div class="form-group" style="margin-bottom:0"><label class="form-label">Telefone</label>
+          <input type="text" id="${prefix}-tel" class="form-input" placeholder="(00) 00000-0000"></div>
+        <div class="form-group" style="margin-bottom:0"><label class="form-label">E-mail</label>
+          <input type="email" id="${prefix}-email" class="form-input" placeholder="nome@empresa.com.br"></div>
+      </div>
+      <div class="cp-ct-form-actions">
+        <span class="cp-ct-form-err" id="${prefix}-err"></span>
+        <button class="btn-nota-add" onclick="addClienteContato('${id}','${prefix}')">${PLUS_ICON}Adicionar contato</button>
+      </div>
+    </div>`;
+}
 function buildCmContatos() {
   const el = document.getElementById('cm-contatos-content');
   if (!el || !_currentCarteira) return;
   const id = _currentCarteira.id;
   const lista = clienteContatosCache[id];
-  const formHtml = `<div class="cp-ct-form">
-      <div class="cp-ct-form-title">Adicionar contato</div>
-      <div class="cp-ct-grid">
-        <div class="form-group" style="margin-bottom:0"><label class="form-label">Nome<span class="form-req">*</span></label>
-          <input type="text" id="cc-nome" class="form-input" placeholder="Nome da pessoa"></div>
-        <div class="form-group" style="margin-bottom:0"><label class="form-label">Cargo</label>
-          <input type="text" id="cc-cargo" class="form-input" placeholder="Ex: Gerente de Compras"></div>
-        <div class="form-group" style="margin-bottom:0"><label class="form-label">Telefone</label>
-          <input type="text" id="cc-tel" class="form-input" placeholder="(00) 00000-0000"></div>
-        <div class="form-group" style="margin-bottom:0"><label class="form-label">E-mail</label>
-          <input type="email" id="cc-email" class="form-input" placeholder="nome@empresa.com.br"></div>
-      </div>
-      <div class="cp-ct-form-actions">
-        <span class="cp-ct-form-err" id="cc-err"></span>
-        <button class="btn-nota-add" onclick="addClienteContato('${id}')">${PLUS_ICON}Adicionar contato</button>
-      </div>
-    </div>`;
-
   if (lista === undefined) {
-    el.innerHTML = formHtml + '<div class="cp-empty" style="padding:24px">Carregando contatos…</div>';
+    el.innerHTML = _ccFormHtml(id, 'cc') + '<div class="cp-empty" style="padding:24px">Carregando contatos…</div>';
     loadClienteContatos(id).then(() => { if (_currentCarteira && _currentCarteira.id === id) buildCmContatos(); updateClienteContatosBadge(id); });
     return;
   }
-  el.innerHTML = formHtml + `<div class="cp-ct-list" style="margin-top:16px">
+  el.innerHTML = _ccFormHtml(id, 'cc') + `<div class="cp-ct-list" style="margin-top:16px">
     ${lista.length ? lista.map(c => _ccCardHtml(id, c)).join('') : '<div class="cp-empty" style="padding:20px">Nenhum contato cadastrado ainda.</div>'}
   </div>`;
 }
-async function addClienteContato(id) {
-  const nome = (document.getElementById('cc-nome')?.value || '').trim();
-  const err  = document.getElementById('cc-err');
+// ── Aba "Dados do Cliente" da proposta — mesmo CRUD, container diferente ──
+function buildCpDadosClienteContatos(id) {
+  const el = document.getElementById('cp-cliente-contatos-content');
+  if (!el) return;
+  const lista = clienteContatosCache[id];
+  if (lista === undefined) {
+    el.innerHTML = _ccFormHtml(id, 'cpcc') + '<div class="cp-empty" style="padding:24px">Carregando contatos…</div>';
+    loadClienteContatos(id).then(() => { _refreshContatosViews(id); updateClienteContatosBadge(id); });
+    return;
+  }
+  el.innerHTML = _ccFormHtml(id, 'cpcc') + `<div class="cp-ct-list" style="margin-top:16px">
+    ${lista.length ? lista.map(c => _ccCardHtml(id, c)).join('') : '<div class="cp-empty" style="padding:20px">Nenhum contato cadastrado ainda.</div>'}
+  </div>`;
+}
+async function addClienteContato(id, prefix) {
+  prefix = prefix || 'cc';
+  const nome = (document.getElementById(`${prefix}-nome`)?.value || '').trim();
+  const err  = document.getElementById(`${prefix}-err`);
   if (!nome) { if (err) err.textContent = 'Informe ao menos o nome do contato.'; return; }
   if (err) err.textContent = '';
   const semPrincipal = !(clienteContatosCache[id] || []).some(c => c.principal);
   const contato = {
     cliente_id: id, nome,
-    cargo:    (document.getElementById('cc-cargo')?.value || '').trim() || null,
-    telefone: (document.getElementById('cc-tel')?.value   || '').trim() || null,
-    email:    (document.getElementById('cc-email')?.value || '').trim() || null,
+    cargo:    (document.getElementById(`${prefix}-cargo`)?.value || '').trim() || null,
+    telefone: (document.getElementById(`${prefix}-tel`)?.value   || '').trim() || null,
+    email:    (document.getElementById(`${prefix}-email`)?.value || '').trim() || null,
     principal: semPrincipal   // primeiro contato do cliente já nasce principal
   };
   try {
@@ -12466,7 +12357,7 @@ async function addClienteContato(id) {
     clienteContatosCache[id].unshift(saved);
     if (saved.principal) _syncContatoPrincipalHeader(id, saved);
   } catch(e) { console.warn('[addClienteContato]', e.message); }
-  buildCmContatos();
+  _refreshContatosViews(id);
   updateClienteContatosBadge(id);
 }
 function editClienteContatoCm(id, cid) {
@@ -12486,7 +12377,7 @@ function editClienteContatoCm(id, cid) {
         <input type="email" id="cce-email-${cid}" class="form-input" value="${_htmlEsc(c.email||'')}"></div>
     </div>
     <div class="nota-edit-actions" style="margin-top:10px">
-      <button onclick="buildCmContatos()">Cancelar</button>
+      <button onclick="_refreshContatosViews('${id}')">Cancelar</button>
       <button class="save" onclick="saveClienteContatoCm('${id}','${cid}')">Salvar</button>
     </div>`;
 }
@@ -12499,7 +12390,7 @@ async function saveClienteContatoCm(id, cid) {
   c.cargo    = (document.getElementById(`cce-cargo-${cid}`)?.value  || '').trim() || null;
   c.telefone = (document.getElementById(`cce-tel-${cid}`)?.value    || '').trim() || null;
   c.email    = (document.getElementById(`cce-email-${cid}`)?.value  || '').trim() || null;
-  buildCmContatos();
+  _refreshContatosViews(id);
   if (c.principal) _syncContatoPrincipalHeader(id, c);
   try {
     await fetch(`${SUPA_URL}/rest/v1/cliente_contatos?id=eq.${cid}`, {
@@ -12513,7 +12404,7 @@ async function tornarPrincipalContato(id, cid) {
   const alvo = lista.find(x => String(x.id) === String(cid));
   if (!alvo) return;
   lista.forEach(c => { c.principal = (String(c.id) === String(cid)); });
-  buildCmContatos();
+  _refreshContatosViews(id);
   _syncContatoPrincipalHeader(id, alvo);
   try {
     // Índice único parcial garante só 1 principal — desmarca os outros antes de marcar o novo.
@@ -12548,7 +12439,7 @@ async function deleteClienteContatoCm(id, cid) {
   if (idx === -1) return;
   if (!confirm('Excluir este contato? Esta ação não pode ser desfeita.')) return;
   arr.splice(idx, 1);
-  buildCmContatos();
+  _refreshContatosViews(id);
   updateClienteContatosBadge(id);
   try {
     await fetch(`${SUPA_URL}/rest/v1/cliente_contatos?id=eq.${cid}`, { method:'DELETE', headers: supaHdr() });
