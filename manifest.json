@@ -1,48 +1,25 @@
 {
-  "name": "SEIBT CRM — Propostas",
-  "short_name": "SEIBT CRM",
-  "description": "Acompanhamento de propostas de peças de reposição",
-  "start_url": "./CRM_SEIBT.html",
-  "scope": "./",
+  "name": "SEIBT Catálogo de Preços",
+  "short_name": "SEIBT",
+  "description": "Catálogo de Preços - Máquinas e Peças de Reposição",
+  "start_url": "./index.html",
   "display": "standalone",
-  "orientation": "landscape",
-  "background_color": "#2C4F79",
-  "theme_color": "#2C4F79",
+  "orientation": "portrait",
+  "background_color": "#1B3A5C",
+  "theme_color": "#1B3A5C",
   "lang": "pt-BR",
-  "categories": ["business", "productivity"],
   "icons": [
     {
-      "src": "icons/icon-72.png",
-      "sizes": "72x72",
-      "type": "image/png",
-      "purpose": "any"
-    },
-    {
-      "src": "icons/icon-144.png",
-      "sizes": "144x144",
-      "type": "image/png",
-      "purpose": "any"
-    },
-    {
-      "src": "icons/icon-192.png",
+      "src": "icon-192.png",
       "sizes": "192x192",
       "type": "image/png",
       "purpose": "any maskable"
     },
     {
-      "src": "icons/icon-512.png",
+      "src": "icon-512.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any maskable"
-    }
-  ],
-  "screenshots": [
-    {
-      "src": "icons/screenshot.png",
-      "sizes": "1280x720",
-      "type": "image/png",
-      "form_factor": "wide",
-      "label": "SEIBT CRM — Visão geral de propostas"
     }
   ]
 }

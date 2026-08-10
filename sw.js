@@ -1,70 +1,91 @@
-// ═══════════════════════════════════════════════════════════════════
-// SEIBT CRM — Service Worker
-// Estratégia: Network-first para a aplicação (sempre busca a versão
-// mais recente), cache como fallback se offline.
-// ═══════════════════════════════════════════════════════════════════
+const CACHE_NAME = 'seibt-catalogo-v6'; // Incrementado para forçar atualização do SW
 
-const CACHE_NAME   = 'seibt-crm-v1';
-const OFFLINE_PAGE = './CRM_SEIBT.html';
-
-// Arquivos para pré-cachear na instalação
-const PRE_CACHE = [
-  './CRM_SEIBT.html',
+// Limitar tamanho do cache de imagens para evitar quota overflow (#15)
+function trimCache(cacheName, maxItems) {
+  caches.open(cacheName).then(cache => {
+    cache.keys().then(keys => {
+      if (keys.length > maxItems) {
+        // Remove a entrada mais antiga (FIFO)
+        cache.delete(keys[0]).then(() => trimCache(cacheName, maxItems));
+      }
+    });
+  });
+}
+const ASSETS = [
   './manifest.json',
-  './icons/icon-192.png',
-  './icons/icon-512.png'
+  './icon-192.png',
+  './icon-512.png',
+  './logo.png'
 ];
 
-// ── Install: pré-carrega os arquivos essenciais ──────────────────────
+// Instalação - cacheia apenas assets estáticos (NÃO inclui index.html)
 self.addEventListener('install', event => {
   event.waitUntil(
-    caches.open(CACHE_NAME)
-      .then(cache => cache.addAll(PRE_CACHE))
-      .then(() => self.skipWaiting())
+    caches.open(CACHE_NAME).then(cache => cache.addAll(ASSETS).catch(() => {}))
   );
+  self.skipWaiting();
 });
 
-// ── Activate: limpa caches antigos ───────────────────────────────────
+// Ativação - limpa TODOS os caches antigos
 self.addEventListener('activate', event => {
   event.waitUntil(
     caches.keys().then(keys =>
-      Promise.all(
-        keys.filter(k => k !== CACHE_NAME).map(k => caches.delete(k))
-      )
-    ).then(() => self.clients.claim())
+      Promise.all(keys.filter(k => k !== CACHE_NAME).map(k => caches.delete(k)))
+    )
   );
+  self.clients.claim();
 });
 
-// ── Fetch: Network-first, cache como fallback ─────────────────────────
+// Estratégia de fetch
 self.addEventListener('fetch', event => {
   const url = new URL(event.request.url);
 
-  // Requisições externas (Supabase, Google Apps Script) → sempre rede
-  const isExternal =
-    url.hostname.includes('supabase.co')    ||
-    url.hostname.includes('googleapis.com') ||
-    url.hostname.includes('script.google.com');
+  // Google Apps Script e APIs externas — NUNCA interceptar (causa CORS)
+  if (url.hostname.includes('script.google.com') ||
+      url.hostname.includes('script.googleusercontent.com') ||
+      url.hostname.includes('googleapis.com')) {
+    return; // browser lida diretamente, sem service worker
+  }
 
-  if (isExternal) {
-    // Passa direto para a rede, sem cache
+  // index.html / navegação / raiz: SEMPRE buscar da rede (sem cache)
+  if (event.request.mode === 'navigate' ||
+      url.pathname === '/' ||
+      url.pathname.endsWith('/') ||
+      url.pathname.endsWith('/index.html') ||
+      url.pathname.endsWith('.html')) {
+    event.respondWith(
+      fetch(event.request, { cache: 'no-store' })
+        .catch(() => caches.match('./index.html'))
+    );
     return;
   }
 
-  // Arquivos locais → Network-first
+  // Imagens externas (ImgBB, Cloudinary) - network first com fallback de cache
+  if (url.hostname.includes('ibb.co') || url.hostname.includes('imgbb.com') || url.hostname.includes('cloudinary.com')) {
+    event.respondWith(
+      caches.open(CACHE_NAME).then(cache =>
+        fetch(event.request)
+          .then(response => {
+            if (response.ok) {
+              cache.put(event.request, response.clone());
+              trimCache(CACHE_NAME, 120); // Limite de 120 imagens em cache (#15)
+            }
+            return response;
+          })
+          .catch(() => cache.match(event.request))
+      )
+    );
+    return;
+  }
+
+  // Demais assets (PNG, manifest, fontes, etc) - cache first
   event.respondWith(
-    fetch(event.request)
-      .then(response => {
-        // Atualiza o cache com a versão mais recente
-        if (response && response.status === 200 && event.request.method === 'GET') {
-          const clone = response.clone();
-          caches.open(CACHE_NAME).then(cache => cache.put(event.request, clone));
-        }
-        return response;
-      })
-      .catch(() => {
-        // Offline: tenta cache, senão mostra a página principal
-        return caches.match(event.request)
-          .then(cached => cached || caches.match(OFFLINE_PAGE));
-      })
+    caches.match(event.request).then(cached => cached || fetch(event.request).then(response => {
+      if (response.ok && event.request.method === 'GET') {
+        const clone = response.clone();
+        caches.open(CACHE_NAME).then(c => c.put(event.request, clone));
+      }
+      return response;
+    }))
   );
 });
